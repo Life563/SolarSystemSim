@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui\imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui\imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui\imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui\stb_textedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{B11A5C48-54B5-330D-B76F-3052925E4CC6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{934D72A6-32D8-34AC-BF90-9D8245227956}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

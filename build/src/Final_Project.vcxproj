@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BEC45D79-AF94-3214-B4E3-7AA3DB1F74AC}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>Final_Project</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\bin\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Final_Project.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Final_Project</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\bin\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Final_Project.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Final_Project</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\bin\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Final_Project.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Final_Project</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\bin\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Final_Project.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Final_Project</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;CGRA_SRCDIR="C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work";GLEW_STATIC;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CGRA_SRCDIR=\"C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work\";GLEW_STATIC;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;..\bin\Debug\glfw3.lib;opengl32.lib;..\bin\Debug\glew.lib;..\bin\Debug\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/bin/Debug/Final_Project.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/bin/Debug/Final_Project.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CGRA_SRCDIR="C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work";GLEW_STATIC;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CGRA_SRCDIR=\"C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work\";GLEW_STATIC;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;..\bin\Release\glfw3.lib;opengl32.lib;..\bin\Release\glew.lib;..\bin\Release\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/bin/Release/Final_Project.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/bin/Release/Final_Project.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CGRA_SRCDIR="C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work";GLEW_STATIC;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CGRA_SRCDIR=\"C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work\";GLEW_STATIC;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;..\bin\MinSizeRel\glfw3.lib;opengl32.lib;..\bin\MinSizeRel\glew.lib;..\bin\MinSizeRel\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/bin/MinSizeRel/Final_Project.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/bin/MinSizeRel/Final_Project.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CGRA_SRCDIR="C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work";GLEW_STATIC;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CGRA_SRCDIR=\"C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work\";GLEW_STATIC;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glfw\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glew\include;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\glm;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;..\bin\RelWithDebInfo\glfw3.lib;opengl32.lib;..\bin\RelWithDebInfo\glew.lib;..\bin\RelWithDebInfo\imgui.lib;opengl32.lib;glu32.lib;kernel32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/bin/RelWithDebInfo/Final_Project.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/bin/RelWithDebInfo/Final_Project.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-HC:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work" "-BC:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build" --check-stamp-file "C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/src/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work/src/CMakeLists.txt;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\CMakeLists.txt;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-HC:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work" "-BC:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build" --check-stamp-file "C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/src/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work/src/CMakeLists.txt;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\CMakeLists.txt;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-HC:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work" "-BC:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build" --check-stamp-file "C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/src/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work/src/CMakeLists.txt;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\CMakeLists.txt;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-HC:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work" "-BC:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build" --check-stamp-file "C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/build/src/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work/src/CMakeLists.txt;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\CMakeLists.txt;C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\ex1.hpp" />
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\ex1.cpp"  />
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\opengl.hpp" />
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\main.cpp"  />
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\matrix.hpp" />
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\mesh.hpp" />
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\mesh.cpp"  />
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\shader.hpp" />
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\shader.cpp"  />
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\wavefront.hpp" />
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\wavefront.cpp"  />
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\imgui_impl_glfw_gl3.h" />
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\imgui_impl_glfw_gl3.cpp"  />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\ZERO_CHECK.vcxproj">
+      <Project>{83990163-491F-316B-B393-4FDEA61CF799}</Project>
+      <Name>ZERO_CHECK</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\vendor\glew\glew.vcxproj">
+      <Project>{28E3F99C-E782-3D24-9AC8-A86A47DE6F8B}</Project>
+      <Name>glew</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\vendor\glfw\src\glfw.vcxproj">
+      <Project>{8C5E5670-3BD6-356B-91D3-2F930209BA5D}</Project>
+      <Name>glfw</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\build\vendor\imgui\imgui.vcxproj">
+      <Project>{2D84914F-C2B5-38B1-8E17-C6979167EAA1}</Project>
+      <Name>imgui</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
