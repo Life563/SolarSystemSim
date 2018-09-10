@@ -5,7 +5,9 @@
 
 #include "glm/glm.hpp"
 
-class Application {
+#include "Planet.hpp"
+
+class SolarSystem {
 public:
     // The window object managed by GLFW
     GLFWwindow *m_window;
@@ -32,7 +34,11 @@ public:
     // Whether or not the left, middle or right buttons are down.
     bool m_mouseButtonDown[3];
 
-    Application(GLFWwindow *win)
+	std::vector<Planet> planets;
+	//vector<PlanetInfo> planetSpots;	
+	int numberOfPlanets;
+
+	SolarSystem(GLFWwindow *win)
         : m_window(win),
           m_viewportSize(1, 1), m_mousePosition(0, 0),
           m_translation(0), m_scale(1), m_rotationMatrix(1) {
@@ -49,8 +55,7 @@ public:
     void init();
 
     void createCube();
-	void sphere_latlong();
-	void sphere_from_cube();
+	void generateSystem();
 
     void drawScene();
     void doGUI();

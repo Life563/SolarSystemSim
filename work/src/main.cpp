@@ -8,7 +8,7 @@
 #include "imgui.h"
 #include "cgra/imgui_impl_glfw_gl3.h"
 
-#include "ex1.hpp"
+#include "SolarSystem.hpp"
 
 // Forward definition of callbacks
 extern "C" {
@@ -113,7 +113,7 @@ int main(int argc, const char** argv) {
 
     {
         // Create the application object
-        Application app(window);
+		SolarSystem app(window);
 
         // Tell GLFW to pass along a pointer to `app` in callbacks
         glfwSetWindowUserPointer(window, reinterpret_cast<void *>(&app));
@@ -270,7 +270,7 @@ extern "C" {
     }
 
     static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-        Application *app = (Application *)glfwGetWindowUserPointer(window);
+		SolarSystem *app = (SolarSystem *)glfwGetWindowUserPointer(window);
         if (app == nullptr) return;
 
         ImGui_ImplGlfwGL3_KeyCallback(window, key, scancode, action, mods);
@@ -282,7 +282,7 @@ extern "C" {
     }
 
     static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
-        Application *app = (Application *)glfwGetWindowUserPointer(window);
+		SolarSystem *app = (SolarSystem *)glfwGetWindowUserPointer(window);
         if (app == nullptr) return;
 
         ImGui_ImplGlfwGL3_MouseButtonCallback(window, button, action, mods);
@@ -294,7 +294,7 @@ extern "C" {
     }
 
     static void cursor_pos_callback(GLFWwindow *window, double xpos, double ypos) {
-        Application *app = (Application *)glfwGetWindowUserPointer(window);
+		SolarSystem *app = (SolarSystem *)glfwGetWindowUserPointer(window);
         if (app == nullptr) return;
 
         ImGuiIO& io = ImGui::GetIO();
@@ -304,7 +304,7 @@ extern "C" {
     }
 
     static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-        Application *app = (Application *)glfwGetWindowUserPointer(window);
+		SolarSystem *app = (SolarSystem *)glfwGetWindowUserPointer(window);
         if (app == nullptr) return;
 
         ImGui_ImplGlfwGL3_ScrollCallback(window, xoffset, yoffset);
@@ -316,7 +316,7 @@ extern "C" {
     }
 
     static void char_callback(GLFWwindow *window, unsigned int codepoint) {
-        Application *app = (Application *)glfwGetWindowUserPointer(window);
+		SolarSystem *app = (SolarSystem *)glfwGetWindowUserPointer(window);
         if (app == nullptr) return;
 
         ImGui_ImplGlfwGL3_CharCallback(window, codepoint);

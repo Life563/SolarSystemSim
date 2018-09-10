@@ -3,9 +3,10 @@
 #
 # If you add any new files, remember to add them here
 SET(sources
-  ex1.hpp
-  ex1.cpp
-
+  SolarSystem.hpp
+  SolarSystem.cpp
+  Planet.hpp
+  Planet.cpp
   opengl.hpp
   main.cpp
 )

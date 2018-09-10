@@ -307,8 +307,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\ex1.hpp" />
-    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\ex1.cpp"  />
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\SolarSystem.hpp" />
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\SolarSystem.cpp"  />
+    <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\Planet.hpp" />
+    <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\Planet.cpp"  />
     <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\opengl.hpp" />
     <ClCompile Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\main.cpp"  />
     <ClInclude Include="C:\Users\Callum\OneDrive\Uni\Year 3\Tri 2\CGRA 350\Assignments\Final Project\SolarSystemSim\work\src\cgra\matrix.hpp" />
