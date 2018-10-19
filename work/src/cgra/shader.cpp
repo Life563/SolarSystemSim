@@ -106,6 +106,16 @@ namespace cgra {
         }
     }
 
+	void Program::setColour(const glm::vec3 &vec) {
+		if (m_program == 0) return;
+		use();
+
+		// Get the location of the "modelMat" uniform variable
+		GLint colourLoc = glGetUniformLocation(m_program, "inputedColor");
+		// Set the value of "colourLoc"
+		glUniform3fv(colourLoc, 1, (float*)&vec);
+	}
+
     void Program::setModelMatrix(const glm::mat4 &mat) {
         if (m_program == 0) return;
         use();

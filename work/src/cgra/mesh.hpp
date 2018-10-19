@@ -33,6 +33,8 @@ namespace cgra {
         // fourth triangles.
         std::vector<unsigned int> m_indices;
 
+		
+
         // Whether or not to draw this mesh as a wireframe
         bool m_drawWireframe;
 
@@ -52,7 +54,9 @@ namespace cgra {
         // that represent triangles
         GLuint m_ibo;
 
-    public:
+    public:	
+
+		std::vector<std::vector<double>> colors;
 
         // Set the mesh data using two Matrices.
         //
@@ -67,6 +71,13 @@ namespace cgra {
         void setDrawWireframe(bool wireframe) {
             m_drawWireframe = wireframe;
         }
+
+		/*
+		* Sets the colour of the mesh
+		*/
+		void setColors(std::vector<std::vector<double>> c) {
+			colors = c;
+		};
 
         // Get whether this mesh will be drawn as a wireframe or not
         bool getDrawWireframe() const {

@@ -12,6 +12,7 @@
 #include "SolarSystem.hpp"
 #include "Planet.hpp"
 
+#include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/euler_angles.hpp"
@@ -29,97 +30,213 @@ void SolarSystem::init() {
     glm::mat4 viewMatrix(1);
     viewMatrix[3] = glm::vec4(0, 0, -10, 1);
     m_program.setViewMatrix(viewMatrix);
-
 	glm::vec3 rotation(1.0f, 1.0f, 0.0f);
-	m_rotationMatrix = glm::rotate(glm::mat4(1.0f), 45.0f, glm::vec3(rotation[0], rotation[1], rotation[2]));
+	m_rotationMatrix = glm::mat4(1.0f);// glm::rotate(glm::mat4(1.0f), 45.0f, glm::vec3(rotation[0], rotation[1], rotation[2]));
+	
+	// Create the sun
+	generateSun();
+	// Setup Basic Planet Info
+	generatePlanetSpots();
+	generateSystem();
+	//planets.push_back(Planet());
+}
 
-    // Create the cube mesh
-    createCube();
+void SolarSystem::generateSun() {
+	this->sun = Planet();
+	this->sun.name = "The Sun";
+	this->sun.location = glm::vec3(0.0f);
+	this->sun.scale = glm::vec3(0.4f);
+	this->sun.rotationSpeed = 2.0f;
+	// Not going to subdivide 
+	std::vector<std::vector<double>> sunColors;
+	for (int i = 0; i < 80; i++) {
+		//sunColors.push_back({255, ((double) rand() % 255 + 1) }, 0); // Shift the green value for some variation
+	}
+	this->sun.vertColours = sunColors;
 }
 
 void SolarSystem::generateSystem() {
-
+	planets.clear();
+	std::vector<PlanetInfo> temp = this->planetSpots;
+	// Generate Planets
+	for (int i = 0; i < this->numberOfPlanets; i++) {
+		int spot = rand() % temp.size();
+		PlanetInfo pi = temp.at(spot);
+		temp.erase(temp.begin() + spot);
+		Planet p = Planet(pi, i);
+		p.name = std::to_string(i);
+		planets.push_back(p);
+	}
 }
 
-void SolarSystem::createCube() {
-
-	cgra::Matrix<double> vertices(36, 3);
-	cgra::Matrix<unsigned int> triangles(12, 3);
-
-	vertices.setRow(0, { -1.0f, -1.0f, -1.0f });
-	vertices.setRow(1, { -1.0f, -1.0f,  1.0f });
-	vertices.setRow(2, { -1.0f,  1.0f,  1.0f });
-	vertices.setRow(3, {  1.0f,  1.0f, -1.0f });
-	vertices.setRow(4, { -1.0f, -1.0f, -1.0f });
-	vertices.setRow(5, { -1.0f,  1.0f, -1.0f });
-	vertices.setRow(6, {  1.0f, -1.0f,  1.0f });
-	vertices.setRow(7, { -1.0f, -1.0f, -1.0f });
-	vertices.setRow(8, {  1.0f, -1.0f, -1.0f });
-	vertices.setRow(9, {  1.0f,  1.0f, -1.0f });
-	vertices.setRow(10, {  1.0f, -1.0f, -1.0f });
-	vertices.setRow(11, { -1.0f, -1.0f, -1.0f });
-	vertices.setRow(12, { -1.0f, -1.0f, -1.0f });
-	vertices.setRow(13, { -1.0f,  1.0f,  1.0f });
-	vertices.setRow(14, { -1.0f,  1.0f, -1.0f });
-	vertices.setRow(15, {  1.0f, -1.0f,  1.0f });
-	vertices.setRow(16, { -1.0f, -1.0f,  1.0f });
-	vertices.setRow(17, { -1.0f, -1.0f, -1.0f });
-	vertices.setRow(18, { -1.0f,  1.0f,  1.0f });
-	vertices.setRow(19, { -1.0f, -1.0f,  1.0f });
-	vertices.setRow(20, {  1.0f, -1.0f,  1.0f });
-	vertices.setRow(21, {  1.0f,  1.0f,  1.0f });
-	vertices.setRow(22, {  1.0f, -1.0f, -1.0f });
-	vertices.setRow(23, {  1.0f,  1.0f, -1.0f });
-	vertices.setRow(24, {  1.0f, -1.0f, -1.0f });
-	vertices.setRow(25, {  1.0f,  1.0f,  1.0f });
-	vertices.setRow(26, {  1.0f, -1.0f,  1.0f });
-	vertices.setRow(27, {  1.0f,  1.0f,  1.0f });
-	vertices.setRow(28, {  1.0f,  1.0f, -1.0f });
-	vertices.setRow(29, { -1.0f,  1.0f, -1.0f });
-	vertices.setRow(30, {  1.0f,  1.0f,  1.0f });
-	vertices.setRow(31, { -1.0f,  1.0f, -1.0f });
-	vertices.setRow(32, { -1.0f,  1.0f,  1.0f });
-	vertices.setRow(33, {  1.0f,  1.0f,  1.0f });
-	vertices.setRow(34, { -1.0f,  1.0f,  1.0f });
-	vertices.setRow(35, {  1.0f, -1.0f,  1.0f });
-
-	triangles.setRow(0, { 0, 1, 2 });
-	triangles.setRow(1, { 3, 4, 5 });
-	triangles.setRow(2, { 6, 7, 8 });
-	triangles.setRow(3, { 9, 10, 11 });
-	triangles.setRow(4, { 12, 13, 14 });
-	triangles.setRow(5, { 15, 16, 17 });
-	triangles.setRow(6, { 18, 19, 20 });
-	triangles.setRow(7, { 21, 22, 23 });
-	triangles.setRow(8, { 24, 25, 26 });
-	triangles.setRow(9, { 27, 28, 29 });
-	triangles.setRow(10, { 30, 31, 32 });
-	triangles.setRow(11, { 33, 34, 35 });
-
-    m_mesh.setData(vertices, triangles);
+void SolarSystem::generatePlanetSpots() {
+	//std::vector<std::vector<double>> cs1;
+	// First Spot: Closest to the sun
+	this->planetSpots.push_back(
+		generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
+		{
+			{ 1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}
+		}
+	));
+	// Second Spot
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(10.0f, 0.0f, 0.0f), 2.0f,
+		{
+			{ 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
+		}
+	));
+	// Third
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(15.0f, 0.0f, 0.0f), 3.0f,
+		{
+			{ 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
+		}
+	));
+	// Fourth: "Goldy locks zone"
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(20.0f, 0.0f, 0.0f), 4.0f,
+		{
+			{ 1.0f, 1.0f , 1.0f}, { 1.0f, 1.0f , 1.0f}, { 1.0f, 1.0f , 1.0f}, { 1.0f, 1.0f , 1.0f}, { 1.0f, 1.0f , 1.0f}
+		}
+	));
+	// Fifth
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(25.0f, 0.0f, 0.0f), 5.0f,
+		{
+			{ 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}
+		}
+	));
+	// Sixth
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(30.0f, 0.0f, 0.0f), 6.0f,
+		{
+			{ 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
+		}
+	));
+	// Seventh
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(35.0f, 0.0f, 0.0f), 7.0f,
+		{
+			{ 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
+		}
+	));
+	// Eighth
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(40.0f, 0.0f, 0.0f), 8.0f,
+		{
+			{ 0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}
+		}
+	));
+	// Nineth : Furthest away
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(45.0f, 0.0f, 0.0f), 9.0f,
+		{
+			{ 0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}
+		}
+	));
 }
+
+/* 
+* Generates Planet Info variable, and makes some minor variation tweaks, such as:
+* - Changing the starting pos
+* - 
+*/
+PlanetInfo SolarSystem::generatePlanetInfo(glm::vec3 pos, float rs, std::vector<std::vector<double>> cs1) {
+	PlanetInfo pi = PlanetInfo();
+	// Decide its position
+	if (rand() % 10 >= 5) {
+		pi.location = -pos;
+	} else {
+		pi.location = pos;
+	}
+	pi.colorSet1 = cs1;
+	pi.rotationSpeed = rs;
+	return pi;
+}
+
 
 void SolarSystem::drawScene() {
-    // Calculate the aspect ratio of the viewport;
-    // width / height
-    float aspectRatio = m_viewportSize.x / m_viewportSize.y;
-    // Calculate the projection matrix with a field-of-view of 45 degrees
-    glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
+	// Calculate the aspect ratio of the viewport;
+	float aspectRatio = m_viewportSize.x / m_viewportSize.y;
+	// Calculate the projection matrix with a field-of-view of 45 degrees
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
+	// Set the projection matrix
+	m_program.setProjectionMatrix(projectionMatrix);
 
-    // Set the projection matrix
-    m_program.setProjectionMatrix(projectionMatrix);  
+	// Caculate View Matrix depenfding on the mode we are in
+	glm::mat4 viewMatrix(1);
+	if (cinematicCam) {
+		float radius = 10.0f;
+		float camX = sin(glfwGetTime()) * radius;
+		float camZ = cos(glfwGetTime()) * radius;
+		viewMatrix = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
 
+	
+	if (freeCam) { // Does the user want to move the camera about
+		double currentTime = glfwGetTime();
+		deltaTime = float(currentTime - lastTime);
+		double xpos, ypos;
+		glfwGetCursorPos(m_window, &xpos, &ypos);
+		glfwSetCursorPos(m_window, m_viewportSize.x / 2, m_viewportSize.y / 2);
+		horizontalAngle += mouseSpeed * deltaTime * float(m_viewportSize.x / 2 - xpos);
+		verticalAngle += mouseSpeed * deltaTime * float(m_viewportSize.y / 2 - ypos);
+	}
+	direction = glm::vec3(cos(verticalAngle) * sin(horizontalAngle),sin(verticalAngle),	cos(verticalAngle) * cos(horizontalAngle));
+	right = glm::vec3( sin(horizontalAngle - 3.14f / 2.0f),	0, cos(horizontalAngle - 3.14f / 2.0f)	);
+
+	// Perpendicular to both direction and right camera views
+	up = glm::cross(right, direction);
+	viewMatrix = glm::lookAt(position, position + direction, up);	
+	m_program.setViewMatrix(viewMatrix);
+
+	// Draw the sun (code to rotate object = ((float)glfwGetTime() / p.rotationSpeed))
+	glm::mat4 modelTransform = glm::rotate(glm::mat4(1.0f), 1.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	// Translate the actual mesh
+	modelTransform = glm::translate(modelTransform, sun.location);
+	// Scale the mesh
+	modelTransform = glm::scale(modelTransform, glm::vec3(1.3f));
+	// Draw the mesh
+	m_program.setModelMatrix(modelTransform);
+	sun.draw();	
+	
 	// Draw each planet
 	for (Planet p : planets) {
+		// Setup colors
+		//GLfloat g_color_buffer_data[5500 * 3 * 3];
+		//for (int i = index; i < 5500*3; i++) {
+		//	if (i == index+p.vertColours.size()) {
+		//		index = i;
+		//		break;
+		//	}
+		//	g_color_buffer_data[i * 3 + 0] = p.vertColours.at(i - index)[0];
+		//	g_color_buffer_data[i * 3 + 1] = p.vertColours.at(i - index)[1];
+		//	g_color_buffer_data[i * 3 + 2] = p.vertColours.at(i - index)[2];
+		//}
+		//// Color
+		//GLuint colorbuffer;
+		//glGenBuffers(1, &colorbuffer);
+		//glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+		//glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+		//// 2nd attribute buffer : colors
+		//glEnableVertexAttribArray(2);
+		//glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+		//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
 		// Move the planet and rotate it
-		glm::mat4 modelTransform = m_rotationMatrix * glm::mat4(1.0f);
-		// Scale the mesh
-		modelTransform = glm::scale(modelTransform, p.scale);
+		modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		//modelTransform = glm::rotate(m_rotationMatrix * glm::mat4(1.0f), (float)glfwGetTime() / p.rotationSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
 		// Translate the actual mesh
 		modelTransform = glm::translate(modelTransform, p.location);
+		// Scale the mesh
+		modelTransform = glm::scale(modelTransform, p.scale);
 		// Draw the mesh
 		m_program.setModelMatrix(modelTransform);
 		p.draw();
+		if (p.hasMoon) {
+			// Move the planet and rotate it
+			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotates with planet
+			modelTransform = glm::rotate(modelTransform, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, p.location); // Rotates around planet
+			// Translate the actual mesh
+			modelTransform = glm::translate(modelTransform, glm::vec3(p.location.x, p.location.y+0.5f, p.location.z+1.25f));			
+			// Scale the mesh
+			modelTransform = glm::scale(modelTransform, glm::vec3(0.2f));
+			// Draw the mesh
+			m_program.setModelMatrix(modelTransform);
+			p.moonMesh.draw();
+		}
 	}
 }
 
@@ -127,42 +244,111 @@ void SolarSystem::doGUI() {
     ImGui::SetNextWindowSize(ImVec2(450, 450), ImGuiSetCond_FirstUseEver);
     ImGui::Begin("Shapes");
 
-	if (true) { // Used for planet Gen UI
-		static int devisions;
-		if (ImGui::InputInt("Number of divisions", &devisions)) {
-			// This block is executed if the input changes
 
+
+
+
+	if (this->screenNum == 0) { // Used for planet Gen UI
+		ImGui::Text("Solar System Information");
+
+		int pt = this->sun.originalTriangles.size();
+		for (int i = 0; i < this->planets.size(); i++) {
+			pt += this->planets.at(i).originalTriangles.size();
+		}
+		std::string totalTris = "Total Number of Tris: " + std::to_string(pt);
+		ImGui::Text(totalTris.data());
+
+		if (ImGui::InputInt("Number of Planets", &numberOfPlanets)) {
+			if (numberOfPlanets < 0) {
+				numberOfPlanets = 0;
+			}
+			if (numberOfPlanets > 9) {
+				numberOfPlanets = 9;
+			}
 		}
 
-		if (ImGui::Button("Generate Planet")) {
-			// This block is executed if the input changes
-		}
-			   	
-	} else {
-		// Example for rotation, use glm to create a a rotation
-		// matrix from this vector
-		static glm::vec3 rotation(1.0f, 1.0f, 0.0f);
-		if (ImGui::InputFloat3("Rotation", &rotation[0])) {
-			// This block is executed if the input changes
-			m_rotationMatrix = glm::rotate(glm::mat4(1.0f), 45.0f, glm::vec3(rotation[0], rotation[1], rotation[2]));
-		}		
-
-		if (ImGui::Button("Play")) {
-			// This block is executed if the input changes
-
+		int subs = 1;
+		if (ImGui::InputInt("Planet Subdivisions", &subs)) {
+			if (subs < 0) {
+				subs = 0;
+			}
+			if (subs > 3) {
+				subs = 3;
+			}
 		}
 
-		if (ImGui::Button("Pause")) {
-			// This block is executed if the input changes
-
+		if (ImGui::Checkbox("Cinematic Camera", &cinematicCam)) { // Rotates around the scene
+			freeCam = false;
 		}
 
 		if (ImGui::Button("Generate New System")) {
-			// This block is executed if the input changes
+			this->generateSystem();
 		}
 
-	}    
+		std::string rot;
+		if (playingRotation) {
+			rot = "Pause";
+		} else {
+			rot = "Play";
+		}
+		if (ImGui::Button(rot.data())) {
+			if (playingRotation) {
+				playingRotation = false;
+			} else {
+				playingRotation = true;
+			}
+		}
 
+			   	
+	} else { // Planet info Screen
+		ImGui::Text("Current Planet Information");
+		std::string planetName = "Planet Name: " + this->planets.at(this->currentPlanet).name;
+		ImGui::Text(planetName.data());
+
+		std::string planetTris = "Planet Tris: " + std::to_string(this->planets.at(this->currentPlanet).originalTriangles.size());
+		ImGui::Text(planetTris.data());
+
+		if (ImGui::Checkbox("Random Noise", &this->planets.at(this->currentPlanet).random)) { // Enable Random Noise
+			this->planets.at(this->currentPlanet).perlin = false;
+			this->planets.at(this->currentPlanet).simplex = false;
+		}
+
+		if (ImGui::Checkbox("Perlin Noise", &this->planets.at(this->currentPlanet).perlin)) { // Use Perlin Noise
+			this->planets.at(this->currentPlanet).random = false;
+			this->planets.at(this->currentPlanet).simplex = false;
+		}
+
+		if (ImGui::Checkbox("Simplex Camera", &this->planets.at(this->currentPlanet).simplex)) { // Rotates around the scene
+			this->planets.at(this->currentPlanet).perlin = false;
+			this->planets.at(this->currentPlanet).random = false;
+		}
+
+		if (ImGui::Button("Regenerate Planet")) {
+			this->planets.at(this->currentPlanet).generatePlanet();
+		}
+
+		if (ImGui::Checkbox("Cinematic Camera", &cinematicCam)) { // Rotates around the scene
+			freeCam = false;
+		}
+
+		if (ImGui::Button("Reset Camera")) { // Just incase user loses track
+			freeCam = false;
+			glm::vec3 position = glm::vec3(0, 0, 10);
+			glm::vec3 right = glm::vec3(1.0f);
+			glm::vec3 direction = glm::vec3(1.0f);
+			glm::vec3 up = glm::vec3(1.0f);			
+			float horizontalAngle = 3.14f; // horizontal angle : toward -Z			
+			float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
+		}
+
+		if (ImGui::Button("Next Planet")) {
+			this->currentPlanet = (this->currentPlanet + 1) % planets.size();
+		}
+
+		if (ImGui::Button("Previous Planet")) {
+
+		}
+	}
     ImGui::End();
 }
 
@@ -177,7 +363,6 @@ void SolarSystem::onMouseButton(int button, int action, int) {
 }
 
 void SolarSystem::onCursorPos(double xpos, double ypos) {
-
     // Make a vec2 with the current mouse position
     glm::vec2 currentMousePosition(xpos, ypos);
 
@@ -198,10 +383,40 @@ void SolarSystem::onCursorPos(double xpos, double ypos) {
 
 void SolarSystem::onKey(int key, int scancode, int action, int mods) {
     // `(void)foo` suppresses unused variable warnings
-    (void)key;
-    (void)scancode;
-    (void)action;
-    (void)mods;
+	if (GLFW_KEY_X == key && action == GLFW_PRESS) {
+		this->screenNum = (this->screenNum + 1) % 2;
+	}
+
+	// Turn freecam on/off
+	if (GLFW_KEY_F == key && action == GLFW_PRESS) {
+		cinematicCam = false;
+		if (this->freeCam) {
+			this->freeCam = false;
+		}
+		else {
+			this->freeCam = true;
+		}
+	}
+
+    // Free cam controls
+	if (freeCam) {
+		if (GLFW_KEY_W == key) {
+			position += direction * deltaTime * movementSpeed;
+		}
+
+		if (GLFW_KEY_A == key) {
+			position -= right * deltaTime * movementSpeed;
+		}
+
+		if (GLFW_KEY_S == key) {
+			position -= direction * deltaTime * movementSpeed;
+		}
+
+		if (GLFW_KEY_D == key) {
+			position += right * deltaTime * movementSpeed;
+		}
+	}
+
 }
 
 void SolarSystem::onScroll(double xoffset, double yoffset) {

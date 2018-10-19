@@ -111,6 +111,8 @@ int main(int argc, const char** argv) {
     // front-facing
     glFrontFace(GL_CCW);
 
+	glDisable(GL_BLEND);
+
     {
         // Create the application object
 		SolarSystem app(window);
@@ -140,6 +142,7 @@ int main(int argc, const char** argv) {
                 // Update the app's window size
                 app.setWindowSize(width, height);
 
+			
                 // Clear the color and depth buffers.
                 glClearColor(0, 0, 0.1, 1); // Clears the color to a dark blue
                 glClearDepth(1); // Clears the depth buffer to it's maximum value

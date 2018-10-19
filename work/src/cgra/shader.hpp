@@ -22,6 +22,9 @@ namespace cgra {
         // Tells OpenGL to use this shader program
         void use();
 
+		// Sets colour
+		void setColour(const glm::vec3 &vec);
+
         // Sets the model matrix for the program.
         // This controls the position, orientation and
         // scale of the model.

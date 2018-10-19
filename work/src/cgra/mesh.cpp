@@ -84,6 +84,7 @@ namespace cgra {
         // Check to see if we have all the GPU objects we need to draw the
         // mesh.
         if (m_vbo == 0 || m_ibo == 0 || m_vao == 0) {
+
             deleteMesh(); // Make sure all the existing things are deleted
 
             // Create the Vertex Array Object, we do this first to make
@@ -126,8 +127,9 @@ namespace cgra {
             // Attribute 1 is the position.
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                                   reinterpret_cast<void *>(offsetof(Vertex, m_normal)));
-            glEnableVertexAttribArray(1);
+            glEnableVertexAttribArray(1);	
         }
+		// Setup color
 
         // Set the appropriate polygon mode for the drawing mode
         if (m_drawWireframe) {
@@ -139,11 +141,31 @@ namespace cgra {
         // Bind the VAO
         glBindVertexArray(m_vao);
 
-        // Draw the mesh.
-        // GL_TRIANGLES means that index buffer contains a list of triangles.
-        // We're using all of the indices, starting at the beginning.
-        // GL_UNSIGNED_INT tells OpenGL that the index buffer is storing unsigned
-        // ints.
+  //      // Draw the mesh.
+  //      // GL_TRIANGLES means that index buffer contains a list of triangles.
+  //      // We're using all of the indices, starting at the beginning.
+  //      // GL_UNSIGNED_INT tells OpenGL that the index buffer is storing unsigned
+  //      // ints.
+		//static GLfloat g_color_buffer_data[5500 * 3 * 3];
+		//for (int i = 0; i < 5500*3; ++i) {
+		//	if (i == colors.size()) {
+		//		break;
+		//	}
+		//	g_color_buffer_data[i * 3 + 0] = colors.at(i)[0];
+		//	g_color_buffer_data[i * 3 + 1] = colors.at(i)[1];
+		//	g_color_buffer_data[i * 3 + 2] = colors.at(i)[2];
+		//}
+
+		//// Color
+		//GLuint colorbuffer;
+		//glGenBuffers(1, &colorbuffer);
+		//glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+		//glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+		//// 2nd attribute buffer : colors
+		//glEnableVertexAttribArray(2);
+		//glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+		//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
         glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
     }
 
