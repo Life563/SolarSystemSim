@@ -1,5 +1,0 @@
-# CMake generation dependency list for this directory.
-C:/Users/Callum/OneDrive/Uni/Year 3/Tri 2/CGRA 350/Assignments/Final Project/SolarSystemSim/work/vendor/glew/CMakeLists.txt
-C:/Program Files/CMake/share/cmake-3.10/Modules/FindOpenGL.cmake
-C:/Program Files/CMake/share/cmake-3.10/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.10/Modules/FindPackageMessage.cmake
