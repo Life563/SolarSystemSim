@@ -36,6 +36,9 @@ public:
 	std::vector<glm::vec3> originalVerticies;
 	std::vector<std::vector<unsigned int>> originalTriangles;
 
+	// Sites used for voronoi
+	std::vector<glm::vec3> sites;
+
 	std::map<int, int> midPoints;
 	std::vector<std::vector<double>> vertColours;
 
@@ -60,6 +63,7 @@ public:
 	void generateMoon();
 	void generateRings();
 	void populatePlanet();
+	void voronoiCells();
 
 	// Noise Methods
 	float generateRandomNoise(int i);

@@ -241,14 +241,9 @@ void SolarSystem::drawScene() {
 }
 
 void SolarSystem::doGUI() {
-    ImGui::SetNextWindowSize(ImVec2(450, 450), ImGuiSetCond_FirstUseEver);
-    ImGui::Begin("Shapes");
-
-
-
-
-
-	if (this->screenNum == 0) { // Used for planet Gen UI
+	if (this->screenNum == 0) {
+		ImGui::SetNextWindowSize(ImVec2(450, 150), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Solar System Settings"); // Used for planet Gen UI
 		ImGui::Text("Solar System Information");
 
 		int pt = this->sun.originalTriangles.size();
@@ -266,14 +261,13 @@ void SolarSystem::doGUI() {
 				numberOfPlanets = 9;
 			}
 		}
-
-		int subs = 1;
-		if (ImGui::InputInt("Planet Subdivisions", &subs)) {
-			if (subs < 0) {
-				subs = 0;
+		
+		if (ImGui::InputInt("Planet Subdivisions", &this->subs)) {
+			if (this->subs < 0) {
+				this->subs = 0;
 			}
-			if (subs > 3) {
-				subs = 3;
+			if (this->subs > 3) {
+				this->subs = 3;
 			}
 		}
 
@@ -288,19 +282,23 @@ void SolarSystem::doGUI() {
 		std::string rot;
 		if (playingRotation) {
 			rot = "Pause";
-		} else {
+		}
+		else {
 			rot = "Play";
 		}
 		if (ImGui::Button(rot.data())) {
 			if (playingRotation) {
 				playingRotation = false;
-			} else {
+			}
+			else {
 				playingRotation = true;
 			}
-		}
-
-			   	
-	} else { // Planet info Screen
+		}			
+		ImGui::End();
+	}
+	else {
+		ImGui::SetNextWindowSize(ImVec2(450, 250), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Planet Settings"); // Used for planet Gen UI
 		ImGui::Text("Current Planet Information");
 		std::string planetName = "Planet Name: " + this->planets.at(this->currentPlanet).name;
 		ImGui::Text(planetName.data());
@@ -336,7 +334,7 @@ void SolarSystem::doGUI() {
 			glm::vec3 position = glm::vec3(0, 0, 10);
 			glm::vec3 right = glm::vec3(1.0f);
 			glm::vec3 direction = glm::vec3(1.0f);
-			glm::vec3 up = glm::vec3(1.0f);			
+			glm::vec3 up = glm::vec3(1.0f);
 			float horizontalAngle = 3.14f; // horizontal angle : toward -Z			
 			float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 		}
@@ -348,8 +346,8 @@ void SolarSystem::doGUI() {
 		if (ImGui::Button("Previous Planet")) {
 
 		}
+		ImGui::End();
 	}
-    ImGui::End();
 }
 
 

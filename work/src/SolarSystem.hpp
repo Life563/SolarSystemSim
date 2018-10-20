@@ -62,6 +62,7 @@ public:
 	int screenNum = 0; // 0 = System Screen, 1 = All planet Info, 2 == Single Planet Info
 	int numberOfTris = 0;
 	int currentPlanet = 0;
+	int subs = 1;
 
 	// 
 	bool playingRotation = false;
