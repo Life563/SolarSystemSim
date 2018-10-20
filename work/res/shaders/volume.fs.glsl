@@ -1,11 +1,32 @@
 #version 330 core
 
 #define M_PI 3.1415926535897932384626433832795
+const int MAX_POINT_LIGHTS = 2;
 
 out vec4 color;
 
 in vec3 fragPosition;
 in vec3 fragNormal;
+
+struct BaseLight {
+    vec3 color;
+    float intensity;
+}
+
+struct DirectionalLight {
+    BaseLight base;
+    vec3 direction;
+}
+
+struct PointLight {
+    BaseLight base;
+    vec3 Position;
+}
+
+// Light Related Uniforms
+uniform int numPointLights;
+uniform DirectionalLight directionalLight;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
 
 uniform float beta; // Thickness of fog
 uniform vec3 viewerPos; // Position of the viewer
