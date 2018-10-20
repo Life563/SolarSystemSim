@@ -53,9 +53,7 @@ Planet::Planet(PlanetInfo pi, int id){
 void Planet::generateIcosahedron() {	
 	// Setup Verticies
 	float t = (1.0f + glm::sqrt(5.0f)) / 2.0f;
-	//vs = { { -1.0f, t, 0.0f }, {1.0f, t, 0.0f}, {-1.0f, -t, 0.0f}, {1.0f, -t, 0.0f}, {0.0f, -1.0f, t}, {0.0f, 1.0f, t}, { 0.0f, -1.0f, -t }, { 0.0f, 1.0f, -t }, {t, 0.0f, -1.0f}, {t, 0.0f, 1.0f}, {-t, 0.0f, -1.0f}, {-t, 0.0f, 1.0f} };
 	originalVerticies = { glm::normalize(glm::vec3(-1.0f, t, 0.0f)), glm::normalize(glm::vec3(1.0f, t, 0.0f)), glm::normalize(glm::vec3(-1.0f, -t, 0.0f)), glm::normalize(glm::vec3(1.0f, -t, 0.0f)), glm::normalize(glm::vec3(0.0f, -1.0f, t)), glm::normalize(glm::vec3(0.0f, 1.0f, t)), glm::normalize(glm::vec3(0.0f, -1.0f, -t)), glm::normalize(glm::vec3(0.0f, 1.0f, -t)), glm::normalize(glm::vec3(t, 0.0f, -1.0f)), glm::normalize(glm::vec3(t, 0.0f, 1.0f)), glm::normalize(glm::vec3(-t, 0.0f, -1.0f)), glm::normalize(glm::vec3(-t, 0.0f, 1.0f)) };
-	//ts = { { 0, 11, 5 }, { 0, 5, 1 }, {0, 1, 7}, {0, 7, 10}, {0, 10, 11}, {1,5,9},{5, 11,4}, {11, 10,2}, {10, 7,6}, {7, 1,8}, {3, 9,4}, {3,4,2}, {3,2,6}, {3,6,8}, {3,8,9}, {4,9,5}, {2,4,11}, {6,2,10}, {8,6,7}, {9,8,1} };
 	originalTriangles = { { 0, 11, 5 }, { 0, 5, 1 }, {0, 1, 7}, {0, 7, 10}, {0, 10, 11}, {1,5,9},{5, 11,4}, {11, 10,2}, {10, 7,6}, {7, 1,8}, {3, 9,4}, {3,4,2}, {3,2,6}, {3,6,8}, {3,8,9}, {4,9,5}, {2,4,11}, {6,2,10}, {8,6,7}, {9,8,1} };
 }
 
@@ -75,7 +73,7 @@ void Planet::generatePlanet() {
 	}
 	point = double(rand()) / (double(RAND_MAX) + 1.0);
 	if (point < 0.5f) { // Generate a ring around planet
-
+		//this->generateRings();
 	}
 	// Set mesh
 	cgra::Matrix<double> vertices(originalVerticies.size(), 3);
@@ -195,41 +193,41 @@ void Planet::generateTerrain() {
 		//originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generatePerlinNoise(i) / 2);
 		//originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateSimplexNoise(i) / 2);
 	}
-	// Generate a new set of noise for biome
+	//// Generate a new set of noise for biome
+	//for (int i = 0; i < originalVerticies.size(); i++) {
+	//	float point = generateRandomNoise(i);
+	//	//float point = generatePerlinNoise(i);
+	//	//float point = generateSimplexNoise(i);
+	//	//std::cout << point << std::endl;
+	//	if (point > 0.0f && point < 0.5f) { // Grass lands
+	//		biomeMap.push_back(0);
+	//		std::cout << "Grasslands" << std::endl;
+	//	} else if (point < 0.0f && point > -0.5f) { // Desert
+	//		biomeMap.push_back(1);
+	//		std::cout << "Desert" << std::endl;
+	//	} else if (point < -0.5f){  // Snow
+	//		biomeMap.push_back(2);
+	//		std::cout << "Snow" << std::endl;
+	//	}else { // Jungle
+	//		biomeMap.push_back(3); 
+	//		std::cout << "Jungle" << std::endl;
+	//	}
+	//}
+	// Generate Colors based off height & biome
 	for (int i = 0; i < originalVerticies.size(); i++) {
-		float point = generateRandomNoise(i);
-		//float point = generatePerlinNoise(i);
-		//float point = generateSimplexNoise(i);
-		//std::cout << point << std::endl;
-		if (point > 0.0f && point < 0.5f) { // Grass lands
-			biomeMap.push_back(0);
-			std::cout << "Grasslands" << std::endl;
-		} else if (point < 0.0f && point > -0.5f) { // Desert
-			biomeMap.push_back(1);
-			std::cout << "Desert" << std::endl;
-		} else if (point < -0.5f){  // Snow
-			biomeMap.push_back(2);
-			std::cout << "Snow" << std::endl;
-		}else { // Jungle
-			biomeMap.push_back(3); 
-			std::cout << "Jungle" << std::endl;
-		}
-	}
-	// Generate Colors based off biome
-	for (int i = 0; i < originalVerticies.size(); i++) {
-		// Get verticies used for triangle
-		glm::vec3 verts = originalVerticies.at(i);
-		float r = double(rand()) / (double(RAND_MAX) + 1.0);
+		// Get distance between center of planet and current vertex
+		float dis = glm::distance(originalVerticies.at(i), glm::vec3(0, 0, 0));
+		std::cout << dis << std::endl;
 		bool land = false, sea = false, mountain = false;
 		// Determin Color
-		if (r < 0.3f) {
-			vertColours.push_back({ 0 / 255, 255 / 255, 0 / 255 });
-		}
-		else if (r < 0.6f) {
+		if (dis < 1.0f) { // Sea
 			vertColours.push_back({ 0 / 255, 0 / 255, 255 / 255 });
 		}
-		else {
-			vertColours.push_back({ 255 / 255, 0 / 255, 0 / 255 });
+		else if (dis < 1.1f) { // Flatland
+			vertColours.push_back({ 0 / 255, 255 / 255, 0 / 255 });
+		}
+		else { // Hill
+			vertColours.push_back({ 125 / 255, 55 / 255, 31 / 255 });
 		}
 	}
 	// Use Vor Cells
@@ -281,8 +279,48 @@ void Planet::generateMoon() {
 }
 
 void Planet::generateRings() {
-
+	this->hasRing = true;
+	ringMesh = loadObj("work/res/Ring.obj");
 }
+
+/*
+*	This is a modified version of the obj loader that I built in CGRA 251
+*/
+cgra::Mesh Planet::loadObj(const char *filename) {
+	cgra::Mesh m_mesh;
+	cgra::Wavefront obj;
+	// Wrap the loading in a try..catch block
+	try {
+		obj = cgra::Wavefront::load(filename);
+	}
+	catch (std::exception e) {
+		std::cerr << "Couldn't load file: '" << e.what() << "'" << std::endl;
+		return m_mesh;
+	}
+	// The mesh data
+	 // Replace these with appropriate values
+	unsigned int numVertices = obj.m_positions.size();
+	unsigned int numTriangles = obj.m_faces.size();
+
+	cgra::Matrix<double> vertices(numVertices, 3);
+	cgra::Matrix<unsigned int> triangles(numTriangles, 3);
+	std::vector<glm::vec3> vC;
+	for (size_t i = 0; i < obj.m_positions.size(); i++) {
+		// Add each position to the vertices matrix
+		vertices.setRow(i, { obj.m_positions[i][0],  obj.m_positions[i][1],  obj.m_positions[i][2] });
+		vC.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
+	}
+
+	for (unsigned int i = 0; i < obj.m_faces.size(); i++) {
+		// Add each triangle's indices to the triangles matrix
+		// Remember that Wavefront files use indices that start at 1
+		std::vector<cgra::Wavefront::Vertex> theVertices = obj.m_faces[i].m_vertices;
+		triangles.setRow(i, { theVertices[0].m_p - 1, theVertices[1].m_p - 1, theVertices[2].m_p - 1 });
+	}
+	//m_mesh.setData(vertices, triangles, vC);
+	return m_mesh;
+}
+
 
 
 void Planet::draw() {

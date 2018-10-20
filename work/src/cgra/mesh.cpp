@@ -141,31 +141,6 @@ namespace cgra {
         // Bind the VAO
         glBindVertexArray(m_vao);
 
-  //      // Draw the mesh.
-  //      // GL_TRIANGLES means that index buffer contains a list of triangles.
-  //      // We're using all of the indices, starting at the beginning.
-  //      // GL_UNSIGNED_INT tells OpenGL that the index buffer is storing unsigned
-  //      // ints.
-		//static GLfloat g_color_buffer_data[5500 * 3 * 3];
-		//for (int i = 0; i < 5500*3; ++i) {
-		//	if (i == colors.size()) {
-		//		break;
-		//	}
-		//	g_color_buffer_data[i * 3 + 0] = colors.at(i)[0];
-		//	g_color_buffer_data[i * 3 + 1] = colors.at(i)[1];
-		//	g_color_buffer_data[i * 3 + 2] = colors.at(i)[2];
-		//}
-
-		//// Color
-		//GLuint colorbuffer;
-		//glGenBuffers(1, &colorbuffer);
-		//glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-		//glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-		//// 2nd attribute buffer : colors
-		//glEnableVertexAttribArray(2);
-		//glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-		//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
         glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
     }
 

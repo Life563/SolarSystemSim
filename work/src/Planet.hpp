@@ -31,6 +31,7 @@ public:
 
 	cgra::Mesh mesh;
 	cgra::Mesh moonMesh;
+	cgra::Mesh ringMesh;
 
 	// Original
 	std::vector<glm::vec3> originalVerticies;
@@ -51,10 +52,12 @@ public:
 	std::vector<float> biomeMap;
 	bool random = false, perlin = false, simplex = true;
 	bool hasMoon = false;
+	bool hasRing = false;
 
 	double timeTaken;
 
 	// Methods
+	cgra::Mesh loadObj(const char *filename);
 	void generatePlanet();
 	void generateIcosahedron();
 	void subdivideIcosahedron();

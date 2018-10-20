@@ -336,29 +336,7 @@ void SolarSystem::drawScene() {
 	sun.draw();	
 	
 	// Draw each planet
-	for (Planet p : planets) {
-		// Setup colors
-		//GLfloat g_color_buffer_data[5500 * 3 * 3];
-		//for (int i = index; i < 5500*3; i++) {
-		//	if (i == index+p.vertColours.size()) {
-		//		index = i;
-		//		break;
-		//	}
-		//	g_color_buffer_data[i * 3 + 0] = p.vertColours.at(i - index)[0];
-		//	g_color_buffer_data[i * 3 + 1] = p.vertColours.at(i - index)[1];
-		//	g_color_buffer_data[i * 3 + 2] = p.vertColours.at(i - index)[2];
-		//}
-		//// Color
-		//GLuint colorbuffer;
-		//glGenBuffers(1, &colorbuffer);
-		//glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-		//glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-		//// 2nd attribute buffer : colors
-		//glEnableVertexAttribArray(2);
-		//glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-		//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	
+	for (Planet p : planets) {	
 		// Move the planet and rotate it
 		modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	
