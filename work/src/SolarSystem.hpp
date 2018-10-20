@@ -7,6 +7,9 @@
 #include "glm/glm.hpp"
 
 #include "Planet.hpp"
+#include "LSystem.hpp"
+
+using namespace glm;
 
 class SolarSystem {
 public:
@@ -17,12 +20,15 @@ public:
     cgra::Program m_program;
     // The mesh data
     cgra::Mesh m_mesh;
+	cgra::Mesh m_cylinder;
 
     // The current size of the viewport
     glm::vec2 m_viewportSize;
     // The current mouse position
     glm::vec2 m_mousePosition;
-
+	
+	LSystem ls;
+	
     // The translation of the mesh as a vec3
     glm::vec3 m_translation = glm::vec3(0);
     // The scale of the mesh
@@ -89,6 +95,8 @@ public:
 	void generateSun();
 	void generateSystem();
 	void generatePlanetSpots();
+	void generateCylinder();
+
 	PlanetInfo generatePlanetInfo(glm::vec3 pos, float rs, std::vector<std::vector<double>> cs1);
 
     void drawScene();
@@ -101,4 +109,5 @@ public:
     void onCursorPos(double xpos, double ypos);
 
     void onScroll(double xoffset, double yoffset);
+	void generateTree(mat4 transMat, vec3 startPos, float length, float trunkSize, int & index);
 };

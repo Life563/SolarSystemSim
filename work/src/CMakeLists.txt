@@ -11,7 +11,10 @@ SET(sources
   
   lightScene.hpp
   lightScene.cpp
-  
+
+  LSystem.hpp
+  LSystem.cpp
+
   opengl.hpp
   main.cpp
 )

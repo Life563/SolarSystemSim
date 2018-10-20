@@ -33,12 +33,20 @@ void SolarSystem::init() {
 	glm::vec3 rotation(1.0f, 1.0f, 0.0f);
 	m_rotationMatrix = glm::mat4(1.0f);// glm::rotate(glm::mat4(1.0f), 45.0f, glm::vec3(rotation[0], rotation[1], rotation[2]));
 	
+	//TREESTUFF
+	generateCylinder();
+	ls.setRules();
+	for (int i = 0; i < 5; i++) {
+		ls.generate();
+	}
+
 	// Create the sun
 	generateSun();
 	// Setup Basic Planet Info
 	generatePlanetSpots();
 	generateSystem();
 	//planets.push_back(Planet());
+
 }
 
 void SolarSystem::generateSun() {
@@ -128,6 +136,139 @@ void SolarSystem::generatePlanetSpots() {
 	));
 }
 
+void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, float trunkSize, int &index) {
+	float  angle = ls.angle;
+	float tsize = trunkSize;
+
+	for (; index < ls.currentTree.length(); index++) {
+		char c = ls.currentTree.at(index);
+		if (c == 'F') {
+			mat4 td = glm::translate(mat4(1), startPos);
+			glm::vec3 fdir = glm::vec3(0, 1, 0);
+			float angle = glm::acos(glm::dot(fdir,startPos));
+			glm::vec3 newdir = glm::cross(fdir,normalize(startPos));
+			//td = glm::rotate(td, angle, newdir);
+
+
+			//mat4 td = mat4(1);
+			glm::vec3 midPoint(0, length, 0);
+			mat4 cyMat = glm::translate(transMat, midPoint);
+			cyMat = td * glm::scale(cyMat, vec3(tsize*0.2, 0.15, tsize*0.2));// translate tree down so we cna see all of it
+			cyMat = glm::rotate(cyMat, angle, newdir);
+
+			m_program.setModelMatrix(cyMat);
+			m_program.setColour(vec3(1, 0.8, 0.6));
+			m_cylinder.draw();
+
+			transMat = translate(transMat, vec3(0, length, 0));
+		}
+		else if (c == 'f') {
+			transMat = translate(transMat, vec3(0, length, 0));
+		}
+		else if (c == '[') {
+			index++;
+			generateTree(transMat, startPos, length, tsize, index);
+		}
+		else if (c == ']') {
+			return;
+		}
+		else if (c == '+') {
+			transMat = rotate(transMat, angle, vec3(0, 0, 1));
+		}
+		else if (c == '-') {
+			transMat = rotate(transMat, -angle, vec3(0, 0, 1));
+		}
+		else if (c == '&') {
+			transMat = rotate(transMat, angle, vec3(1, 0, 0));
+		}
+		else if (c == '^') {
+			transMat = rotate(transMat, -angle, vec3(1, 0, 0));
+		}
+		else if (c == '\\' || c == '<') {
+			transMat = rotate(transMat, angle, vec3(0, 1, 0));
+		}
+		else if (c == '/' || c == '>') {
+			transMat = rotate(transMat, -angle, vec3(0, 1, 0));
+		}
+		else if (c == '|') {
+			transMat = rotate(transMat, radians(180.f), vec3(0, 0, 1));
+		}
+		else if (c == '!') {
+			//transMat = glm::scale(transMat, vec3(0.8));
+
+			//TODO trunksize
+			tsize -= (0.15* trunkSize);
+		}
+		else if (c == '\'') {
+			//TODO increment color index
+		}
+		else if (c == 'T') {
+			glm::vec3 scale(1);
+			mat4 scaleMat = glm::scale(transMat, scale);
+			scaleMat = translate(scaleMat, vec3(0, 0.5, 0));
+			mat4 td = glm::translate(mat4(1), vec3(0, -40, 0)) *scaleMat;
+
+			m_program.setModelMatrix(td);
+			m_program.setColour(vec3(0, 1, 0));
+			//m_leaf.draw();
+		}
+	}
+}
+
+void SolarSystem::generateCylinder() {
+	int divisions = 10;
+
+	std::vector<unsigned int> indices;
+	cgra::Matrix<double> vertices((divisions + 1) * (divisions + 1), 3);
+
+	int count = 0;
+
+	for (int i = 0; i <= divisions; ++i) {
+		float V = i / (float)divisions;
+		float azi = V * glm::pi<float>();
+
+		for (int j = 0; j <= divisions; ++j) {
+
+			float U = j / (float)divisions;
+			float ele = U * (glm::pi <float>() * 2);
+
+			float x = cos(ele) * sin(azi);
+			float y = cos(azi);
+			if (i >= (divisions / 2) + 1) {
+				y = cos(azi) - 1;
+			}
+			float z = sin(ele) * sin(azi);
+
+			vertices.setRow(count++, { x,y,z });
+		}
+	}
+
+	for (int i = 0; i < ((divisions + 1) * (divisions + 1) * 2); i++) {
+
+		if (i + divisions + 1 >= vertices.numRows()) {
+			continue;
+		}
+
+		//Bot corner
+		indices.push_back(i);
+		indices.push_back(i + divisions + 1);
+		indices.push_back(i + divisions);
+
+		//Top corner
+		indices.push_back(i + divisions + 1);
+		indices.push_back(i);
+		indices.push_back(i + 1);
+	}
+
+	cgra::Matrix<unsigned int> triangles(indices.size() / 3, 3);
+	count = 0;
+	for (int i = 0; i < indices.size(); i += 3) {
+		triangles.setRow(count++, { indices.at(i), indices.at(i + 1), indices.at(i + 2) });
+	}
+
+	m_cylinder.setData(vertices, triangles);
+}
+
 /* 
 * Generates Planet Info variable, and makes some minor variation tweaks, such as:
 * - Changing the starting pos
@@ -215,11 +356,15 @@ void SolarSystem::drawScene() {
 		//glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 		//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
+	
 		// Move the planet and rotate it
 		modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	
 		//modelTransform = glm::rotate(m_rotationMatrix * glm::mat4(1.0f), (float)glfwGetTime() / p.rotationSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
 		// Translate the actual mesh
 		modelTransform = glm::translate(modelTransform, p.location);
+		int h = 0;
+		generateTree(modelTransform, p.originalVerticies.at(8), 0.3, 0.4, h);
 		// Scale the mesh
 		modelTransform = glm::scale(modelTransform, p.scale);
 		// Draw the mesh
