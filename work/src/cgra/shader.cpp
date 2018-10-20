@@ -111,7 +111,7 @@ namespace cgra {
 		use();
 
 		// Get the location of the "modelMat" uniform variable
-		GLint colourLoc = glGetUniformLocation(m_program, "inputedColor");
+		GLint colourLoc = glGetUniformLocation(m_program, "ColorVec");
 		// Set the value of "colourLoc"
 		glUniform3fv(colourLoc, 1, (float*)&vec);
 	}
@@ -205,7 +205,17 @@ namespace cgra {
 			throw std::runtime_error("Error: could not open file for reading");
 		}
 
+
 		std::string row;
+		
+		std::getline(file, row); // X res
+		std::getline(file, row); // Y res
+		std::getline(file, row); // x min
+		std::getline(file, row); // x max
+		std::getline(file, row); // y min
+		std::getline(file, row); // y max
+
+
 		size_t lineNumber = 0;
 		float integralResult;
 		std::string stringResult;

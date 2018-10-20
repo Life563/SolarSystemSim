@@ -144,7 +144,7 @@ int main(int argc, const char** argv) {
 
 			
                 // Clear the color and depth buffers.
-                glClearColor(0, 0, 0.1, 1); // Clears the color to a dark blue
+                glClearColor(0, 0, 0.0, 1); // Clears the color to a dark blue
                 glClearDepth(1); // Clears the depth buffer to it's maximum value
                 // Actually tell OpenGL to clear the buffers
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

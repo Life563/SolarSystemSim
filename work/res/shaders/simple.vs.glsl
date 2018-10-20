@@ -9,6 +9,7 @@ in vec3 vertNormal;
 
 out vec3 fragPosition;
 out vec3 fragNormal;
+out mat4 view;
 
 void main() {
     gl_Position = projectionMat * viewMat * modelMat * vec4(vertPosition, 1.0);
@@ -18,4 +19,6 @@ void main() {
 
     mat3 normalMat = transpose(inverse(mat3(viewMat * modelMat)));
     fragNormal = normalMat * vertNormal;
+
+    view = viewMat;
 }

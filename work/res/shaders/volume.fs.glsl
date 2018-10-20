@@ -7,6 +7,8 @@ out vec4 color;
 
 in vec3 fragPosition;
 in vec3 fragNormal;
+in mat4 model;
+in mat4 view;
 
 struct BaseLight {
     vec3 color;
@@ -33,10 +35,14 @@ uniform vec3 viewerPos; // Position of the viewer
 uniform sampler2D airlightLookup;
 uniform vec3 fragColor;
 uniform vec3 ColorVec;
+uniform bool airlightOnly;
+
+
 
 const float lightIntensity = 1;
-const vec3 lightPos = vec3(5, -5, 10);
+// const vec3 lightPos = vec3(5, -5, 10);
 const vec3 lightColor = vec3(1, 0, 0);
+
 
 const vec3 objectDiffuseColor = vec3(0.4, 0.4, 1.0);
 const vec3 objectSpecColor    = vec3(0.2, 0.1, 0.1);
@@ -62,11 +68,13 @@ void main() {
     // Calculate lighting from point sources
     for(int i = 0; i < numPointLights; i++){
         PointLight p = pointLights[i];
+        vec4 pos = view * vec4(p.position, 1.0f);
+        vec3 lightPos = vec3(pos) / pos.w;
         // Set up initial variables
         // Helper variables
-        vec3 viewerToLight = p.position - viewerPos; // Vector from the viewer to the light source
+        vec3 viewerToLight = lightPos - viewerPos; // Vector from the viewer to the light source
         
-        vec3 lightToSurface = fragPosition - p.position; // Vector from the light source to the surface point
+        vec3 lightToSurface = fragPosition - lightPos; // Vector from the light source to the surface point
         // Distance between light source and viewer
         float dsv = length(viewerToLight);
 
@@ -76,8 +84,11 @@ void main() {
 
         float tsp = beta * dsp;
 
+        vec3 S = normalize(lightPos - viewerPos);
+        vec3 V = normalize(fragPosition - viewerPos);
+
         // Angle between light source and viewing ray
-        float gamma = acos(dot(viewerToLight, viewerToSurface) / (dsv * dvp));
+        float gamma = acos(dot(S, V));
         
         float tvp = beta * dvp; // Optical thickness between light source and surface point
 
@@ -91,12 +102,13 @@ void main() {
         float A1 = tsv * sin(gamma);
         float v = (M_PI / 4) + (0.5 * atan((tvp - tsv * cos(gamma)) / (tsv * sin(gamma)))); 
 
-        float f1 = texture(airlightLookup, vec2(A1, v)).r;
-        float f2 = texture(airlightLookup, vec2(A1, gamma/2)).r;
+        float f1 = texture(airlightLookup, vec2(A1 + 1.0/maxU, v + 1.0/maxV)).r;
+        float f2 = texture(airlightLookup, vec2(A1  + 1.0/maxU, gamma/2 + 1.0/maxV)).r;
 
-        vec3 La = A0;// * (f1 - f2); // Airlight Integral
+        vec3 La = A0;// * (f1 - f2);
+        
 
-        vec3 totalAirlight = Ld + La;
+        vec3 totalAirlight = Ld + La * 10;
 
         /******************* Diffuse ***********************/
 
@@ -123,25 +135,27 @@ void main() {
         cumulativeColor = cumulativeColor + totalColor;
     }
 
-    // Calculate lighting from directional source
-    vec3 dLightDir = normalize(-directionalLight.direction);
-    float dLambertian = max(dot(dLightDir, surfaceNormal), 0.0);
-    float dSpecular = 0.0;
+    vec3 dFragColor = vec3(0, 0, 0);
+    if(!airlightOnly) {
+        // Calculate lighting from directional source
+        vec3 dLightDir = normalize(-directionalLight.direction);
+        float dLambertian = max(dot(dLightDir, surfaceNormal), 0.0);
+        float dSpecular = 0.0;
 
-    if(dLambertian > 0.0) {
-        vec3 viewDir = normalize(-fragPosition);
+        if(dLambertian > 0.0) {
+            vec3 viewDir = normalize(-fragPosition);
 
-        vec3 halfDir = normalize(dLightDir + viewDir);
-        float specAngle = max(dot(halfDir, surfaceNormal), 0.0);
+            vec3 halfDir = normalize(dLightDir + viewDir);
+            float specAngle = max(dot(halfDir, surfaceNormal), 0.0);
 
-        dSpecular = pow(specAngle, shininess);
+            dSpecular = pow(specAngle, shininess);
+        }
+
+        dFragColor = ambientColor +
+            dLambertian * ColorVec +
+            dSpecular * specColor;
     }
-
-    vec3 dFragColor = ambientColor +
-        dLambertian * diffuseColor +
-        dSpecular * specColor;
-
-    // /cumulativeColor = cumulativeColor + dFragColor;
+    cumulativeColor = cumulativeColor + dFragColor;
 
     color = vec4(cumulativeColor, 1.0f);
 }

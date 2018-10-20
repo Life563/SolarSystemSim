@@ -8,6 +8,7 @@
 
 #include "Planet.hpp"
 #include "LSystem.hpp"
+#include "lightScene.hpp"
 
 using namespace glm;
 
@@ -16,11 +17,14 @@ public:
     // The window object managed by GLFW
     GLFWwindow *m_window;
 
+	LightScene m_lightScene;
+
     // The shader program used for drawing
     cgra::Program m_program;
     // The mesh data
     cgra::Mesh m_mesh;
 	cgra::Mesh m_cylinder;
+	cgra::Mesh m_cube;
 
     // The current size of the viewport
     glm::vec2 m_viewportSize;
@@ -92,12 +96,18 @@ public:
 
     void init();
 
+	void createCube();
+	void drawBoundingBox();
+
 	void generateSun();
 	void generateSystem();
 	void generatePlanetSpots();
 	void generateCylinder();
 
 	mat4 createTreeTransMatrix(vec3 startPoint);
+
+	void generateLights();
+
 
 	PlanetInfo generatePlanetInfo(glm::vec3 pos, float rs, std::vector<std::vector<double>> cs1);
 

@@ -10,16 +10,40 @@
 struct BaseLight {
 	glm::vec3 color;
 	float intensity;
+
+	BaseLight() {
+		color = glm::vec3(1, 1, 1);
+		intensity = 1;
+	}
+
+	BaseLight(glm::vec3 col, float inten) {
+		color = col;
+		intensity = inten;
+	}
 };
 
 // Point light struct derived from BaseLight struct.
 struct PointLight : public BaseLight {
 	glm::vec3 position;
+
+	PointLight(glm::vec3 col, float inten, glm::vec3 pos) {
+		color = col;
+		intensity = inten;
+		position = pos;
+	}
 };
 
 // Struct representing directional light
 struct DirectionalLight : public BaseLight {
 	glm::vec3 direction;
+
+	DirectionalLight() {
+		direction = glm::vec3(1, 0, 0);
+	}
+
+	DirectionalLight(glm::vec3 dir) {
+		direction = dir;
+	}
 };
 
 // A Class that represents the lighting in the scene

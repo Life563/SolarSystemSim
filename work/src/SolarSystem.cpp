@@ -12,6 +12,7 @@
 #include "SolarSystem.hpp"
 #include "Planet.hpp"
 
+
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -23,12 +24,20 @@ void SolarSystem::init() {
     // have to run the program from a specific folder.
     m_program = cgra::Program::load_program(
         CGRA_SRCDIR "/res/shaders/simple.vs.glsl",
-        CGRA_SRCDIR "/res/shaders/simple.fs.glsl");
+        CGRA_SRCDIR "/res/shaders/volume.fs.glsl");
+
+
+	m_lightScene = LightScene(m_program);
+	m_lightScene.init();
+
+	generateLights();
+	
 
     // Create a view matrix that positions the camera
     // 10 units behind the object
     glm::mat4 viewMatrix(1);
     viewMatrix[3] = glm::vec4(0, 0, -10, 1);
+	m_program.setViewerPosition(glm::vec3(0, 0, -10));
     m_program.setViewMatrix(viewMatrix);
 	glm::vec3 rotation(1.0f, 1.0f, 0.0f);
 	m_rotationMatrix = glm::mat4(1.0f);// glm::rotate(glm::mat4(1.0f), 45.0f, glm::vec3(rotation[0], rotation[1], rotation[2]));
@@ -45,8 +54,23 @@ void SolarSystem::init() {
 	// Setup Basic Planet Info
 	generatePlanetSpots();
 	generateSystem();
+	createCube();
 	//planets.push_back(Planet());
 
+}
+
+void::SolarSystem::generateLights() {
+	PointLight p = PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(20, 20, 20));
+	PointLight p2 = PointLight(glm::vec3(0, 1, 0), 1, glm::vec3(-20, -20, -20));
+	PointLight p3 = PointLight(glm::vec3(1, 1, 0), 1, glm::vec3(-20, 20, -20));
+
+	PointLight pLights[] = { p, p2 };
+
+	DirectionalLight d = DirectionalLight(glm::vec3(0.25, 0.25, -1));
+
+	m_lightScene.setPointLights(2, &pLights[0]);
+
+	m_lightScene.setDirectionalLight(d);
 }
 
 void SolarSystem::generateSun() {
@@ -289,6 +313,113 @@ PlanetInfo SolarSystem::generatePlanetInfo(glm::vec3 pos, float rs, std::vector<
 	return pi;
 }
 
+void SolarSystem::createCube() {
+
+	cgra::Matrix<double> vertices(36, 3);
+	cgra::Matrix<unsigned int> triangles(12, 3);
+
+	vertices.setRow(0, { -1.0f, -1.0f, -1.0f });
+	vertices.setRow(1, { -1.0f, -1.0f,  1.0f });
+	vertices.setRow(2, { -1.0f,  1.0f,  1.0f });
+	vertices.setRow(3, { 1.0f,  1.0f, -1.0f });
+	vertices.setRow(4, { -1.0f, -1.0f, -1.0f });
+	vertices.setRow(5, { -1.0f,  1.0f, -1.0f });
+	vertices.setRow(6, { 1.0f, -1.0f,  1.0f });
+	vertices.setRow(7, { -1.0f, -1.0f, -1.0f });
+	vertices.setRow(8, { 1.0f, -1.0f, -1.0f });
+	vertices.setRow(9, { 1.0f,  1.0f, -1.0f });
+	vertices.setRow(10, { 1.0f, -1.0f, -1.0f });
+	vertices.setRow(11, { -1.0f, -1.0f, -1.0f });
+	vertices.setRow(12, { -1.0f, -1.0f, -1.0f });
+	vertices.setRow(13, { -1.0f,  1.0f,  1.0f });
+	vertices.setRow(14, { -1.0f,  1.0f, -1.0f });
+	vertices.setRow(15, { 1.0f, -1.0f,  1.0f });
+	vertices.setRow(16, { -1.0f, -1.0f,  1.0f });
+	vertices.setRow(17, { -1.0f, -1.0f, -1.0f });
+	vertices.setRow(18, { -1.0f,  1.0f,  1.0f });
+	vertices.setRow(19, { -1.0f, -1.0f,  1.0f });
+	vertices.setRow(20, { 1.0f, -1.0f,  1.0f });
+	vertices.setRow(21, { 1.0f,  1.0f,  1.0f });
+	vertices.setRow(22, { 1.0f, -1.0f, -1.0f });
+	vertices.setRow(23, { 1.0f,  1.0f, -1.0f });
+	vertices.setRow(24, { 1.0f, -1.0f, -1.0f });
+	vertices.setRow(25, { 1.0f,  1.0f,  1.0f });
+	vertices.setRow(26, { 1.0f, -1.0f,  1.0f });
+	vertices.setRow(27, { 1.0f,  1.0f,  1.0f });
+	vertices.setRow(28, { 1.0f,  1.0f, -1.0f });
+	vertices.setRow(29, { -1.0f,  1.0f, -1.0f });
+	vertices.setRow(30, { 1.0f,  1.0f,  1.0f });
+	vertices.setRow(31, { -1.0f,  1.0f, -1.0f });
+	vertices.setRow(32, { -1.0f,  1.0f,  1.0f });
+	vertices.setRow(33, { 1.0f,  1.0f,  1.0f });
+	vertices.setRow(34, { -1.0f,  1.0f,  1.0f });
+	vertices.setRow(35, { 1.0f, -1.0f,  1.0f });
+
+	triangles.setRow(0, { 0, 1, 2 });
+	triangles.setRow(1, { 3, 4, 5 });
+	triangles.setRow(2, { 6, 7, 8 });
+	triangles.setRow(3, { 9, 10, 11 });
+	triangles.setRow(4, { 12, 13, 14 });
+	triangles.setRow(5, { 15, 16, 17 });
+	triangles.setRow(6, { 18, 19, 20 });
+	triangles.setRow(7, { 21, 22, 23 });
+	triangles.setRow(8, { 24, 25, 26 });
+	triangles.setRow(9, { 27, 28, 29 });
+	triangles.setRow(10, { 30, 31, 32 });
+	triangles.setRow(11, { 33, 34, 35 });
+
+	m_cube.setData(vertices, triangles);
+}
+
+void SolarSystem::drawBoundingBox() {
+	GLuint airlightOnly;
+	glUniform1i(glGetUniformLocation(m_program.getProgram(), "airlightOnly"), 1);
+	m_program.setColour(glm::vec3(0, 0, 0));
+	// Bottom
+	glm::mat4 modelTransform = glm::mat4(1.0f);
+	modelTransform = glm::translate(modelTransform, glm::vec3(0, -50, 0));
+	modelTransform = glm::scale(modelTransform, glm::vec3(50, 1, 50));
+	
+	m_program.setModelMatrix(modelTransform);
+	m_cube.draw();
+
+	//Top
+	modelTransform = glm::mat4(1.0f);
+	modelTransform = glm::translate(modelTransform, glm::vec3(0, 50, 0));
+	modelTransform = glm::scale(modelTransform, glm::vec3(50, 1, 50));
+	m_program.setModelMatrix(modelTransform);
+	m_cube.draw();
+
+	//Front
+	modelTransform = glm::mat4(1.0f);
+	modelTransform = glm::translate(modelTransform, glm::vec3(0, 0, -50));
+	modelTransform = glm::scale(modelTransform, glm::vec3(50, 50, 1));
+	m_program.setModelMatrix(modelTransform);
+	m_cube.draw();
+
+	//Back
+	modelTransform = glm::mat4(1.0f);
+	modelTransform = glm::translate(modelTransform, glm::vec3(0, 0, 50));
+	modelTransform = glm::scale(modelTransform, glm::vec3(50, 50, 1));
+	m_program.setModelMatrix(modelTransform);
+	m_cube.draw();
+
+	//Left
+	modelTransform = glm::mat4(1.0f);
+	modelTransform = glm::translate(modelTransform, glm::vec3(-50, 0, 0));
+	modelTransform = glm::scale(modelTransform, glm::vec3(1, 50, 50));
+	m_program.setModelMatrix(modelTransform);
+	m_cube.draw();
+
+	//Right
+	modelTransform = glm::mat4(1.0f);
+	modelTransform = glm::translate(modelTransform, glm::vec3(50, 0, 0));
+	modelTransform = glm::scale(modelTransform, glm::vec3(1, 50, 50));
+	m_program.setModelMatrix(modelTransform);
+	m_cube.draw();
+	glUniform1i(glGetUniformLocation(m_program.getProgram(), "airlightOnly"), 0);
+}
+
 
 void SolarSystem::drawScene() {
 	// Calculate the aspect ratio of the viewport;
@@ -298,7 +429,7 @@ void SolarSystem::drawScene() {
 	// Set the projection matrix
 	m_program.setProjectionMatrix(projectionMatrix);
 
-	// Caculate View Matrix depenfding on the mode we are in
+	// Caculate View Matrix depending on the mode we are in
 	glm::mat4 viewMatrix(1);
 	if (cinematicCam) {
 		float radius = 10.0f;
@@ -322,6 +453,7 @@ void SolarSystem::drawScene() {
 
 	// Perpendicular to both direction and right camera views
 	up = glm::cross(right, direction);
+	m_program.setViewerPosition(position);
 	viewMatrix = glm::lookAt(position, position + direction, up);	
 	m_program.setViewMatrix(viewMatrix);
 
@@ -373,6 +505,9 @@ void SolarSystem::drawScene() {
 			p.moonMesh.draw();
 		}
 	}
+
+	// Draw Bounding Box
+	drawBoundingBox();
 }
 
 void SolarSystem::doGUI() {
@@ -429,6 +564,11 @@ void SolarSystem::doGUI() {
 				playingRotation = true;
 			}
 		}			
+
+		static float beta;
+		if (ImGui::SliderFloat("Beta", &beta, 0.0f, 0.04f, "%.2f")) {
+			m_program.setBeta(beta);
+		}
 		ImGui::End();
 	}
 	else {
