@@ -13,7 +13,7 @@ void LightScene::init() {
 	// Initialize directional light locations
 	m_dirLightLocation.color = glGetUniformLocation(m_program.getProgram(), "directionalLight.base.color");
 	m_dirLightLocation.intensity = glGetUniformLocation(m_program.getProgram(), "directionalLight.base.intensity");
-	m_dirLightLocation.direction = glGetUniformLocation(m_program.getProgram(), "directionalLight.base.direction");
+	m_dirLightLocation.direction = glGetUniformLocation(m_program.getProgram(), "directionalLight.direction");
 
 	// Initialize point light locations
 	for (unsigned int i = 0; i < NUM_POINT_LIGHTS; i++) {

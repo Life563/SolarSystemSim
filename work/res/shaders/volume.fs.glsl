@@ -32,6 +32,7 @@ uniform float beta; // Thickness of fog
 uniform vec3 viewerPos; // Position of the viewer
 uniform sampler2D airlightLookup;
 uniform vec3 fragColor;
+uniform vec3 ColorVec;
 
 const float lightIntensity = 1;
 const vec3 lightPos = vec3(5, -5, 10);
@@ -41,6 +42,10 @@ const vec3 objectDiffuseColor = vec3(0.4, 0.4, 1.0);
 const vec3 objectSpecColor    = vec3(0.2, 0.1, 0.1);
 const float shininess         = 40;
 
+const vec3 ambientColor = vec3(0.05, 0.05, 0.1);
+const vec3 diffuseColor = vec3(0.4, 0.4, 1.0);
+const vec3 specColor    = vec3(0.2, 0.1, 0.1);
+
 // Lookup Table Attributes
 const float maxU = 10;
 const float maxV = M_PI / 2;
@@ -49,18 +54,21 @@ const float conversion = 1.5708;
 void main() {
 
     vec3 cumulativeColor = vec3(0, 0, 0);
+    vec3 surfaceNormal = normalize(fragNormal);
 
+    vec3 viewerToSurface = fragPosition - viewerPos; // Vector from the viewer to the surface point
+    float dvp = length(viewerToSurface); //Distance between surface point and viewer
+
+    // Calculate lighting from point sources
     for(int i = 0; i < numPointLights; i++){
         PointLight p = pointLights[i];
         // Set up initial variables
         // Helper variables
         vec3 viewerToLight = p.position - viewerPos; // Vector from the viewer to the light source
-        vec3 viewerToSurface = fragPosition - viewerPos; // Vector from the viewer to the surface point
+        
         vec3 lightToSurface = fragPosition - p.position; // Vector from the light source to the surface point
         // Distance between light source and viewer
         float dsv = length(viewerToLight);
-        //Distance between surface point and viewer
-        float dvp = length(viewerToSurface);
 
         float dsp = length(lightToSurface);
         // Optical thickness between light source and viewer
@@ -72,8 +80,6 @@ void main() {
         float gamma = acos(dot(viewerToLight, viewerToSurface) / (dsv * dvp));
         
         float tvp = beta * dvp; // Optical thickness between light source and surface point
-
-        vec3 surfaceNormal = normalize(fragNormal);
 
         /****************** Airlight ***********************/
 
@@ -96,7 +102,7 @@ void main() {
 
         vec3 lightDirection = normalize(-lightToSurface);
         float lambertian = max(dot(lightDirection, surfaceNormal), 0.0);
-        vec3 totalLambertian = lambertian * fragColor * exp(-tsp) * ((p.base.intensity * 4 * M_PI) / (dsp * dsp));
+        vec3 totalLambertian = lambertian * objectDiffuseColor * exp(-tsp) * ((p.base.intensity * 4 * M_PI) / (dsp * dsp));
 
 
         /******************* Specular **********************/
@@ -116,6 +122,26 @@ void main() {
         vec3 totalColor = totalLambertian + totalSpecular + totalAirlight;
         cumulativeColor = cumulativeColor + totalColor;
     }
+
+    // Calculate lighting from directional source
+    vec3 dLightDir = normalize(-directionalLight.direction);
+    float dLambertian = max(dot(dLightDir, surfaceNormal), 0.0);
+    float dSpecular = 0.0;
+
+    if(dLambertian > 0.0) {
+        vec3 viewDir = normalize(-fragPosition);
+
+        vec3 halfDir = normalize(dLightDir + viewDir);
+        float specAngle = max(dot(halfDir, surfaceNormal), 0.0);
+
+        dSpecular = pow(specAngle, shininess);
+    }
+
+    vec3 dFragColor = ambientColor +
+        dLambertian * diffuseColor +
+        dSpecular * specColor;
+
+    // /cumulativeColor = cumulativeColor + dFragColor;
 
     color = vec4(cumulativeColor, 1.0f);
 }
