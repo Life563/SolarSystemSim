@@ -97,6 +97,8 @@ public:
 	void generatePlanetSpots();
 	void generateCylinder();
 
+	mat4 createTreeTransMatrix(vec3 startPoint);
+
 	PlanetInfo generatePlanetInfo(glm::vec3 pos, float rs, std::vector<std::vector<double>> cs1);
 
     void drawScene();

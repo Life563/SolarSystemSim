@@ -143,18 +143,9 @@ void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, floa
 	for (; index < ls.currentTree.length(); index++) {
 		char c = ls.currentTree.at(index);
 		if (c == 'F') {
-			mat4 td = glm::translate(mat4(1), startPos);
-			glm::vec3 fdir = glm::vec3(0, 1, 0);
-			float angle = glm::acos(glm::dot(fdir,startPos));
-			glm::vec3 newdir = glm::cross(fdir,normalize(startPos));
-			//td = glm::rotate(td, angle, newdir);
-
-
-			//mat4 td = mat4(1);
 			glm::vec3 midPoint(0, length, 0);
 			mat4 cyMat = glm::translate(transMat, midPoint);
-			cyMat = td * glm::scale(cyMat, vec3(tsize*0.2, 0.15, tsize*0.2));// translate tree down so we cna see all of it
-			cyMat = glm::rotate(cyMat, angle, newdir);
+			cyMat = glm::scale(cyMat, vec3(tsize*0.2, length, tsize*0.2)) ; // translate tree down so we cna see all of it
 
 			m_program.setModelMatrix(cyMat);
 			m_program.setColour(vec3(1, 0.8, 0.6));
@@ -216,7 +207,7 @@ void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, floa
 }
 
 void SolarSystem::generateCylinder() {
-	int divisions = 10;
+	int divisions = 5;
 
 	std::vector<unsigned int> indices;
 	cgra::Matrix<double> vertices((divisions + 1) * (divisions + 1), 3);
@@ -235,7 +226,7 @@ void SolarSystem::generateCylinder() {
 			float x = cos(ele) * sin(azi);
 			float y = cos(azi);
 			if (i >= (divisions / 2) + 1) {
-				y = cos(azi) - 1;
+				y = cos(azi);
 			}
 			float z = sin(ele) * sin(azi);
 
@@ -267,6 +258,17 @@ void SolarSystem::generateCylinder() {
 	}
 
 	m_cylinder.setData(vertices, triangles);
+}
+
+
+mat4 SolarSystem::createTreeTransMatrix(vec3 startPoint) {
+	glm::vec3 fdir = glm::vec3(0, 1.f, 0);
+	vec3 vPos = startPoint;
+	float angle = glm::acos(glm::dot(fdir, vPos));
+	glm::vec3 newdir = glm::cross(fdir, vPos);
+	mat4 td = glm::rotate(mat4(1), angle , newdir);
+	td = translate(td, vec3(0, -vPos.y, 0));
+	return td;
 }
 
 /* 
@@ -362,9 +364,19 @@ void SolarSystem::drawScene() {
 	
 		//modelTransform = glm::rotate(m_rotationMatrix * glm::mat4(1.0f), (float)glfwGetTime() / p.rotationSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
 		// Translate the actual mesh
+
 		modelTransform = glm::translate(modelTransform, p.location);
+	
+
+		mat4 td = createTreeTransMatrix(p.originalVerticies.at(4));
+		mat4 td1 = createTreeTransMatrix(p.originalVerticies.at(22));
+		mat4 td2 = createTreeTransMatrix(p.originalVerticies.at(15));
+
 		int h = 0;
-		generateTree(modelTransform, p.originalVerticies.at(8), 0.3, 0.4, h);
+		generateTree(modelTransform *td, vec3(0), 0.05, 0.05, h);
+	/*	generateTree(modelTransform *td1, vec3(0), 0.05, 0.3, h = 0);
+		generateTree(modelTransform *td2, vec3(0), 0.05, 0.3, h = 0);*/
+
 		// Scale the mesh
 		modelTransform = glm::scale(modelTransform, p.scale);
 		// Draw the mesh
