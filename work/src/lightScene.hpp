@@ -49,6 +49,7 @@ class LightScene {
 
 
 public:
+	LightScene();
 	// Constructor - Requires shader program being used in scene
 	LightScene(cgra::Program shader);
 

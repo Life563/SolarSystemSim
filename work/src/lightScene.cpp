@@ -1,11 +1,14 @@
 #include "lightScene.hpp";
 #include <stdio.h>
 
+LightScene::LightScene() {}
+
 LightScene::LightScene(cgra::Program shader) {
 	m_program = shader;
 }
 
 void LightScene::init() {
+	m_numPointLightsLocation = glGetUniformLocation(m_program.getProgram(), "numPointLights");
 
 	// Initialize directional light locations
 	m_dirLightLocation.color = glGetUniformLocation(m_program.getProgram(), "directionalLight.base.color");
@@ -25,6 +28,18 @@ void LightScene::init() {
 		sprintf(uniformName, "pointLights[%d].base.position", i);
 		m_pointLightsLocation[i].position = glGetUniformLocation(m_program.getProgram(), uniformName);
 	}
+
+	// Build Airlight data
+	std::vector<GLubyte> textureData;
+	m_program.buildAirlightData(CGRA_SRCDIR "/res/lookups/airlight_lookup.txt", textureData, 64, 64);
+	GLuint tex;
+	glGenTextures(1, &tex); // Generates an array of one texture and stores it in tex
+	glBindTexture(GL_TEXTURE_2D, tex); // Bind the texture so that any subsequent texture commands will configure the currently bound texture
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, 64, 64);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 64, 64, GL_RED, GL_UNSIGNED_BYTE, &textureData[0]);  // Generate the texture
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glUniform1i(glGetUniformLocation(m_program.getProgram(), "airlightLookup"), 0);
 }
 
 void LightScene::setPointLights(unsigned int numLights, const PointLight * pLights) {
