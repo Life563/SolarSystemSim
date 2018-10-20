@@ -71,22 +71,7 @@ void Planet::generatePlanet() {
 	// Do we want to generate other planet features?
 	float point = double(rand()) / (double(RAND_MAX) + 1.0);
 	if (point < 0.5f) { // Generate a moon
-		this->hasMoon = true;
-		float t = (1.0f + glm::sqrt(5.0f)) / 2.0f;
-		std::vector<glm::vec3> moonVertices = { glm::normalize(glm::vec3(-1.0f, t, 0.0f)), glm::normalize(glm::vec3(1.0f, t, 0.0f)), glm::normalize(glm::vec3(-1.0f, -t, 0.0f)), glm::normalize(glm::vec3(1.0f, -t, 0.0f)), glm::normalize(glm::vec3(0.0f, -1.0f, t)), glm::normalize(glm::vec3(0.0f, 1.0f, t)), glm::normalize(glm::vec3(0.0f, -1.0f, -t)), glm::normalize(glm::vec3(0.0f, 1.0f, -t)), glm::normalize(glm::vec3(t, 0.0f, -1.0f)), glm::normalize(glm::vec3(t, 0.0f, 1.0f)), glm::normalize(glm::vec3(-t, 0.0f, -1.0f)), glm::normalize(glm::vec3(-t, 0.0f, 1.0f)) };
-		std::vector<std::vector<unsigned int>> moonTriangles = { { 0, 11, 5 }, { 0, 5, 1 }, {0, 1, 7}, {0, 7, 10}, {0, 10, 11}, {1,5,9},{5, 11,4}, {11, 10,2}, {10, 7,6}, {7, 1,8}, {3, 9,4}, {3,4,2}, {3,2,6}, {3,6,8}, {3,8,9}, {4,9,5}, {2,4,11}, {6,2,10}, {8,6,7}, {9,8,1} };
-		
-		cgra::Matrix<double> mV(moonVertices.size(), 3);
-		for (int i = 0; i < moonVertices.size(); i++) {
-			mV.setRow(i, { moonVertices.at(i)[0], moonVertices.at(i)[1], moonVertices.at(i)[2] });
-		}
-		// Setup Triangles
-		cgra::Matrix<unsigned int> mT(moonTriangles.size(), 3);
-		for (int i = 0; i < moonTriangles.size(); i++) {
-			mT.setRow(i, { moonTriangles.at(i)[0], moonTriangles.at(i)[1], moonTriangles.at(i)[2] });
-		}
-		// Set Mesh
-		this->moonMesh.setData(mV, mT);
+		this->generateMoon();
 	}
 	point = double(rand()) / (double(RAND_MAX) + 1.0);
 	if (point < 0.5f) { // Generate a ring around planet
@@ -255,8 +240,44 @@ void Planet::generateTerrain() {
 	this->mesh.setColors(vertColours);
 }
 
-void Planet::generateMoon() {
+/*
+* Brute Force Algorithm
+* A site is a starter point for a biome
+*/
+void Planet::voronoiCells() {
+	// Determin which points are going to become main sites
+	int numberOfSites = rand() % (this->originalVerticies.size()) + 5;
+	for (int i = 0; i < numberOfSites; i++) {
+		// Decide on a random point
+		int vertToSite = rand() % this->originalVerticies.size();
+		this->sites.push_back(this->originalVerticies.at(i));
+	}
+	// Now 
+	for (int i = 0; i < this->originalVerticies.size(); i++) {
+		float shortestDistance;
+		// List of potential canidates
+		// If a point is an equal distance between multiple points, randomly decide on what it should be
+		
+	}
+}
 
+void Planet::generateMoon() {
+	this->hasMoon = true;
+	float t = (1.0f + glm::sqrt(5.0f)) / 2.0f;
+	std::vector<glm::vec3> moonVertices = { glm::normalize(glm::vec3(-1.0f, t, 0.0f)), glm::normalize(glm::vec3(1.0f, t, 0.0f)), glm::normalize(glm::vec3(-1.0f, -t, 0.0f)), glm::normalize(glm::vec3(1.0f, -t, 0.0f)), glm::normalize(glm::vec3(0.0f, -1.0f, t)), glm::normalize(glm::vec3(0.0f, 1.0f, t)), glm::normalize(glm::vec3(0.0f, -1.0f, -t)), glm::normalize(glm::vec3(0.0f, 1.0f, -t)), glm::normalize(glm::vec3(t, 0.0f, -1.0f)), glm::normalize(glm::vec3(t, 0.0f, 1.0f)), glm::normalize(glm::vec3(-t, 0.0f, -1.0f)), glm::normalize(glm::vec3(-t, 0.0f, 1.0f)) };
+	std::vector<std::vector<unsigned int>> moonTriangles = { { 0, 11, 5 }, { 0, 5, 1 }, {0, 1, 7}, {0, 7, 10}, {0, 10, 11}, {1,5,9},{5, 11,4}, {11, 10,2}, {10, 7,6}, {7, 1,8}, {3, 9,4}, {3,4,2}, {3,2,6}, {3,6,8}, {3,8,9}, {4,9,5}, {2,4,11}, {6,2,10}, {8,6,7}, {9,8,1} };
+
+	cgra::Matrix<double> mV(moonVertices.size(), 3);
+	for (int i = 0; i < moonVertices.size(); i++) {
+		mV.setRow(i, { moonVertices.at(i)[0], moonVertices.at(i)[1], moonVertices.at(i)[2] });
+	}
+	// Setup Triangles
+	cgra::Matrix<unsigned int> mT(moonTriangles.size(), 3);
+	for (int i = 0; i < moonTriangles.size(); i++) {
+		mT.setRow(i, { moonTriangles.at(i)[0], moonTriangles.at(i)[1], moonTriangles.at(i)[2] });
+	}
+	// Set Mesh
+	this->moonMesh.setData(mV, mT);
 }
 
 void Planet::generateRings() {
