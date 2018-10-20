@@ -5,8 +5,13 @@
 SET(sources
   SolarSystem.hpp
   SolarSystem.cpp
+  
   Planet.hpp
   Planet.cpp
+  
+  lightScene.hpp
+  lightScene.cpp
+  
   opengl.hpp
   main.cpp
 )

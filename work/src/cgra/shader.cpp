@@ -175,4 +175,53 @@ namespace cgra {
 
         return shader;
     }
+
+	void Program::setBeta(const float &beta) {
+		if (m_program == 0) return;
+		use();
+
+		// Get the location of the beta uniform variable
+		GLint betaLoc = glGetUniformLocation(m_program, "beta");
+		glUniform1f(betaLoc, beta);
+	}
+
+	void Program::setViewerPosition(const glm::vec3 &viewerPos) {
+		if (m_program == 0) return;
+		use();
+
+		// Get the location of the viewer position uniform variable
+		GLint viewerLoc = glGetUniformLocation(m_program, "viewerPos");
+		glUniform3f(viewerLoc, viewerPos.x, viewerPos.y, viewerPos.z);
+	}
+
+	void Program::buildAirlightData(const char *filename, std::vector<GLubyte> &textureData, int uResolution, int vResolution) {
+		textureData.resize(uResolution * vResolution);
+
+		std::vector<GLubyte>::iterator currIt = textureData.begin();
+
+		// Open the file
+		std::ifstream file(filename, std::ios::in);
+		if (!file.is_open()) {
+			throw std::runtime_error("Error: could not open file for reading");
+		}
+
+		std::string row;
+		size_t lineNumber = 0;
+		float integralResult;
+		std::string stringResult;
+		while (file.good()) {
+			// Get the next line in the file
+			std::getline(file, row);
+
+			// Create a stream for the row
+			std::istringstream lineStream(row);
+			while (std::getline(lineStream, stringResult, ',')) {
+
+				// Read next result
+				integralResult = std::stof(stringResult);
+
+				*currIt++ = (GLubyte)(integralResult * 255.0f);
+			}
+		}
+	}
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "opengl.hpp"
-
+#include <vector>
 #include "glm/glm.hpp"
 
 namespace cgra {
@@ -38,5 +38,18 @@ namespace cgra {
         // This specifies how to convert from 3D coordinates to
         // 2D coordinates
         void setProjectionMatrix(const glm::mat4 &);
+
+		// Sets the beta variable that controls the level of fog
+		void setBeta(const float &);
+
+		// Sets the position of the viewer. Used for shading calculation
+		void setViewerPosition(const glm::vec3 &);
+
+
+		void buildAirlightData(const char *filename, std::vector<GLubyte> &textureData, int uResolution, int vResolution);
+
+		GLuint getProgram() {
+			return m_program;
+		}
     };
 }
