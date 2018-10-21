@@ -6,12 +6,10 @@ uniform mat4 projectionMat;
 
 in vec3 vertPosition;
 in vec3 vertNormal;
+in layout (location=3) vec3 vertColor;
 
 out vec3 fragPosition;
 out vec3 fragNormal;
-
-layout(location = 2) in vec3 vertexColor;
-
 out vec3 fragmentColor;
 
 void main() {
@@ -23,5 +21,5 @@ void main() {
     mat3 normalMat = transpose(inverse(mat3(viewMat * modelMat)));
     fragNormal = normalMat * vertNormal;
 	
-	fragmentColor = vertexColor;
+	fragmentColor = vertColor;
 }

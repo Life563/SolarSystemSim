@@ -79,15 +79,10 @@ void SolarSystem::generateSun() {
 	this->sun.location = glm::vec3(0.0f);
 	this->sun.scale = glm::vec3(0.4f);
 	this->sun.rotationSpeed = 2.0f;
-	// Not going to subdivide 
-	std::vector<std::vector<double>> sunColors;
-	for (int i = 0; i < 80; i++) {
-		//sunColors.push_back({255, ((double) rand() % 255 + 1) }, 0); // Shift the green value for some variation
-	}
-	this->sun.vertColours = sunColors;
 }
 
 void SolarSystem::generateSystem() {
+	double startTime = glfwGetTime();
 	planets.clear();
 	std::vector<PlanetInfo> temp = this->planetSpots;
 	// Generate Planets
@@ -99,6 +94,8 @@ void SolarSystem::generateSystem() {
 		p.name = std::to_string(i);
 		planets.push_back(p);
 	}
+	double timeTaken = glfwGetTime() - startTime;
+	std::cout << "Generated System, Time Taken: " << timeTaken << " Seconds" << std::endl;
 }
 
 void SolarSystem::generatePlanetSpots() {
@@ -172,7 +169,7 @@ void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, floa
 			cyMat = glm::scale(cyMat, vec3(tsize*0.2, length, tsize*0.2)) ; // translate tree down so we cna see all of it
 
 			m_program.setModelMatrix(cyMat);
-			m_program.setColour(vec3(1, 0.8, 0.6));
+			//m_program.setColour(vec3(1, 0.8, 0.6));
 			m_cylinder.draw();
 
 			transMat = translate(transMat, vec3(0, length, 0));
@@ -224,7 +221,7 @@ void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, floa
 			mat4 td = glm::translate(mat4(1), vec3(0, -40, 0)) *scaleMat;
 
 			m_program.setModelMatrix(td);
-			m_program.setColour(vec3(0, 1, 0));
+			//m_program.setColour(vec3(0, 1, 0));
 			//m_leaf.draw();
 		}
 	}
@@ -235,7 +232,7 @@ void SolarSystem::generateCylinder() {
 
 	std::vector<unsigned int> indices;
 	cgra::Matrix<double> vertices((divisions + 1) * (divisions + 1), 3);
-
+	std::vector<glm::vec3> vertColours;
 	int count = 0;
 
 	for (int i = 0; i <= divisions; ++i) {
@@ -253,7 +250,7 @@ void SolarSystem::generateCylinder() {
 				y = cos(azi);
 			}
 			float z = sin(ele) * sin(azi);
-
+			vertColours.push_back(vec3(1, 0.8, 0.6));
 			vertices.setRow(count++, { x,y,z });
 		}
 	}
@@ -281,7 +278,7 @@ void SolarSystem::generateCylinder() {
 		triangles.setRow(count++, { indices.at(i), indices.at(i + 1), indices.at(i + 2) });
 	}
 
-	m_cylinder.setData(vertices, triangles);
+	m_cylinder.setData(vertices, triangles, vertColours);
 }
 
 
@@ -368,13 +365,18 @@ void SolarSystem::createCube() {
 	triangles.setRow(10, { 30, 31, 32 });
 	triangles.setRow(11, { 33, 34, 35 });
 
-	m_cube.setData(vertices, triangles);
+	std::vector<glm::vec3> vertColours;
+	for (int i = 0; i < 36; i++) {
+		vertColours.push_back(vec3(0.0f));
+	}
+
+	m_cube.setData(vertices, triangles, vertColours);
 }
 
 void SolarSystem::drawBoundingBox() {
 	GLuint airlightOnly;
 	glUniform1i(glGetUniformLocation(m_program.getProgram(), "airlightOnly"), 1);
-	m_program.setColour(glm::vec3(0, 0, 0));
+	//m_program.setColour(glm::vec3(0, 0, 0));
 	// Bottom
 	glm::mat4 modelTransform = glm::mat4(1.0f);
 	modelTransform = glm::translate(modelTransform, glm::vec3(0, -50, 0));

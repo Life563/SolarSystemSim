@@ -29,6 +29,7 @@ Planet::Planet() {
 	cgra::Matrix<double> vertices(originalVerticies.size(), 3);
 	for (int i = 0; i < originalVerticies.size(); i++) {
 		vertices.setRow(i, { originalVerticies.at(i)[0], originalVerticies.at(i)[1], originalVerticies.at(i)[2] });
+		vertColours.push_back({ 255/255, 255/255, 0/255 }); // Shift the green value for some variation (rand() % 255 + 1)
 	}
 	// Setup Triangles
 	cgra::Matrix<unsigned int> triangles(originalTriangles.size(), 3);
@@ -36,11 +37,13 @@ Planet::Planet() {
 		triangles.setRow(i, { originalTriangles.at(i)[0], originalTriangles.at(i)[1], originalTriangles.at(i)[2] });
 	}
 	// Set Mesh
-	this->mesh.setData(vertices, triangles);
-	std::cout << "Generated Planet" << std::endl;
+	this->mesh.setData(vertices, triangles, this->vertColours);
+	std::cout << "Generated Sun" << std::endl;
 }
 
-
+/*
+* 
+*/
 Planet::Planet(PlanetInfo pi, int id){
 	this->location = pi.location;
 	this->rotationSpeed = pi.rotationSpeed;
@@ -49,7 +52,9 @@ Planet::Planet(PlanetInfo pi, int id){
 	generatePlanet();
 }
 
-
+/*
+* Creates the base icosahedron
+*/
 void Planet::generateIcosahedron() {	
 	// Setup Verticies
 	float t = (1.0f + glm::sqrt(5.0f)) / 2.0f;
@@ -58,7 +63,7 @@ void Planet::generateIcosahedron() {
 }
 
 /*
-* Method
+* Method to 
 */
 void Planet::generatePlanet() {
 	//srand(((float)glfwGetTime() / this->rotationSpeed));
@@ -86,7 +91,7 @@ void Planet::generatePlanet() {
 		triangles.setRow(i, { originalTriangles.at(i)[0], originalTriangles.at(i)[1], originalTriangles.at(i)[2] });
 	}
 	// Set Mesh
-	this->mesh.setData(vertices, triangles);
+	this->mesh.setData(vertices, triangles, this->vertColours);
 	this->timeTaken = glfwGetTime() - startTime;
 	std::cout << "Generated Planet, Time Taken: " << this->timeTaken << " Seconds" << std::endl;
 }
@@ -158,7 +163,6 @@ float Planet::generatePerlinNoise(int i) {
 	float point = glm::perlin(glm::vec3(originalVerticies.at(i)[0]/ scale, originalVerticies.at(i)[1]/ scale, originalVerticies.at(i)[2]/ scale));
 	// Update Vertex
 	return point;
-	//originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + point/2);
 }
 
 /*
@@ -169,7 +173,6 @@ float Planet::generateSimplexNoise(int i) {
 	float point = glm::simplex(glm::vec3(originalVerticies.at(i)[0] / scale, originalVerticies.at(i)[1] / scale, originalVerticies.at(i)[2] / scale));
 	// Update vertex
 	return point;
-	//originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + point/2);
 }
 
 /*
@@ -189,9 +192,9 @@ float Planet::generateSimplexNoise(int i) {
 void Planet::generateTerrain() {	
 	// Generate and apply noise to change terrain
 	for (int i = 0; i < originalVerticies.size(); i++) {
-		originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateRandomNoise(i) / 2);
+		//originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateRandomNoise(i) / 2);
 		//originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generatePerlinNoise(i) / 2);
-		//originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateSimplexNoise(i) / 2);
+		originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateSimplexNoise(i) / 2);
 	}
 	//// Generate a new set of noise for biome
 	//for (int i = 0; i < originalVerticies.size(); i++) {
@@ -214,6 +217,11 @@ void Planet::generateTerrain() {
 	//	}
 	//}
 	// Generate Colors based off height & biome
+	// Use Vor Cells
+	for (int i = 0; i < originalVerticies.size(); i++) {
+
+	}
+	vertColours.clear();
 	for (int i = 0; i < originalVerticies.size(); i++) {
 		// Get distance between center of planet and current vertex
 		float dis = glm::distance(originalVerticies.at(i), glm::vec3(0, 0, 0));
@@ -230,12 +238,6 @@ void Planet::generateTerrain() {
 			vertColours.push_back({ 125 / 255, 55 / 255, 31 / 255 });
 		}
 	}
-	// Use Vor Cells
-	for (int i = 0; i < originalVerticies.size(); i++) {
-
-	}
-	// Pass colours to mesh
-	this->mesh.setColors(vertColours);
 }
 
 /*
@@ -264,10 +266,11 @@ void Planet::generateMoon() {
 	float t = (1.0f + glm::sqrt(5.0f)) / 2.0f;
 	std::vector<glm::vec3> moonVertices = { glm::normalize(glm::vec3(-1.0f, t, 0.0f)), glm::normalize(glm::vec3(1.0f, t, 0.0f)), glm::normalize(glm::vec3(-1.0f, -t, 0.0f)), glm::normalize(glm::vec3(1.0f, -t, 0.0f)), glm::normalize(glm::vec3(0.0f, -1.0f, t)), glm::normalize(glm::vec3(0.0f, 1.0f, t)), glm::normalize(glm::vec3(0.0f, -1.0f, -t)), glm::normalize(glm::vec3(0.0f, 1.0f, -t)), glm::normalize(glm::vec3(t, 0.0f, -1.0f)), glm::normalize(glm::vec3(t, 0.0f, 1.0f)), glm::normalize(glm::vec3(-t, 0.0f, -1.0f)), glm::normalize(glm::vec3(-t, 0.0f, 1.0f)) };
 	std::vector<std::vector<unsigned int>> moonTriangles = { { 0, 11, 5 }, { 0, 5, 1 }, {0, 1, 7}, {0, 7, 10}, {0, 10, 11}, {1,5,9},{5, 11,4}, {11, 10,2}, {10, 7,6}, {7, 1,8}, {3, 9,4}, {3,4,2}, {3,2,6}, {3,6,8}, {3,8,9}, {4,9,5}, {2,4,11}, {6,2,10}, {8,6,7}, {9,8,1} };
-
+	std::vector<glm::vec3> vC; // Color
 	cgra::Matrix<double> mV(moonVertices.size(), 3);
 	for (int i = 0; i < moonVertices.size(); i++) {
 		mV.setRow(i, { moonVertices.at(i)[0], moonVertices.at(i)[1], moonVertices.at(i)[2] });
+		vC.push_back(glm::vec3(0.5f));
 	}
 	// Setup Triangles
 	cgra::Matrix<unsigned int> mT(moonTriangles.size(), 3);
@@ -275,27 +278,22 @@ void Planet::generateMoon() {
 		mT.setRow(i, { moonTriangles.at(i)[0], moonTriangles.at(i)[1], moonTriangles.at(i)[2] });
 	}
 	// Set Mesh
-	this->moonMesh.setData(mV, mT);
-}
-
-void Planet::generateRings() {
-	this->hasRing = true;
-	ringMesh = loadObj("work/res/Ring.obj");
+	this->moonMesh.setData(mV, mT, vC);
 }
 
 /*
-*	This is a modified version of the obj loader that I built in CGRA 251
+*   Method used to generate a ring for the planet
 */
-cgra::Mesh Planet::loadObj(const char *filename) {
+void Planet::generateRings() {
+	this->hasRing = true;
 	cgra::Mesh m_mesh;
 	cgra::Wavefront obj;
 	// Wrap the loading in a try..catch block
 	try {
-		obj = cgra::Wavefront::load(filename);
+		obj = cgra::Wavefront::load("work/res/Ring.obj");
 	}
 	catch (std::exception e) {
 		std::cerr << "Couldn't load file: '" << e.what() << "'" << std::endl;
-		return m_mesh;
 	}
 	// The mesh data
 	 // Replace these with appropriate values
@@ -317,17 +315,15 @@ cgra::Mesh Planet::loadObj(const char *filename) {
 		std::vector<cgra::Wavefront::Vertex> theVertices = obj.m_faces[i].m_vertices;
 		triangles.setRow(i, { theVertices[0].m_p - 1, theVertices[1].m_p - 1, theVertices[2].m_p - 1 });
 	}
-	//m_mesh.setData(vertices, triangles, vC);
-	return m_mesh;
+	m_mesh.setData(vertices, triangles, vC);
 }
+
 
 
 
 void Planet::draw() {
 	// Draw the planet mesh first
 	this->mesh.draw();
-	// Draw moon
-	//this->moonMesh.draw();
 	// Draw the items on the planet afterwards
 	populatePlanet();
 }

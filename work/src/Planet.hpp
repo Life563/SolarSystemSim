@@ -41,7 +41,7 @@ public:
 	std::vector<glm::vec3> sites;
 
 	std::map<int, int> midPoints;
-	std::vector<std::vector<double>> vertColours;
+	std::vector<glm::vec3> vertColours;
 
 	std::string name;
 	int colorID; // Used for color picking

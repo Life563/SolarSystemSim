@@ -16,9 +16,11 @@ namespace cgra {
             glm::vec3 m_position;
             // The normal at the vertex
             glm::vec3 m_normal;
+			// The color
+			glm::vec3 m_color;
 
-            Vertex(glm::vec3 pos, glm::vec3 norm) :
-                m_position(pos), m_normal(norm) { }
+            Vertex(glm::vec3 pos, glm::vec3 norm, glm::vec3 col) :
+                m_position(pos), m_normal(norm), m_color(col) { }
         };
 
         // A list of all the vertices in the mesh
@@ -38,6 +40,7 @@ namespace cgra {
         // Whether or not to draw this mesh as a wireframe
         bool m_drawWireframe;
 
+        bool m_OtherColorMethod = false;
         /********************************************************
          * GPU Objects                                          *
          *                                                      *
@@ -56,28 +59,19 @@ namespace cgra {
 
     public:	
 
-		std::vector<std::vector<double>> colors;
-
-        // Set the mesh data using two Matrices.
-        //
-        // `vertices` is an n x 3 matrix of vertex positions
-        // `triangles` is an n x 3 matrix of triangles using
-        //    indices into the rows of `vertices`
-        void setData(const Matrix<double> &vertices,
-                     const Matrix<unsigned int> &triangles);
+		// `vertices` is an n x 3 matrix of vertex positions
+		// `triangles` is an n x 3 matrix of triangles using
+		//    indices into the rows of `vertices`
+		// 'vertColors indicates the verticies colors
+		void setData(const Matrix<double> &vertices,
+			const Matrix<unsigned int> &triangles,
+			const std::vector<glm::vec3> &vertColours);
 
         // Set whether or not to draw this mesh as a wireframe.
         // true means that the mesh will be drawn as a wireframe.
         void setDrawWireframe(bool wireframe) {
             m_drawWireframe = wireframe;
         }
-
-		/*
-		* Sets the colour of the mesh
-		*/
-		void setColors(std::vector<std::vector<double>> c) {
-			colors = c;
-		};
 
         // Get whether this mesh will be drawn as a wireframe or not
         bool getDrawWireframe() const {
