@@ -225,7 +225,7 @@ void Planet::generateTerrain() {
 	for (int i = 0; i < originalVerticies.size(); i++) {
 		// Get distance between center of planet and current vertex
 		float dis = glm::distance(originalVerticies.at(i), glm::vec3(0, 0, 0));
-		std::cout << dis << std::endl;
+		//std::cout << dis << std::endl;
 		bool land = false, sea = false, mountain = false;
 		// Determin Color
 		if (dis < 1.0f) { // Sea
