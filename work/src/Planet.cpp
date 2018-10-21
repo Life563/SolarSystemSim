@@ -66,7 +66,7 @@ void Planet::generateIcosahedron() {
 * Method to 
 */
 void Planet::generatePlanet() {
-	//srand(((float)glfwGetTime() / this->rotationSpeed));
+	srand(glfwGetTime() + (this->colorID+1) * 5000); // Makes sure we have a random seed
 	double startTime = glfwGetTime();
 	generateIcosahedron();
 	subdivideIcosahedron();
@@ -218,46 +218,68 @@ void Planet::generateTerrain() {
 	//}
 	// Generate Colors based off height & biome
 	// Use Vor Cells
-	for (int i = 0; i < originalVerticies.size(); i++) {
-
-	}
-	vertColours.clear();
-	for (int i = 0; i < originalVerticies.size(); i++) {
-		// Get distance between center of planet and current vertex
-		float dis = glm::distance(originalVerticies.at(i), glm::vec3(0, 0, 0));
-		//std::cout << dis << std::endl;
-		bool land = false, sea = false, mountain = false;
-		// Determin Color
-		if (dis < 1.0f) { // Sea
-			vertColours.push_back({ 0 / 255, 0 / 255, 255 / 255 });
-		}
-		else if (dis < 1.1f) { // Flatland
-			vertColours.push_back({ 0 / 255, 255 / 255, 0 / 255 });
-		}
-		else { // Hill
-			vertColours.push_back({ 125 / 255, 55 / 255, 31 / 255 });
-		}
-	}
+	voronoiCells();
+	//vertColours.clear();
+	//for (int i = 0; i < originalVerticies.size(); i++) {
+	//	// Get distance between center of planet and current vertex
+	//	float dis = glm::distance(originalVerticies.at(i), glm::vec3(0, 0, 0));
+	//	//std::cout << dis << std::endl;
+	//	bool land = false, sea = false, mountain = false;
+	//	// Determin Color
+	//	if (dis < 1.0f) { // Sea
+	//		vertColours.push_back({ 0 / 255, 0 / 255, 255 / 255 });
+	//	}
+	//	else if (dis < 1.1f) { // Flatland
+	//		vertColours.push_back({ 0 / 255, 255 / 255, 0 / 255 });
+	//	}
+	//	else { // Hill
+	//		vertColours.push_back({ 125 / 255, 55 / 255, 31 / 255 });
+	//	}
+	//}
 }
 
 /*
 * Brute Force Algorithm
 * A site is a starter point for a biome
 */
-void Planet::voronoiCells() {
+void Planet::voronoiCells() {	
 	// Determin which points are going to become main sites
-	int numberOfSites = rand() % (this->originalVerticies.size()) + 5;
+	int numberOfSites = 5; // rand() % (this->originalVerticies.size()) + 5;
 	for (int i = 0; i < numberOfSites; i++) {
 		// Decide on a random point
 		int vertToSite = rand() % this->originalVerticies.size();
-		this->sites.push_back(this->originalVerticies.at(i));
+		this->sites.push_back(this->originalVerticies.at(vertToSite));
 	}
+	vertColours.clear();
 	// Now 
 	for (int i = 0; i < this->originalVerticies.size(); i++) {
-		float shortestDistance;
+		float shortestDistance = 9999.0f;
+		int biomeNum;
 		// List of potential canidates
 		// If a point is an equal distance between multiple points, randomly decide on what it should be
-		
+		for (int j = 0; j < this->sites.size(); j++) {
+			float dis = glm::distance(originalVerticies.at(i), this->sites.at(j));
+			if (dis < shortestDistance) {
+				shortestDistance = dis;
+				biomeNum = j;
+			}
+		}
+		// Determin Color
+		if (biomeNum == 0) { // Flatlands
+			vertColours.push_back({ 0 / 255, 255 / 255, 0 / 255 });
+		}
+		else if (biomeNum == 1) { // Dessert
+			vertColours.push_back({ 183 / 255, 119 / 255, 45 / 255 });
+		}
+		else if (biomeNum == 2) { // Snow
+			vertColours.push_back({ 255 / 255, 255 / 255, 255 / 255 });
+		}
+		else if (biomeNum == 3) { // Jungle
+			vertColours.push_back({ 15 / 255, 86 / 255, 36 / 255 });
+		}
+		else { // Urban
+			vertColours.push_back({ 255 / 255, 0 / 255, 0 / 255 });
+		}
 	}
 }
 
