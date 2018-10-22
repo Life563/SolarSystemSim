@@ -1,0 +1,7 @@
+name		Basic
+axiom		+R
+angle		5.7
+generations	5
+
+rule	R 	FT[[//BB+B]^B]
+rule	B 	^^////////FTRFT++TFTRRT
