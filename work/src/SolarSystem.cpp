@@ -26,6 +26,9 @@ void SolarSystem::init() {
         CGRA_SRCDIR "/res/shaders/simple.vs.glsl",
         CGRA_SRCDIR "/res/shaders/volume.fs.glsl");
 
+	billBoardShader = cgra::Program::load_program(
+		CGRA_SRCDIR "/res/shaders/Billboard.vs.glsl",
+		CGRA_SRCDIR "/res/shaders/Billboard.fs.glsl");
 
 	m_lightScene = LightScene(m_program);
 	m_lightScene.init();
@@ -35,7 +38,6 @@ void SolarSystem::init() {
 
     // Create a view matrix that positions the camera
     // 10 units behind the object
-    glm::mat4 viewMatrix(1);
     viewMatrix[3] = glm::vec4(0, 0, -9, 1);
 	m_program.setViewerPosition(glm::vec3(0, 0, -9));
     m_program.setViewMatrix(viewMatrix);
@@ -44,7 +46,10 @@ void SolarSystem::init() {
 	
 	//TREESTUFF
 	generateCylinder();
-	ls.setRules();
+	billBoardShader.setViewMatrix(viewMatrix);
+
+	ls.readRules(CGRA_SRCDIR "/res/TreeFiles/Basic.txt");
+	billBoardShader.specifyLeafTexture();
 	for (int i = 0; i < 5; i++) {
 		ls.generate();
 	}
@@ -217,14 +222,20 @@ void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, floa
 			//TODO increment color index
 		}
 		else if (c == 'T') {
+			glm::vec3 midPoint(0, length, 0);
+			mat4 cyMat = glm::translate(transMat, midPoint);
+
 			glm::vec3 scale(1);
-			mat4 scaleMat = glm::scale(transMat, scale);
-			scaleMat = translate(scaleMat, vec3(0, 0.5, 0));
-			mat4 td = glm::translate(mat4(1), vec3(0, -40, 0)) *scaleMat;
+			mat4 scaleMat = glm::scale(cyMat, scale);
+
+			scaleMat = translate(scaleMat, vec3(0, -0.5, 0));
+			mat4 td = scaleMat;
 
 			m_program.setModelMatrix(td);
-			//m_program.setColour(vec3(0, 1, 0));
-			//m_leaf.draw();
+
+			m_program.setModelMatrix(td);
+			billBoardShader.setModelMatrix(td);
+			drawLeaf();
 		}
 	}
 }
@@ -283,6 +294,30 @@ void SolarSystem::generateCylinder() {
 	m_cylinder.setData(vertices, triangles, vertColours);
 }
 
+
+
+void SolarSystem::drawLeaf() {
+	float aspectRatio = m_viewportSize.x / m_viewportSize.y;
+
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 200.0f);
+
+	glm::mat4 ViewProjectionMatrix = projectionMatrix * viewMatrix;
+
+	//billBoardShader.setProjectionMatrix(projectionMatrix);
+
+	billBoardShader.setUpLeafBillboard(ViewProjectionMatrix, viewMatrix);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	billBoardShader.use();
+
+	// Draw the billboard !
+	// This draws a triangle_strip which looks like a quad.
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	glDisableVertexAttribArray(2);
+
+}
 
 mat4 SolarSystem::createTreeTransMatrix(vec3 startPoint) {
 	glm::vec3 fdir = glm::vec3(0, 1.f, 0);
@@ -432,6 +467,7 @@ void SolarSystem::drawScene() {
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
 	// Set the projection matrix
 	m_program.setProjectionMatrix(projectionMatrix);
+	billBoardShader.setProjectionMatrix(projectionMatrix);
 
 	// Caculate View Matrix depending on the mode we are in
 	glm::mat4 viewMatrix(1);

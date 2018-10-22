@@ -1,0 +1,7 @@
+name		Test
+axiom		A
+angle		25.0
+generations	2
+
+rule	A	AFB	0.4
+rule	B	BCF	0.6 
