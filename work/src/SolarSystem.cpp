@@ -305,12 +305,13 @@ void SolarSystem::generateCylinder() {
 
 void SolarSystem::drawLeaf() {
 	float aspectRatio = m_viewportSize.x / m_viewportSize.y;
+	billBoardShader.setViewMatrix(viewMatrix);
 
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 200.0f);
 
 	glm::mat4 ViewProjectionMatrix = projectionMatrix * viewMatrix;
 
-	//billBoardShader.setProjectionMatrix(projectionMatrix);
+	billBoardShader.setProjectionMatrix(projectionMatrix);
 
 	billBoardShader.setUpLeafBillboard(ViewProjectionMatrix, viewMatrix);
 	glEnable(GL_BLEND);
