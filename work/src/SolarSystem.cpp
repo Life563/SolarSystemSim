@@ -36,8 +36,8 @@ void SolarSystem::init() {
     // Create a view matrix that positions the camera
     // 10 units behind the object
     glm::mat4 viewMatrix(1);
-    viewMatrix[3] = glm::vec4(0, 0, -10, 1);
-	m_program.setViewerPosition(glm::vec3(0, 0, -10));
+    viewMatrix[3] = glm::vec4(0, 0, -9, 1);
+	m_program.setViewerPosition(glm::vec3(0, 0, -9));
     m_program.setViewMatrix(viewMatrix);
 	glm::vec3 rotation(1.0f, 1.0f, 0.0f);
 	m_rotationMatrix = glm::mat4(1.0f);// glm::rotate(glm::mat4(1.0f), 45.0f, glm::vec3(rotation[0], rotation[1], rotation[2]));
@@ -60,15 +60,17 @@ void SolarSystem::init() {
 }
 
 void::SolarSystem::generateLights() {
-	PointLight p = PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(2, 2, 2));
+	PointLight p = PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(10, 10, 10));
 	PointLight p2 = PointLight(glm::vec3(0, 1, 0), 1, glm::vec3(-20, -20, -20));
-	PointLight p3 = PointLight(glm::vec3(1, 1, 0), 1, glm::vec3(0, 0, 0));
-
-	PointLight pLights[] = { p, p2, p3 };
+	PointLight p3 = PointLight(glm::vec3(1, 1, 0), 20, glm::vec3(0, 0, 0)); // Sun
+	PointLight p4 = PointLight(glm::vec3(0, 1, 1), 20, glm::vec3(10, -10, 9));
+	PointLight p5 = PointLight(glm::vec3(1, 1, 1), 20, glm::vec3(-13, 6, 12));
+	PointLight p6 = PointLight(glm::vec3(0, .5, .5), 20, glm::vec3(9, 9, -8));
+	PointLight pLights[] = { p, p2, p3, p4, p5, p6 };
 
 	DirectionalLight d = DirectionalLight(glm::vec3(0.25, 0.25, -1));
 
-	m_lightScene.setPointLights(3, &pLights[0]);
+	m_lightScene.setPointLights(6, &pLights[0]);
 
 	m_lightScene.setDirectionalLight(d);
 }
