@@ -527,29 +527,29 @@ void SolarSystem::drawScene() {
 		* 3 = Jungle
 		* 4 = Urban
 		*/
-		// for (int i = 0; i < p.treeVerts.size(); i++) {
-		// 	int biome = p.biomeMap.at(i);
-		// 	int tv = p.treeVerts.at(i);
-		// 	vec3 mv = p.modifiedVerticies.at(tv);
-		// 	mat4 td = createTreeTransMatrix(mv);
-		// 	int h = 0;
-    //
-		// 	if (biome == 0) {
-		// 		generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
-		// 	}
-		// 	else if (biome == 1) {
-		// 		generateTree(dessertTrees, modelTransform *td, mv, 0.05, 0.05, h);
-		// 	}
-		// 	else if (biome == 2) {
-		// 		generateTree(snowTrees, modelTransform *td, mv, 0.05, 0.05, h);
-		// 	}
-		// 	else if (biome == 3) {
-		// 		generateTree(jungleTrees, modelTransform *td, mv, 0.05, 0.05, h);
-		// 	}
-		// 	else {
-		// 		generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
-		// 	}
-		// }
+		for (int i = 0; i < p.treeVerts.size(); i++) {
+			int biome = p.biomeMap.at(i);
+			int tv = p.treeVerts.at(i);
+			vec3 mv = p.modifiedVerticies.at(tv);
+			mat4 td = createTreeTransMatrix(mv);
+			int h = 0;
+
+			if (biome == 0) {
+				generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
+			}
+			else if (biome == 1) {
+				generateTree(dessertTrees, modelTransform *td, mv, 0.05, 0.05, h);
+			}
+			else if (biome == 2) {
+				generateTree(snowTrees, modelTransform *td, mv, 0.05, 0.05, h);
+			}
+			else if (biome == 3) {
+				generateTree(jungleTrees, modelTransform *td, mv, 0.05, 0.05, h);
+			}
+			else {
+				generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
+			}
+		}
 
 
 		// Scale the mesh
