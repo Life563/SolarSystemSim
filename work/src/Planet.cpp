@@ -15,21 +15,40 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/euler_angles.hpp"
 
+//  Windows
+#ifdef _WIN32
+
+#include <intrin.h>
+uint64_t rdtsc() {
+	return __rdtsc();
+}
+
+//  Linux/GCC
+#else
+
+uint64_t rdtsc() {
+	unsigned int lo, hi;
+	__asm__ __volatile__("rdtsc" : "=a" (lo), "=d" (hi));
+	return ((uint64_t)hi << 32) | lo;
+}
+
+#endif
+
 /**
- * Class which deals with the planet
- *
- * May create holder classes which contain different types of information about how the planet should be generated, like what colour it would be
- * size etc.
+ * Constructor class. This is treated as the sun
  **/
 Planet::Planet() {
+	//srand(glfwGetTime() * 5000); // Makes sure we have a random seed
 	// Generate the Planet
 	generateIcosahedron();
 	subdivideIcosahedron();
 	// Set mesh
+	vertColours.clear();
 	cgra::Matrix<double> vertices(originalVerticies.size(), 3);
 	for (int i = 0; i < originalVerticies.size(); i++) {
 		vertices.setRow(i, { originalVerticies.at(i)[0], originalVerticies.at(i)[1], originalVerticies.at(i)[2] });
-		vertColours.push_back({ 255/255, 255/255, 0/255 }); // Shift the green value for some variation (rand() % 255 + 1)
+		float g = (float)(rand() % 105 + 150.0f);
+		vertColours.push_back({ 255.0f/255.0f, g /255.0f, 0.0f /255.0f }); // Shift the green value for some variation
 	}
 	// Setup Triangles
 	cgra::Matrix<unsigned int> triangles(originalTriangles.size(), 3);
@@ -42,12 +61,20 @@ Planet::Planet() {
 }
 
 /*
-* 
+* Main constructor for planets
 */
-Planet::Planet(PlanetInfo pi, int id){
+Planet::Planet(PlanetInfo pi, int id, int octs, float freq, float amps, int sub){
+	// Load info from planet info class
 	this->location = pi.location;
 	this->rotationSpeed = pi.rotationSpeed;
-	this->colorID = id;
+	this->cs1 = pi.colorSet1;
+	// Extras
+	this->planetId = id;
+	this->subdivisions = sub;
+	// Noise Values
+	this->octaves = octs;
+	this->frequency = freq;
+	this->amplitude = amps;
 	// Generate the Planet
 	generatePlanet();
 }
@@ -63,10 +90,10 @@ void Planet::generateIcosahedron() {
 }
 
 /*
-* Method to 
+* Method to generate the planets
 */
 void Planet::generatePlanet() {
-	srand(glfwGetTime() + (this->colorID+1) * 5000); // Makes sure we have a random seed
+	srand(rdtsc()); // Makes sure we have a random seed
 	double startTime = glfwGetTime();
 	generateIcosahedron();
 	subdivideIcosahedron();
@@ -79,19 +106,7 @@ void Planet::generatePlanet() {
 	point = double(rand()) / (double(RAND_MAX) + 1.0);
 	if (point < 0.5f) { // Generate a ring around planet
 		//this->generateRings();
-	}
-	// Set mesh
-	cgra::Matrix<double> vertices(originalVerticies.size(), 3);
-	for (int i = 0; i < originalVerticies.size(); i++) {
-		vertices.setRow(i, { originalVerticies.at(i)[0], originalVerticies.at(i)[1], originalVerticies.at(i)[2] });
-	}
-	// Setup Triangles
-	cgra::Matrix<unsigned int> triangles(originalTriangles.size(), 3);
-	for (int i = 0; i < originalTriangles.size(); i++) {
-		triangles.setRow(i, { originalTriangles.at(i)[0], originalTriangles.at(i)[1], originalTriangles.at(i)[2] });
-	}
-	// Set Mesh
-	this->mesh.setData(vertices, triangles, this->vertColours);
+	}	
 	this->timeTaken = glfwGetTime() - startTime;
 	std::cout << "Generated Planet, Time Taken: " << this->timeTaken << " Seconds" << std::endl;
 }
@@ -143,36 +158,44 @@ int Planet::getMidPoint(int a, int b) {
 	return loc;
 }
 
-float Planet::generateRandomNoise(int i) {
-	return double(rand()) / (double(RAND_MAX) + 1.0);
-	//if (point < 0.4f) { // Sea			
-	//	// Do nothing
-	//	return 0.0f;
-	//}else if (point < 0.7) { // Normal
-	//	return 0.5f;
-	//}else { // Mountain
-	//	return 1.0f;
-	//}
-}
-
 /*
 *  Returns a floating point between -1.0f & 1.0f which has been generated through running a vertex point through a Perlin noise algorithm
 */
-float Planet::generatePerlinNoise(int i) {
-	float scale = rand() % 10 + 1; // Use a scale factor to randomise noise
-	float point = glm::perlin(glm::vec3(originalVerticies.at(i)[0]/ scale, originalVerticies.at(i)[1]/ scale, originalVerticies.at(i)[2]/ scale));
-	// Update Vertex
-	return point;
-}
+float Planet::generateNoise(int i) {
+	float xFactor = 1.0f / (glm::sqrt(originalVerticies.size()) - 1);
+	float yFactor = 1.0f / (glm::sqrt(originalVerticies.size()) - 1);
+	float zFactor = 1.0f / (glm::sqrt(originalVerticies.size()) - 1);
 
-/*
-* Returns a floating point between -1.0f & 1.0f which has been generated through running a vertex point through a simplex noise algorithm
-*/
-float Planet::generateSimplexNoise(int i) {
-	float scale = rand() % 100 + 1; // Use a scale factor to randomise noise
-	float point = glm::simplex(glm::vec3(originalVerticies.at(i)[0] / scale, originalVerticies.at(i)[1] / scale, originalVerticies.at(i)[2] / scale));
-	// Update vertex
-	return point;
+	float x = xFactor * originalVerticies.at(i)[0];
+	float y = yFactor * originalVerticies.at(i)[1];
+	float z = zFactor * originalVerticies.at(i)[2];
+
+	float sum = 0.0f;
+	// Tuneable
+	float freq = this->frequency; 
+	float amp = this->amplitude; 
+	//float point;
+	for (int octs = 0; octs < this->octaves; octs++) {
+		glm::vec3 p = glm::vec3(x * freq, y*freq, z * freq);
+		float value;
+		if (this->perlin) {
+			value = glm::perlin(p, glm::vec3(freq)) / amp;
+		} else if (this->simplex) {
+			value = glm::simplex(p) / amp;
+		} else { // Random
+			value = double(rand()) / (double(RAND_MAX) + 1.0);
+		}
+		sum += value;
+		freq *= 2.0f;
+		amp *= 2;
+	}
+
+	//float scale = rand() % 10 + 5; // Use a scale factor to randomise noise
+	//float point = glm::perlin(glm::vec3(originalVerticies.at(i)[0]/ scale, originalVerticies.at(i)[1]/ scale, originalVerticies.at(i)[2]/ scale));
+	//float point = 
+	// Update Vertex
+	//std::cout << sum << std::endl;
+	return sum;
 }
 
 /*
@@ -191,51 +214,24 @@ float Planet::generateSimplexNoise(int i) {
 */
 void Planet::generateTerrain() {	
 	// Generate and apply noise to change terrain
+	modifiedVerticies.clear();
 	for (int i = 0; i < originalVerticies.size(); i++) {
-		//originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateRandomNoise(i) / 2);
-		//originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generatePerlinNoise(i) / 2);
-		originalVerticies.at(i) = originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateSimplexNoise(i) / 2);
+		modifiedVerticies.push_back(originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateNoise(i)));
 	}
-	//// Generate a new set of noise for biome
-	//for (int i = 0; i < originalVerticies.size(); i++) {
-	//	float point = generateRandomNoise(i);
-	//	//float point = generatePerlinNoise(i);
-	//	//float point = generateSimplexNoise(i);
-	//	//std::cout << point << std::endl;
-	//	if (point > 0.0f && point < 0.5f) { // Grass lands
-	//		biomeMap.push_back(0);
-	//		std::cout << "Grasslands" << std::endl;
-	//	} else if (point < 0.0f && point > -0.5f) { // Desert
-	//		biomeMap.push_back(1);
-	//		std::cout << "Desert" << std::endl;
-	//	} else if (point < -0.5f){  // Snow
-	//		biomeMap.push_back(2);
-	//		std::cout << "Snow" << std::endl;
-	//	}else { // Jungle
-	//		biomeMap.push_back(3); 
-	//		std::cout << "Jungle" << std::endl;
-	//	}
-	//}
-	// Generate Colors based off height & biome
-	// Use Vor Cells
-	voronoiCells();
-	//vertColours.clear();
-	//for (int i = 0; i < originalVerticies.size(); i++) {
-	//	// Get distance between center of planet and current vertex
-	//	float dis = glm::distance(originalVerticies.at(i), glm::vec3(0, 0, 0));
-	//	//std::cout << dis << std::endl;
-	//	bool land = false, sea = false, mountain = false;
-	//	// Determin Color
-	//	if (dis < 1.0f) { // Sea
-	//		vertColours.push_back({ 0 / 255, 0 / 255, 255 / 255 });
-	//	}
-	//	else if (dis < 1.1f) { // Flatland
-	//		vertColours.push_back({ 0 / 255, 255 / 255, 0 / 255 });
-	//	}
-	//	else { // Hill
-	//		vertColours.push_back({ 125 / 255, 55 / 255, 31 / 255 });
-	//	}
-	//}
+	// Use Vor Cells to generate biomes
+	voronoiCells();	
+	// Set mesh
+	cgra::Matrix<double> vertices(modifiedVerticies.size(), 3);
+	for (int i = 0; i < modifiedVerticies.size(); i++) {
+		vertices.setRow(i, { modifiedVerticies.at(i)[0], modifiedVerticies.at(i)[1], modifiedVerticies.at(i)[2] });
+	}
+	// Setup Triangles
+	cgra::Matrix<unsigned int> triangles(originalTriangles.size(), 3);
+	for (int i = 0; i < originalTriangles.size(); i++) {
+		triangles.setRow(i, { originalTriangles.at(i)[0], originalTriangles.at(i)[1], originalTriangles.at(i)[2] });
+	}
+	// Set Mesh
+	this->mesh.setData(vertices, triangles, this->vertColours);
 }
 
 /*
@@ -247,42 +243,55 @@ void Planet::voronoiCells() {
 	int numberOfSites = 5; // rand() % (this->originalVerticies.size()) + 5;
 	for (int i = 0; i < numberOfSites; i++) {
 		// Decide on a random point
-		int vertToSite = rand() % this->originalVerticies.size();
-		this->sites.push_back(this->originalVerticies.at(vertToSite));
+		int vertToSite = rand() % this->modifiedVerticies.size();
+		this->sites.push_back(this->modifiedVerticies.at(vertToSite));
 	}
 	vertColours.clear();
 	// Now 
-	for (int i = 0; i < this->originalVerticies.size(); i++) {
+	for (int i = 0; i < this->modifiedVerticies.size(); i++) {
 		float shortestDistance = 9999.0f;
 		int biomeNum;
 		// List of potential canidates
 		// If a point is an equal distance between multiple points, randomly decide on what it should be
 		for (int j = 0; j < this->sites.size(); j++) {
-			float dis = glm::distance(originalVerticies.at(i), this->sites.at(j));
+			float dis = glm::distance(modifiedVerticies.at(i), this->sites.at(j));
 			if (dis < shortestDistance) {
 				shortestDistance = dis;
 				biomeNum = j;
 			}
 		}
 		// Determin Color
-		if (biomeNum == 0) { // Flatlands
-			vertColours.push_back({ 0 / 255, 255 / 255, 0 / 255 });
-		}
-		else if (biomeNum == 1) { // Dessert
-			vertColours.push_back({ 183 / 255, 119 / 255, 45 / 255 });
-		}
-		else if (biomeNum == 2) { // Snow
-			vertColours.push_back({ 255 / 255, 255 / 255, 255 / 255 });
-		}
-		else if (biomeNum == 3) { // Jungle
-			vertColours.push_back({ 15 / 255, 86 / 255, 36 / 255 });
-		}
-		else { // Urban
-			vertColours.push_back({ 255 / 255, 0 / 255, 0 / 255 });
+		// First we will check the height, if the height is less than 1.0f, it will be a sea tile, so it will be blue regardless
+		// Get distance between center of planet and current vertex
+		float dis = glm::abs(glm::length(modifiedVerticies.at(i)));
+		//float dis = glm::distance(glm::vec3(0, 0, 0), originalVerticies.at(i));
+		std::cout << dis << std::endl;
+		if (dis <= 1.0f) {
+			vertColours.push_back(this->cs1.at(0)); // 'Sea' color
+		} else {
+			if (biomeNum == 0) { // Flatlands
+				vertColours.push_back(this->cs1.at(1));
+			}
+			else if (biomeNum == 1) { // Dessert
+				vertColours.push_back(this->cs1.at(2));
+			}
+			else if (biomeNum == 2) { // Snow
+				vertColours.push_back(this->cs1.at(3));
+			}
+			else if (biomeNum == 3) { // Jungle
+				vertColours.push_back(this->cs1.at(4));
+			}
+			else { // Urban
+				vertColours.push_back(this->cs1.at(5));
+			}
+			biomeMap.push_back(biomeNum);
 		}
 	}
 }
 
+/*
+* Generates a small moon for the planet which uses the base icohedron
+*/
 void Planet::generateMoon() {
 	this->hasMoon = true;
 	float t = (1.0f + glm::sqrt(5.0f)) / 2.0f;

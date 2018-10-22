@@ -48,7 +48,6 @@ void SolarSystem::init() {
 	for (int i = 0; i < 5; i++) {
 		ls.generate();
 	}
-
 	// Create the sun
 	generateSun();
 	// Setup Basic Planet Info
@@ -90,7 +89,7 @@ void SolarSystem::generateSystem() {
 		int spot = rand() % temp.size();
 		PlanetInfo pi = temp.at(spot);
 		temp.erase(temp.begin() + spot);
-		Planet p = Planet(pi, i);
+		Planet p = Planet(pi, i, this->octaves, this->freq, this->amp, this->subs);
 		p.name = std::to_string(i);
 		planets.push_back(p);
 	}
@@ -98,61 +97,69 @@ void SolarSystem::generateSystem() {
 	std::cout << "Generated System, Time Taken: " << timeTaken << " Seconds" << std::endl;
 }
 
+/*
+* Biome Keys:
+* 0 = FlatLand (Grass)
+* 1 = Desert
+* 2 = Snow
+* 3 = Jungle
+* 4 = Urban
+*/
 void SolarSystem::generatePlanetSpots() {
 	//std::vector<std::vector<double>> cs1;
 	// First Spot: Closest to the sun
 	this->planetSpots.push_back(
 		generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
 		{
-			{ 1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}
+			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Second Spot
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(10.0f, 0.0f, 0.0f), 2.0f,
 		{
-			{ 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
+			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
 		}
 	));
 	// Third
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(15.0f, 0.0f, 0.0f), 3.0f,
 		{
-			{ 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
+			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
 		}
 	));
 	// Fourth: "Goldy locks zone"
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(20.0f, 0.0f, 0.0f), 4.0f,
 		{
-			{ 1.0f, 1.0f , 1.0f}, { 1.0f, 1.0f , 1.0f}, { 1.0f, 1.0f , 1.0f}, { 1.0f, 1.0f , 1.0f}, { 1.0f, 1.0f , 1.0f}
+			{ 0.0f, 1.0f , 0.0f}, { 0.0f, 1.0f , 0.0f}, { 237.0f/255.0f, 166.0f / 255.0f , 66.0f / 255.0f}, { 1.0f, 1.0f , 1.0f}, { 0.0f, 0.7f , 0.0f}, { 0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Fifth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(25.0f, 0.0f, 0.0f), 5.0f,
 		{
-			{ 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}
+			{ 0.0f, 1.0f , 0.0f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}
 		}
 	));
 	// Sixth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(30.0f, 0.0f, 0.0f), 6.0f,
 		{
-			{ 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
+			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
 		}
 	));
 	// Seventh
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(35.0f, 0.0f, 0.0f), 7.0f,
 		{
-			{ 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
+			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}
 		}
 	));
 	// Eighth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(40.0f, 0.0f, 0.0f), 8.0f,
 		{
-			{ 0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}
+			{ 0.0f, 1.0f , 0.0f}, { 0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}, {0.0f, 0.2f , 1.0f}
 		}
 	));
 	// Nineth : Furthest away
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(45.0f, 0.0f, 0.0f), 9.0f,
 		{
-			{ 0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}
+			{ 0.0f, 1.0f , 0.0f}, { 0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}, {0.0f, 0.0f , 1.0f}
 		}
 	));
 }
@@ -297,7 +304,7 @@ mat4 SolarSystem::createTreeTransMatrix(vec3 startPoint) {
 * - Changing the starting pos
 * - 
 */
-PlanetInfo SolarSystem::generatePlanetInfo(glm::vec3 pos, float rs, std::vector<std::vector<double>> cs1) {
+PlanetInfo SolarSystem::generatePlanetInfo(glm::vec3 pos, float rs, std::vector<glm::vec3> cs1) {
 	PlanetInfo pi = PlanetInfo();
 	// Decide its position
 	if (rand() % 10 >= 5) {
@@ -543,12 +550,26 @@ void SolarSystem::doGUI() {
 			}
 		}
 
-		if (ImGui::Checkbox("Cinematic Camera", &cinematicCam)) { // Rotates around the scene
-			freeCam = false;
+		if (ImGui::InputInt("Frequency", &this->freq)) {
+			if (this->freq < 0) {
+				this->freq = 0;
+			}
+		}
+		
+		if (ImGui::InputInt("Scale", &this->amp)) {
+			if (this->amp < 0) {
+				this->amp = 0;
+			}
+		}
+		
+		if (ImGui::InputInt("Octaves", &this->octaves)) {
+			if (this->octaves < 0) {
+				this->octaves = 0;
+			}
 		}
 
-		if (ImGui::Button("Generate New System")) {
-			this->generateSystem();
+		if (ImGui::Checkbox("Cinematic Camera", &cinematicCam)) { // Rotates around the scene
+			freeCam = false;
 		}
 
 		std::string rot;
@@ -571,6 +592,12 @@ void SolarSystem::doGUI() {
 		if (ImGui::SliderFloat("Beta", &beta, 0.0f, 0.04f, "%.2f")) {
 			m_program.setBeta(beta);
 		}
+
+
+		if (ImGui::Button("Generate New System")) {
+			this->generateSystem();
+		}
+
 		ImGui::End();
 	}
 	else {
@@ -583,19 +610,45 @@ void SolarSystem::doGUI() {
 		std::string planetTris = "Planet Tris: " + std::to_string(this->planets.at(this->currentPlanet).originalTriangles.size());
 		ImGui::Text(planetTris.data());
 
-		if (ImGui::Checkbox("Random Noise", &this->planets.at(this->currentPlanet).random)) { // Enable Random Noise
-			this->planets.at(this->currentPlanet).perlin = false;
-			this->planets.at(this->currentPlanet).simplex = false;
-		}
-
 		if (ImGui::Checkbox("Perlin Noise", &this->planets.at(this->currentPlanet).perlin)) { // Use Perlin Noise
-			this->planets.at(this->currentPlanet).random = false;
 			this->planets.at(this->currentPlanet).simplex = false;
 		}
 
 		if (ImGui::Checkbox("Simplex Camera", &this->planets.at(this->currentPlanet).simplex)) { // Rotates around the scene
 			this->planets.at(this->currentPlanet).perlin = false;
-			this->planets.at(this->currentPlanet).random = false;
+		}
+
+		if (ImGui::InputInt("Planet Subdivisions", &this->planets.at(this->currentPlanet).subdivisions)) {
+			if (this->planets.at(this->currentPlanet).subdivisions < 0) {
+				this->planets.at(this->currentPlanet).subdivisions = 0;
+			}
+			if (this->planets.at(this->currentPlanet).subdivisions > 3) {
+				this->planets.at(this->currentPlanet).subdivisions = 3;
+			}
+		}
+
+		if (ImGui::InputFloat("Frequency", &this->planets.at(this->currentPlanet).frequency)) {
+			if (this->planets.at(this->currentPlanet).frequency < 0) {
+				this->planets.at(this->currentPlanet).frequency = 0;
+			}
+			// Regenerate 
+			this->planets.at(this->currentPlanet).generateTerrain();
+		}
+
+		if (ImGui::InputFloat("Scale", &this->planets.at(this->currentPlanet).amplitude)) {
+			if (this->planets.at(this->currentPlanet).amplitude < 0) {
+				this->planets.at(this->currentPlanet).amplitude = 0;
+			}
+			// Regenerate 
+			this->planets.at(this->currentPlanet).generateTerrain();
+		}
+
+		if (ImGui::InputInt("Octaves", &this->planets.at(this->currentPlanet).octaves)) {
+			if (this->planets.at(this->currentPlanet).octaves < 0) {
+				this->planets.at(this->currentPlanet).octaves = 0;
+			}
+			// Regenerate 
+			this->planets.at(this->currentPlanet).generateTerrain();
 		}
 
 		if (ImGui::Button("Regenerate Planet")) {

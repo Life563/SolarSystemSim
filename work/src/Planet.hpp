@@ -11,7 +11,7 @@
 
 extern struct PlanetInfo {
 	glm::vec3 location;
-	std::vector<std::vector<double>> colorSet1;
+	std::vector<glm::vec3> colorSet1;
 	float rotationSpeed;
 };
 
@@ -20,7 +20,7 @@ public:
 	
 	// Methods
 	Planet();
-	Planet(PlanetInfo pi, int id);
+	Planet(PlanetInfo pi, int id, int octs, float freq, float amp, int sub );
 	void draw();
 
 	// Variables
@@ -34,30 +34,37 @@ public:
 	cgra::Mesh ringMesh;
 
 	// Original
-	std::vector<glm::vec3> originalVerticies;
+	std::vector<glm::vec3> originalVerticies;	
 	std::vector<std::vector<unsigned int>> originalTriangles;
+	// Ones Used after the height map
+	std::vector<glm::vec3> modifiedVerticies;
+
+	// Color Pallets
+	std::vector<glm::vec3> cs1;
 
 	// Sites used for voronoi
 	std::vector<glm::vec3> sites;
 
 	std::map<int, int> midPoints;
-	std::vector<glm::vec3> vertColours;
+	std::vector<glm::vec3> vertColours; // Current colors for each vertex
 
 	std::string name;
-	int colorID; // Used for color picking
+	int planetId;
 	bool selected;
 	int radius;
 	int subdivisions = 1;
-	std::vector<float> heightMap;
-	std::vector<float> biomeMap;
-	bool random = false, perlin = false, simplex = true;
+	std::vector<int> biomeMap;
+	bool perlin = true, simplex = false;
 	bool hasMoon = false;
 	bool hasRing = false;
+
+	int octaves = 4;
+	float frequency = 1;
+	float amplitude = 2;
 
 	double timeTaken;
 
 	// Methods
-	cgra::Mesh loadObj(const char *filename);
 	void generatePlanet();
 	void generateIcosahedron();
 	void subdivideIcosahedron();
@@ -68,9 +75,7 @@ public:
 	void populatePlanet();
 	void voronoiCells();
 
-	// Noise Methods
-	float generateRandomNoise(int i);
-	float generatePerlinNoise(int i);
-	float generateSimplexNoise(int i);
+	// Noise
+	float generateNoise(int i);
 	
 };

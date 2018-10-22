@@ -58,11 +58,11 @@ public:
 	glm::vec3 right = glm::vec3(1.0f);
 	glm::vec3 direction = glm::vec3(1.0f);
 	glm::vec3 up = glm::vec3(1.0f);
-	// horizontal angle : toward -Z
-	float horizontalAngle = 3.14f;
-	// vertical angle : 0, look at the horizon
-	float verticalAngle = 0.0f;
+	
+	float horizontalAngle = 3.14f; // horizontal angle : toward -Z	
+	float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 
+	// Movement and mouse
 	float movementSpeed = 0.05f;
 	float mouseSpeed = 0.00009f;
 	float deltaTime = 0.0f;
@@ -73,6 +73,11 @@ public:
 	int numberOfTris = 0;
 	int currentPlanet = 0;
 	int subs = 1;
+
+	// Global Noise Functions
+	int freq = 1;
+	int amp = 2;
+	int octaves = 4;
 
 	// 
 	bool playingRotation = false;
@@ -109,7 +114,7 @@ public:
 	void generateLights();
 
 
-	PlanetInfo generatePlanetInfo(glm::vec3 pos, float rs, std::vector<std::vector<double>> cs1);
+	PlanetInfo generatePlanetInfo(glm::vec3 pos, float rs, std::vector<glm::vec3> cs1);
 
     void drawScene();
     void doGUI();
