@@ -723,12 +723,12 @@ void SolarSystem::doGUI() {
 
 		if (ImGui::Button("Reset Camera")) { // Just incase user loses track
 			freeCam = false;
-			glm::vec3 position = glm::vec3(0, 0, 10);
-			glm::vec3 right = glm::vec3(1.0f);
-			glm::vec3 direction = glm::vec3(1.0f);
-			glm::vec3 up = glm::vec3(1.0f);
-			float horizontalAngle = 3.14f; // horizontal angle : toward -Z
-			float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
+			position = glm::vec3(0, 0, 10);
+			right = glm::vec3(1.0f);
+			direction = glm::vec3(1.0f);
+			up = glm::vec3(1.0f);
+			horizontalAngle = 3.14f; // horizontal angle : toward -Z
+			verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 		}
 
 		if (ImGui::Button("Next Planet")) {

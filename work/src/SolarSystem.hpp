@@ -50,7 +50,7 @@ public:
     // A 4x4 matrix representing the rotation of the
     // mesh
     glm::mat4 m_rotationMatrix;
-	
+
 	glm::mat4 viewMatrix;
 
     // Whether or not the left, middle or right buttons are down.
@@ -58,7 +58,7 @@ public:
 
 	Planet sun;
 	std::vector<Planet> planets;
-	std::vector<PlanetInfo> planetSpots;	
+	std::vector<PlanetInfo> planetSpots;
 	int numberOfPlanets = 1;
 
 	// Camera Controls
@@ -68,8 +68,8 @@ public:
 	glm::vec3 right = glm::vec3(1.0f);
 	glm::vec3 direction = glm::vec3(1.0f);
 	glm::vec3 up = glm::vec3(1.0f);
-	
-	float horizontalAngle = 3.14f; // horizontal angle : toward -Z	
+
+	float horizontalAngle = 3.14f; // horizontal angle : toward -Z
 	float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 
 	// Movement and mouse
@@ -90,7 +90,7 @@ public:
 	int amp = 2;
 	int octaves = 4;
 
-	// 
+	//
 	bool playingRotation = false;
 	double timeTaken;
 

@@ -42,9 +42,9 @@ uniform bool onlyPointLights;       // Determine whether only point light contri
 // Object color attributes
 const vec3 objectSpecColor    = vec3(0.2, 0.1, 0.1);
 const float shininess         = 20;
-const vec3 ambientColor = vec3(0.05, 0.05, 0.1);
+const vec3 ambientColor       = vec3(0.05, 0.05, 0.1);
 const vec3 objectDiffuseColor = vec3(0.4, 0.4, 0.1);
-const vec3 specColor    = vec3(0.2, 0.1, 0.1);
+const vec3 specColor          = vec3(0.2, 0.1, 0.1);
 
 // Lookup Table Attributes
 const float maxU = 10;
@@ -61,7 +61,6 @@ void main() {
                     Point Lights
     ******************************************/
     for(int i = 0; i < numPointLights; i++){
-
         PointLight p = pointLights[i]; // Current Point Light
 
         // Move the light based on view of the camera
@@ -80,6 +79,11 @@ void main() {
         float gamma = acos(dot(normalize(viewerToLight), normalize(viewerToSurface))); // Angle between light source and viewing ray
         float thetaS = acos(dot(surfaceNormal, -normalize(lightToSurface))); // Direction of light source to surface
         float thetaSPrime = acos(dot(-normalize(lightToSurface), reflect(normalize(viewerToSurface), surfaceNormal)));
+
+        if(acos(dot(surfaceNormal, normalize(viewerToLight))) < 0) {
+            continue;
+        }
+
         /****************** Airlight - Radiance coming from Light Source ***********************/
 
         // The light coming from the direct transmission of the light source.
@@ -127,7 +131,6 @@ void main() {
         vec3 totalColor = totalLambertian + totalSpecular + totalAirlight;
         cumulativeColor = cumulativeColor + totalColor;
     }
-
 
     /*****************************************
                 Directional Light
