@@ -477,7 +477,6 @@ void SolarSystem::drawScene() {
 	billBoardShader.setProjectionMatrix(projectionMatrix);
 
 	// Caculate View Matrix depending on the mode we are in
-	glm::mat4 viewMatrix(1);
 	if (cinematicCam) {
 		float radius = 10.0f;
 		float camX = sin(glfwGetTime()) * radius;

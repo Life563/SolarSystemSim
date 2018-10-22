@@ -20,10 +20,11 @@ void main()
 {
 	vec3 particleCenter_wordspace = BillboardPos;
 	
-	vec3 vertexPosition_worldspace = 
+		vec3 vertexPosition_worldspace = 
 		particleCenter_wordspace
-		+ CameraRight_worldspace * squareVertices.x 
-		+ CameraUp_worldspace * squareVertices.y ;
+		+ CameraRight_worldspace * squareVertices.x * BillboardSize.x 
+		+ CameraUp_worldspace * squareVertices.y * BillboardSize.y;
+
 
 
 	// Output position of the vertex
