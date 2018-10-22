@@ -60,15 +60,15 @@ void SolarSystem::init() {
 }
 
 void::SolarSystem::generateLights() {
-	PointLight p = PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(20, 20, 20));
+	PointLight p = PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(2, 2, 2));
 	PointLight p2 = PointLight(glm::vec3(0, 1, 0), 1, glm::vec3(-20, -20, -20));
-	PointLight p3 = PointLight(glm::vec3(1, 1, 0), 1, glm::vec3(-20, 20, -20));
+	PointLight p3 = PointLight(glm::vec3(1, 1, 0), 1, glm::vec3(0, 0, 0));
 
-	PointLight pLights[] = { p, p2 };
+	PointLight pLights[] = { p, p2, p3 };
 
 	DirectionalLight d = DirectionalLight(glm::vec3(0.25, 0.25, -1));
 
-	m_lightScene.setPointLights(2, &pLights[0]);
+	m_lightScene.setPointLights(3, &pLights[0]);
 
 	m_lightScene.setDirectionalLight(d);
 }
@@ -375,7 +375,7 @@ void SolarSystem::createCube() {
 
 void SolarSystem::drawBoundingBox() {
 	GLuint airlightOnly;
-	glUniform1i(glGetUniformLocation(m_program.getProgram(), "airlightOnly"), 1);
+	glUniform1i(glGetUniformLocation(m_program.getProgram(), "onlyPointLights"), 1);
 	//m_program.setColour(glm::vec3(0, 0, 0));
 	// Bottom
 	glm::mat4 modelTransform = glm::mat4(1.0f);
@@ -419,7 +419,7 @@ void SolarSystem::drawBoundingBox() {
 	modelTransform = glm::scale(modelTransform, glm::vec3(1, 50, 50));
 	m_program.setModelMatrix(modelTransform);
 	m_cube.draw();
-	glUniform1i(glGetUniformLocation(m_program.getProgram(), "airlightOnly"), 0);
+	glUniform1i(glGetUniformLocation(m_program.getProgram(), "onlyPointLights"), 0);
 }
 
 
@@ -455,7 +455,7 @@ void SolarSystem::drawScene() {
 
 	// Perpendicular to both direction and right camera views
 	up = glm::cross(right, direction);
-	m_program.setViewerPosition(position);
+	
 	viewMatrix = glm::lookAt(position, position + direction, up);	
 	m_program.setViewMatrix(viewMatrix);
 
@@ -690,6 +690,7 @@ void SolarSystem::onKey(int key, int scancode, int action, int mods) {
 		if (GLFW_KEY_D == key) {
 			position += right * deltaTime * movementSpeed;
 		}
+		m_program.setViewerPosition(position);
 	}
 
 }
