@@ -101,8 +101,7 @@ void SolarSystem::generateSystem() {
 		p.name = std::to_string(i);
 		planets.push_back(p);
 	}
-	double timeTaken = glfwGetTime() - startTime;
-	std::cout << "Generated System, Time Taken: " << timeTaken << " Seconds" << std::endl;
+	this->timeTaken = glfwGetTime() - startTime;
 }
 
 /*
@@ -114,58 +113,50 @@ void SolarSystem::generateSystem() {
 * 4 = Urban
 */
 void SolarSystem::generatePlanetSpots() {
-	//std::vector<std::vector<double>> cs1;
 	// First Spot: Closest to the sun
-	this->planetSpots.push_back(
-		generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
-			{
-				{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {0.5f, 0.5f , 0.5f}
-			}
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
+		{
+			{ 1.0f, 0.0f , 0.0f}, { 1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {0.5f, 0.5f , 0.5f}
+		}
 	));
 	// Second Spot
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(10.0f, 0.0f, 0.0f), 2.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Third
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(15.0f, 0.0f, 0.0f), 3.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Fourth: "Goldy locks zone"
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(20.0f, 0.0f, 0.0f), 4.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 0.0f, 1.0f , 0.0f}, { 237.0f / 255.0f, 166.0f / 255.0f , 66.0f / 255.0f}, { 1.0f, 1.0f , 1.0f}, { 0.0f, 0.7f , 0.0f}, { 0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 0.0f, 1.0f , 0.0f}, { 237.0f / 255.0f, 166.0f / 255.0f , 66.0f / 255.0f}, { 1.0f, 1.0f , 1.0f}, { 0.0f, 0.7f , 0.0f}, { 0.6f, 0.6f , 0.6f}
 		}
 	));
 	// Fifth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(25.0f, 0.0f, 0.0f), 5.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Sixth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(30.0f, 0.0f, 0.0f), 6.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.0f, 0.0f , 0.0f}, {0.0f, 0.6f , 0.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Seventh
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(35.0f, 0.0f, 0.0f), 7.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Eighth
-	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(40.0f, 0.0f, 0.0f), 8.0f,
-		{
-			{ 0.0f, 0.0f , 0.9f}, { 163.0f / 255.0f, 198.0f / 255.0f , 1.0f}, {1.0f, 1.0f , 1.0f}, {1.0f, 1.0f , 1.0f}, {0.0f, 30.0f / 255.0f , 79.0f / 255.0f}, {0.6f, 0.6f , 0.6f}
-		}
-	));
-	// Nineth : Furthest away
-	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(45.0f, 0.0f, 0.0f), 9.0f,
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(45.0f, 0.0f, 0.0f), 8.0f,
 		{
 			{ 0.0f, 0.0f , 1.0f}, { 163.0f / 255.0f, 198.0f / 255.0f , 1.0f}, {1.0f, 1.0f , 1.0f}, {1.0f, 1.0f , 1.0f}, {0.0f, 30.0f / 255.0f , 79.0f / 255.0f}, {0.6f, 0.6f , 0.6f}
 		}
@@ -587,12 +578,15 @@ void SolarSystem::doGUI() {
 		std::string totalTris = "Total Number of Tris: " + std::to_string(pt);
 		ImGui::Text(totalTris.data());
 
+		std::string timeTaken = "System Generation Time: " + std::to_string(this->timeTaken) + " Seconds";
+		ImGui::Text(timeTaken.data());
+
 		if (ImGui::InputInt("Number of Planets", &numberOfPlanets)) {
 			if (numberOfPlanets < 0) {
 				numberOfPlanets = 0;
 			}
-			if (numberOfPlanets > 9) {
-				numberOfPlanets = 9;
+			if (numberOfPlanets > 8) {
+				numberOfPlanets = 8;
 			}
 		}
 		
@@ -655,6 +649,10 @@ void SolarSystem::doGUI() {
 			this->generateSystem();
 		}
 
+		if (ImGui::Button("View Planet Screen")) {
+			this->changeScreen = 1;
+		}
+
 		ImGui::End();
 	}
 	else {
@@ -666,6 +664,9 @@ void SolarSystem::doGUI() {
 
 		std::string planetTris = "Planet Tris: " + std::to_string(this->planets.at(this->currentPlanet).originalTriangles.size());
 		ImGui::Text(planetTris.data());
+
+		std::string timeTaken = "Generation Time: " + std::to_string(this->planets.at(this->currentPlanet).timeTaken) + " Seconds";
+		ImGui::Text(timeTaken.data());
 
 		if (ImGui::Checkbox("Perlin Noise", &this->planets.at(this->currentPlanet).perlin)) { // Use Perlin Noise
 			this->planets.at(this->currentPlanet).simplex = false;

@@ -124,8 +124,7 @@ void Planet::generatePlanet() {
 		int tv = dis(randGen);
 		treeVerts.push_back(tv);
 	}
-	this->timeTaken = glfwGetTime() - startTime;
-	std::cout << "Generated Planet, Time Taken: " << this->timeTaken << " Seconds" << std::endl;
+	this->timeTaken = glfwGetTime() - startTime; // Update Time
 }
 
 /*
@@ -191,7 +190,6 @@ float Planet::generateNoise(int i) {
 	// Tuneable
 	float freq = this->frequency; 
 	float amp = this->amplitude; 
-	//float point;
 	for (int octs = 0; octs < this->octaves; octs++) {
 		glm::vec3 p = glm::vec3(x * freq, y*freq, z * freq);
 		float value;
@@ -257,7 +255,6 @@ void Planet::voronoiCells() {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dis(0, this->modifiedVerticies.size()-1);
-	int vertSites [5];
 	int numberOfSites = 5;
 	for (int i = 0; i < numberOfSites; i++) {
 		// Decide on a random point
@@ -267,41 +264,28 @@ void Planet::voronoiCells() {
 	vertColours.clear();
 	// Now 
 	for (int i = 0; i < this->modifiedVerticies.size(); i++) {
-		float shortestDistance = 9999.0f;
-		int biomeNum;
+		float shortestDistance = FLT_MAX;
+		int ClosetBiomeNum;
 		// List of potential canidates
 		// If a point is an equal distance between multiple points, randomly decide on what it should be
 		for (int j = 0; j < this->sites.size(); j++) {
-			float dis = glm::abs(glm::distance(modifiedVerticies.at(i), this->sites.at(j)));
+			float dis = glm::distance(modifiedVerticies.at(i), this->sites.at(j));
 			if (dis <= shortestDistance) {
 				shortestDistance = dis;
-				biomeNum = j;
+				ClosetBiomeNum = j;
 			}
 		}
 		// First we will check the height, if the height is less than 1.0f, it will be a sea tile, so it will be blue regardless
 		// Get distance between center of planet and current vertex
 		float dis = glm::length(modifiedVerticies.at(i));
-		//float dis = glm::distance(glm::vec3(0, 0, 0), originalVerticies.at(i));
-		//std::cout << dis << std::endl;
+		//float dis = glm::distance(originalVerticies.at(i), glm::vec3(0, 0, 0));
+		std::cout << dis << std::endl;
 		if (dis <= 1.0f) {
 			vertColours.push_back(this->cs1.at(0)); // 'Sea' color
+			biomeMap.push_back(-1);
 		} else {
-			if (biomeNum == 0) { // Flatlands
-				vertColours.push_back(this->cs1.at(1));
-			}
-			else if (biomeNum == 1) { // Dessert
-				vertColours.push_back(this->cs1.at(2));
-			}
-			else if (biomeNum == 2) { // Snow
-				vertColours.push_back(this->cs1.at(3));
-			}
-			else if (biomeNum == 3) { // Jungle
-				vertColours.push_back(this->cs1.at(4));
-			}
-			else { // Urban
-				vertColours.push_back(this->cs1.at(5));
-			}
-			biomeMap.push_back(biomeNum);
+			vertColours.push_back(this->cs1.at(ClosetBiomeNum + 1));
+			biomeMap.push_back(ClosetBiomeNum);
 		}
 	}
 }
@@ -365,9 +349,6 @@ void Planet::generateRings() {
 	}
 	m_mesh.setData(vertices, triangles, vC);
 }
-
-
-
 
 void Planet::draw() {
 	// Draw the planet mesh first

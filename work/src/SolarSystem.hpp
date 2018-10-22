@@ -85,6 +85,7 @@ public:
 
 	// 
 	bool playingRotation = false;
+	double timeTaken;
 
 	// Interaction
 	bool wasLeftMouseDown = false;
