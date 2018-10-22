@@ -134,7 +134,7 @@ void Planet::subdivideIcosahedron() {
 	midPoints = std::map<int, int>();
 	for (int i = 0; i < this->subdivisions; i++) {
 		std::vector<std::vector<unsigned int>> newTris;
-		for (std::vector<unsigned int> tri : this->originalTriangles) { // Cycle through each polygon	
+		for (std::vector<unsigned int> tri : this->originalTriangles) { // Cycle through each polygon
 			// Create a new vertex or find one that was previously made
 			unsigned int ab = getMidPoint(tri[0], tri[1]);
 			unsigned int bc = getMidPoint(tri[1], tri[2]);
@@ -188,8 +188,8 @@ float Planet::generateNoise(int i) {
 
 	float sum = 0.0f;
 	// Tuneable
-	float freq = this->frequency; 
-	float amp = this->amplitude; 
+	float freq = this->frequency;
+	float amp = this->amplitude;
 	for (int octs = 0; octs < this->octaves; octs++) {
 		glm::vec3 p = glm::vec3(x * freq, y*freq, z * freq);
 		float value;
@@ -279,7 +279,7 @@ void Planet::voronoiCells() {
 		// Get distance between center of planet and current vertex
 		float dis = glm::length(modifiedVerticies.at(i));
 		//float dis = glm::distance(originalVerticies.at(i), glm::vec3(0, 0, 0));
-		std::cout << dis << std::endl;
+		//std::cout << dis << std::endl;
 		if (dis <= 1.0f) {
 			vertColours.push_back(this->cs1.at(0)); // 'Sea' color
 			biomeMap.push_back(-1);

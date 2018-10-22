@@ -527,29 +527,29 @@ void SolarSystem::drawScene() {
 		* 3 = Jungle
 		* 4 = Urban
 		*/
-		for (int i = 0; i < p.treeVerts.size(); i++) {
-			int biome = p.biomeMap.at(i);
-			int tv = p.treeVerts.at(i);
-			vec3 mv = p.modifiedVerticies.at(tv);
-			mat4 td = createTreeTransMatrix(mv);
-			int h = 0;
-
-			if (biome == 0) {
-				generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
-			}
-			else if (biome == 1) {
-				generateTree(dessertTrees, modelTransform *td, mv, 0.05, 0.05, h);
-			}
-			else if (biome == 2) {
-				generateTree(snowTrees, modelTransform *td, mv, 0.05, 0.05, h);
-			}
-			else if (biome == 3) {
-				generateTree(jungleTrees, modelTransform *td, mv, 0.05, 0.05, h);
-			}
-			else {
-				generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
-			}
-		}
+		// for (int i = 0; i < p.treeVerts.size(); i++) {
+		// 	int biome = p.biomeMap.at(i);
+		// 	int tv = p.treeVerts.at(i);
+		// 	vec3 mv = p.modifiedVerticies.at(tv);
+		// 	mat4 td = createTreeTransMatrix(mv);
+		// 	int h = 0;
+    //
+		// 	if (biome == 0) {
+		// 		generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
+		// 	}
+		// 	else if (biome == 1) {
+		// 		generateTree(dessertTrees, modelTransform *td, mv, 0.05, 0.05, h);
+		// 	}
+		// 	else if (biome == 2) {
+		// 		generateTree(snowTrees, modelTransform *td, mv, 0.05, 0.05, h);
+		// 	}
+		// 	else if (biome == 3) {
+		// 		generateTree(jungleTrees, modelTransform *td, mv, 0.05, 0.05, h);
+		// 	}
+		// 	else {
+		// 		generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
+		// 	}
+		// }
 
 
 		// Scale the mesh
@@ -725,12 +725,12 @@ void SolarSystem::doGUI() {
 
 		if (ImGui::Button("Reset Camera")) { // Just incase user loses track
 			freeCam = false;
-			glm::vec3 position = glm::vec3(0, 0, 10);
-			glm::vec3 right = glm::vec3(1.0f);
-			glm::vec3 direction = glm::vec3(1.0f);
-			glm::vec3 up = glm::vec3(1.0f);
-			float horizontalAngle = 3.14f; // horizontal angle : toward -Z
-			float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
+			position = glm::vec3(0, 0, 10);
+			right = glm::vec3(1.0f);
+			direction = glm::vec3(1.0f);
+			up = glm::vec3(1.0f);
+			horizontalAngle = 3.14f; // horizontal angle : toward -Z
+			verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 		}
 
 		if (ImGui::Button("Next Planet")) {
