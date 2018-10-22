@@ -55,7 +55,6 @@ public:
 	int numberOfPlanets = 1;
 
 	// Camera Controls
-	bool cinematicCam = false;
 	bool freeCam = false;
 
 	glm::vec3 position = glm::vec3(0, 0, 10);
@@ -73,10 +72,11 @@ public:
 	float lastTime = 0.0f;
 
 	bool changeScreen;
+	bool wire = false;
 	int screenNum = 0; // 0 = System Screen, 1 = All planet Info, 2 == Single Planet Info
 	int numberOfTris = 0;
 	int currentPlanet = 0;
-	int subs = 1;
+	int subs = 2;
 
 	// Global Noise Functions
 	int freq = 1;

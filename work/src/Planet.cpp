@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
+#include <random>
 
 #include "opengl.hpp"
 #include "imgui.h"
@@ -38,7 +39,6 @@ uint64_t rdtsc() {
  * Constructor class. This is treated as the sun
  **/
 Planet::Planet() {
-	//srand(glfwGetTime() * 5000); // Makes sure we have a random seed
 	// Generate the Planet
 	generateIcosahedron();
 	subdivideIcosahedron();
@@ -47,7 +47,10 @@ Planet::Planet() {
 	cgra::Matrix<double> vertices(originalVerticies.size(), 3);
 	for (int i = 0; i < originalVerticies.size(); i++) {
 		vertices.setRow(i, { originalVerticies.at(i)[0], originalVerticies.at(i)[1], originalVerticies.at(i)[2] });
-		float g = (float)(rand() % 105 + 150.0f);
+		std::random_device rd; 
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<> dis(150, 255);
+		float g = dis(gen);
 		vertColours.push_back({ 255.0f/255.0f, g /255.0f, 0.0f /255.0f }); // Shift the green value for some variation
 	}
 	// Setup Triangles
@@ -93,27 +96,27 @@ void Planet::generateIcosahedron() {
 * Method to generate the planets
 */
 void Planet::generatePlanet() {
-	srand(rdtsc()); // Makes sure we have a random seed
+	srand((unsigned int)rdtsc()); // Makes sure we have a random seed
 	double startTime = glfwGetTime();
 	generateIcosahedron();
 	subdivideIcosahedron();
 	generateTerrain();
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	uniform_real_distribution<double> distribution(0.0, 1.0);
 	// Do we want to generate other planet features?
-	float point = double(rand()) / (double(RAND_MAX) + 1.0);
+	float point = distribution(randGen);
 	if (point < 0.5f) { // Generate a moon
 		this->generateMoon();
 	}
-	point = double(rand()) / (double(RAND_MAX) + 1.0);
+	point = distribution(randGen);
 	if (point < 0.5f) { // Generate a ring around planet
 		//this->generateRings();
 	}	
-	this->timeTaken = glfwGetTime() - startTime;
-	std::cout << "Generated Planet, Time Taken: " << this->timeTaken << " Seconds" << std::endl;
-
-	//TREES
-	
-	uniform_real_distribution<double> distribution(0.0, 5);
-	amtTrees = distribution(randGen);
+	//TREES	
+	std::uniform_int_distribution<> dis(0, 4);
+	amtTrees = dis(gen);
 	for (int i = 0; i < amtTrees;i++) {
 		int seed = std::chrono::system_clock::now().time_since_epoch().count();
 		randGen = default_random_engine(seed);
@@ -121,6 +124,8 @@ void Planet::generatePlanet() {
 		int tv = dis(randGen);
 		treeVerts.push_back(tv);
 	}
+	this->timeTaken = glfwGetTime() - startTime;
+	std::cout << "Generated Planet, Time Taken: " << this->timeTaken << " Seconds" << std::endl;
 }
 
 /*
@@ -195,18 +200,15 @@ float Planet::generateNoise(int i) {
 		} else if (this->simplex) {
 			value = glm::simplex(p) / amp;
 		} else { // Random
-			value = double(rand()) / (double(RAND_MAX) + 1.0);
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			uniform_real_distribution<double> distribution(-1.0, 1.0);
+			value = distribution(gen);
 		}
 		sum += value;
 		freq *= 2.0f;
 		amp *= 2;
 	}
-
-	//float scale = rand() % 10 + 5; // Use a scale factor to randomise noise
-	//float point = glm::perlin(glm::vec3(originalVerticies.at(i)[0]/ scale, originalVerticies.at(i)[1]/ scale, originalVerticies.at(i)[2]/ scale));
-	//float point = 
-	// Update Vertex
-	//std::cout << sum << std::endl;
 	return sum;
 }
 
@@ -252,10 +254,14 @@ void Planet::generateTerrain() {
 */
 void Planet::voronoiCells() {	
 	// Determin which points are going to become main sites
-	int numberOfSites = 5; // rand() % (this->originalVerticies.size()) + 5;
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(0, this->modifiedVerticies.size()-1);
+	int vertSites [5];
+	int numberOfSites = 5;
 	for (int i = 0; i < numberOfSites; i++) {
 		// Decide on a random point
-		int vertToSite = rand() % this->modifiedVerticies.size();
+		int vertToSite = dis(gen);		
 		this->sites.push_back(this->modifiedVerticies.at(vertToSite));
 	}
 	vertColours.clear();
@@ -266,18 +272,17 @@ void Planet::voronoiCells() {
 		// List of potential canidates
 		// If a point is an equal distance between multiple points, randomly decide on what it should be
 		for (int j = 0; j < this->sites.size(); j++) {
-			float dis = glm::distance(modifiedVerticies.at(i), this->sites.at(j));
-			if (dis < shortestDistance) {
+			float dis = glm::abs(glm::distance(modifiedVerticies.at(i), this->sites.at(j)));
+			if (dis <= shortestDistance) {
 				shortestDistance = dis;
 				biomeNum = j;
 			}
 		}
-		// Determin Color
 		// First we will check the height, if the height is less than 1.0f, it will be a sea tile, so it will be blue regardless
 		// Get distance between center of planet and current vertex
-		float dis = glm::abs(glm::length(modifiedVerticies.at(i)));
+		float dis = glm::length(modifiedVerticies.at(i));
 		//float dis = glm::distance(glm::vec3(0, 0, 0), originalVerticies.at(i));
-		std::cout << dis << std::endl;
+		//std::cout << dis << std::endl;
 		if (dis <= 1.0f) {
 			vertColours.push_back(this->cs1.at(0)); // 'Sea' color
 		} else {

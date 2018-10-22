@@ -132,12 +132,10 @@ namespace cgra {
                                   reinterpret_cast<void *>(offsetof(Vertex, m_normal)));
             glEnableVertexAttribArray(1);
 
-				glDisable(GL_BLEND);
-
-				// Attribute 3 is the color.
-				glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-					reinterpret_cast<void *>(offsetof(Vertex, m_color)));
-				glEnableVertexAttribArray(3);
+			// Attribute 3 is the color.
+			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+									reinterpret_cast<void *>(offsetof(Vertex, m_color)));
+			glEnableVertexAttribArray(3);
 			
         }
         // Set the appropriate polygon mode for the drawing mode
