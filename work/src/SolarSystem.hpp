@@ -33,11 +33,14 @@ public:
     // The current mouse position
     glm::vec2 m_mousePosition;
 
+	// TREE STUFF
 	LSystem basicTrees;
 	LSystem dessertTrees;
 	LSystem snowTrees;
 	LSystem jungleTrees;
 	LSystem urbanTrees;
+	bool showTrees = false;
+
 
     // The translation of the mesh as a vec3
     glm::vec3 m_translation = glm::vec3(0);
