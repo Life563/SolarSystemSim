@@ -26,7 +26,6 @@ public:
 	// Methods
 	Planet();
 	Planet(PlanetInfo pi, int id, int octs, float freq, float amp, int sub );
-	void draw();
 
 	// Variables
 	glm::vec3 location = glm::vec3(0);
@@ -82,7 +81,6 @@ public:
 	void generateTerrain();
 	void generateMoon();
 	void generateRings();
-	void populatePlanet();
 	void voronoiCells();
 
 	// Noise

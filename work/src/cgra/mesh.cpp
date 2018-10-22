@@ -84,6 +84,7 @@ namespace cgra {
 	}
 
     void Mesh::draw() {
+		glShadeModel(GL_FLAT);
         // Check to see if we have all the GPU objects we need to draw the
         // mesh.
         if (m_vbo == 0 || m_ibo == 0 || m_vao == 0) {
@@ -132,6 +133,8 @@ namespace cgra {
                                   reinterpret_cast<void *>(offsetof(Vertex, m_normal)));
             glEnableVertexAttribArray(1);
 
+			
+
 			// Attribute 3 is the color.
 			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
 									reinterpret_cast<void *>(offsetof(Vertex, m_color)));
@@ -144,7 +147,7 @@ namespace cgra {
         } else {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
-
+		
         // Bind the VAO
         glBindVertexArray(m_vao);
 

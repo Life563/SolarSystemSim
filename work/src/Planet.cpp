@@ -277,8 +277,7 @@ void Planet::voronoiCells() {
 		}
 		// First we will check the height, if the height is less than 1.0f, it will be a sea tile, so it will be blue regardless
 		// Get distance between center of planet and current vertex
-		//float dis = glm::length(modifiedVerticies.at(i));
-		float dis = glm::distance(modifiedVerticies.at(i), glm::vec3(0, 0, 0));
+		float dis = glm::distance(modifiedVerticies.at(i), this->location);
 		std::cout << dis << std::endl;
 		if (dis <= 1.0f) {
 			vertColours.push_back(this->cs1.at(0)); // 'Sea' color
@@ -348,23 +347,4 @@ void Planet::generateRings() {
 		triangles.setRow(i, { theVertices[0].m_p - 1, theVertices[1].m_p - 1, theVertices[2].m_p - 1 });
 	}
 	m_mesh.setData(vertices, triangles, vC);
-}
-
-void Planet::draw() {
-	// Draw the planet mesh first
-	this->mesh.draw();
-	// Draw the items on the planet afterwards
-	populatePlanet();
-}
-
-//========================================================//
-//================= Alans Methods ========================//
-//========================================================//
-
-/*
- * Method used to populate the planet. Alans Main method
- */
-void Planet::populatePlanet() {
-
-
 }

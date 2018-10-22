@@ -127,19 +127,19 @@ void SolarSystem::generatePlanetSpots() {
 	// First Spot: Closest to the sun
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
 		{
-			{ 1.0f, 0.0f , 0.0f}, { 1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 1.0f, 0.0f , 0.0f}, { 1.0f, 0.8f , 0.0f}, {1.0f, 1.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {163.0f / 255.0f, 198.0f / 255.0f , 1.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Second Spot
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(10.0f, 0.0f, 0.0f), 2.0f,
 		{
-			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 1.0f, 0.0f , 0.0f}, { 1.0f, 0.8f , 0.0f}, {1.0f, 1.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {163.0f / 255.0f, 198.0f / 255.0f , 1.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Third
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(15.0f, 0.0f, 0.0f), 3.0f,
 		{
-			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 0.0f, 1.0f , 0.0f}, { 237.0f / 255.0f, 166.0f / 255.0f , 66.0f / 255.0f}, { 1.0f, 1.0f , 1.0f}, { 0.0f, 0.7f , 0.0f}, { 0.6f, 0.6f , 0.6f}
 		}
 	));
 	// Fourth: "Goldy locks zone"
@@ -250,7 +250,7 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 }
 
 void SolarSystem::generateCylinder() {
-	int divisions = 3;
+	int divisions = 2;
 
 	std::vector<unsigned int> indices;
 	cgra::Matrix<double> vertices((divisions + 1) * (divisions + 1), 3);
@@ -506,7 +506,7 @@ void SolarSystem::drawScene() {
 	modelTransform = glm::scale(modelTransform, glm::vec3(1.3f));
 	// Draw the mesh
 	m_program.setModelMatrix(modelTransform);
-	sun.draw();
+	sun.mesh.draw();
 
 	// Draw each planet
 	for (Planet p : planets) {
@@ -557,7 +557,7 @@ void SolarSystem::drawScene() {
 		modelTransform = glm::scale(modelTransform, p.scale);
 		// Draw the mesh
 		m_program.setModelMatrix(modelTransform);
-		p.draw();
+		p.mesh.draw();
 		if (p.hasMoon) {
 			// Move the planet and rotate it
 			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotates with planet
@@ -571,7 +571,6 @@ void SolarSystem::drawScene() {
 			p.moonMesh.draw();
 		}
 	}
-
 	// Draw Bounding Box
 	drawBoundingBox();
 }
