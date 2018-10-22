@@ -26,13 +26,11 @@ void SolarSystem::init() {
         CGRA_SRCDIR "/res/shaders/simple.vs.glsl",
         CGRA_SRCDIR "/res/shaders/volume.fs.glsl");
 
-
-
 	m_lightScene = LightScene(m_program);
 	m_lightScene.init();
 
 	generateLights();
-	
+
 
     // Create a view matrix that positions the camera
     // 10 units behind the object
@@ -41,7 +39,7 @@ void SolarSystem::init() {
     m_program.setViewMatrix(viewMatrix);
 	glm::vec3 rotation(1.0f, 1.0f, 0.0f);
 	m_rotationMatrix = glm::mat4(1.0f);// glm::rotate(glm::mat4(1.0f), 45.0f, glm::vec3(rotation[0], rotation[1], rotation[2]));
-	
+
 	//TREESTUFF
 	billBoardShader = cgra::Program::load_program(
 		CGRA_SRCDIR "/res/shaders/Billboard.vs.glsl",
@@ -49,11 +47,24 @@ void SolarSystem::init() {
 	generateCylinder();
 	billBoardShader.setViewMatrix(viewMatrix);
 
+	/*
+	* Biome Keys:
+	* 0 = FlatLand (Grass)
+	* 1 = Desert
+	* 2 = Snow
+	* 3 = Jungle
+	* 4 = Urban
+	*/
+	// Tree2 is not good
+	// Tree1 might be good for desert
 	basicTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/Basic.txt");
-	billBoardShader.specifyLeafTexture();
-	for (int i = 0; i < 4; i++) {
-		basicTrees.generate();
-	}
+	dessertTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/Tree1.txt");
+	snowTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/ProbTree3.txt");
+	jungleTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/Tree5.txt");
+	urbanTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/Tree4.txt");
+
+	billBoardShader.specifyLeafTexture(CGRA_SRCDIR "/res/Textures/leaves.png");
+
 	// Create the sun
 	generateSun();
 	// Setup Basic Planet Info
@@ -170,9 +181,11 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 	for (; index < LS.currentTree.length(); index++) {
 		char c = LS.currentTree.at(index);
 		if (c == 'F') {
+			mat4 td = translate(mat4(1), startPos * 0.58f);
+
 			glm::vec3 midPoint(0, length, 0);
 			mat4 cyMat = glm::translate(transMat, midPoint);
-			cyMat = glm::scale(cyMat, vec3(tsize*0.2, length, tsize*0.2)) ; // translate tree down so we cna see all of it
+			cyMat = td * glm::scale(cyMat, vec3(tsize*0.2, length, tsize*0.2)); // translate tree down so we cna see all of it
 
 			m_program.setModelMatrix(cyMat);
 			m_program.setColour(vec3(1, 0.8, 0.6));
@@ -185,7 +198,7 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 		}
 		else if (c == '[') {
 			index++;
-			generateTree(LS,transMat, startPos, length, tsize, index);
+			generateTree(LS, transMat, startPos, length, tsize, index);
 		}
 		else if (c == ']') {
 			return;
@@ -218,17 +231,18 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 		else if (c == '\'') {
 			//TODO increment color index
 		}
-		else if (c == 'T') {
+		else if (c == 'l') {
+			mat4 td = translate(mat4(1), startPos *0.58f);
+
 			glm::vec3 midPoint(0, length, 0);
 			mat4 cyMat = glm::translate(transMat, midPoint);
 
 			glm::vec3 scale(1);
 			mat4 scaleMat = glm::scale(cyMat, scale);
 
-			mat4 td = scaleMat;
+			td = td * scaleMat;
 
 			m_program.setModelMatrix(td);
-
 			billBoardShader.setModelMatrix(td);
 			drawLeaf();
 		}
@@ -322,21 +336,14 @@ mat4 SolarSystem::createTreeTransMatrix(vec3 startPoint) {
 	glm::vec3 newdir = glm::cross(fdir, vPos);
 	mat4 td;
 
-	td = glm::rotate(td, angle , newdir);
-	if (vPos.y < 0) {
-		td = translate(td, vec3(0, -vPos.y * 0.6, 0));
-	}
-	else {
-		td = translate(td, vec3(0, vPos.y * 0.6, 0));
-	}
-
+	td = glm::rotate(td, angle, newdir);
 	return td;
 }
 
-/* 
+/*
 * Generates Planet Info variable, and makes some minor variation tweaks, such as:
 * - Changing the starting pos
-* - 
+* -
 */
 PlanetInfo SolarSystem::generatePlanetInfo(glm::vec3 pos, float rs, std::vector<glm::vec3> cs1) {
 	PlanetInfo pi = PlanetInfo();
@@ -422,7 +429,7 @@ void SolarSystem::drawBoundingBox() {
 	glm::mat4 modelTransform = glm::mat4(1.0f);
 	modelTransform = glm::translate(modelTransform, glm::vec3(0, -50, 0));
 	modelTransform = glm::scale(modelTransform, glm::vec3(50, 1, 50));
-	
+
 	m_program.setModelMatrix(modelTransform);
 	m_cube.draw();
 
@@ -472,7 +479,7 @@ void SolarSystem::drawScene() {
 	// Set the projection matrix
 	m_program.setProjectionMatrix(projectionMatrix);
 	billBoardShader.setProjectionMatrix(projectionMatrix);
-	
+
 	if (freeCam) { // Does the user want to move the camera about
 		double currentTime = glfwGetTime();
 		deltaTime = float(currentTime - lastTime);
@@ -487,8 +494,8 @@ void SolarSystem::drawScene() {
 
 	// Perpendicular to both direction and right camera views
 	up = glm::cross(right, direction);
-	
-	viewMatrix = glm::lookAt(position, position + direction, up);	
+
+	viewMatrix = glm::lookAt(position, position + direction, up);
 	m_program.setViewMatrix(viewMatrix);
 
 	// Draw the sun (code to rotate object = ((float)glfwGetTime() / p.rotationSpeed))
@@ -499,48 +506,51 @@ void SolarSystem::drawScene() {
 	modelTransform = glm::scale(modelTransform, glm::vec3(1.3f));
 	// Draw the mesh
 	m_program.setModelMatrix(modelTransform);
-	sun.draw();	
-	
+	sun.draw();
+
 	// Draw each planet
-	for (Planet p : planets) {	
+	for (Planet p : planets) {
 		// Move the planet and rotate it
 		modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	
+
 		//modelTransform = glm::rotate(m_rotationMatrix * glm::mat4(1.0f), (float)glfwGetTime() / p.rotationSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
 		// Translate the actual mesh
 
 		modelTransform = glm::translate(modelTransform, p.location);
-	
-		//TREES
 
+		//TREES
+		/*
+		* Biome Keys:
+		* 0 = FlatLand (Grass)
+		* 1 = Desert
+		* 2 = Snow
+		* 3 = Jungle
+		* 4 = Urban
+		*/
 		for (int i = 0; i < p.treeVerts.size(); i++) {
 			int biome = p.biomeMap.at(i);
+			int tv = p.treeVerts.at(i);
+			vec3 mv = p.modifiedVerticies.at(tv);
+			mat4 td = createTreeTransMatrix(mv);
+			int h = 0;
+
 			if (biome == 0) {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 			else if (biome == 1) {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(dessertTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 			else if (biome == 2) {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(snowTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 			else if (biome == 3) {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(jungleTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 			else {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 		}
+
 
 		// Scale the mesh
 		modelTransform = glm::scale(modelTransform, p.scale);
@@ -552,7 +562,7 @@ void SolarSystem::drawScene() {
 			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotates with planet
 			modelTransform = glm::rotate(modelTransform, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, p.location); // Rotates around planet
 			// Translate the actual mesh
-			modelTransform = glm::translate(modelTransform, glm::vec3(p.location.x, p.location.y+0.5f, p.location.z+1.25f));			
+			modelTransform = glm::translate(modelTransform, glm::vec3(p.location.x, p.location.y+0.5f, p.location.z+1.25f));
 			// Scale the mesh
 			modelTransform = glm::scale(modelTransform, glm::vec3(0.2f));
 			// Draw the mesh
@@ -576,7 +586,7 @@ void SolarSystem::doGUI() {
 			pt += this->planets.at(i).originalTriangles.size();
 		}
 		std::string totalTris = "Total Number of Tris: " + std::to_string(pt);
-		ImGui::Text(totalTris.data());
+		ImGui::Text("%s", totalTris.c_str());
 
 		std::string timeTaken = "System Generation Time: " + std::to_string(this->timeTaken) + " Seconds";
 		ImGui::Text(timeTaken.data());
@@ -589,7 +599,7 @@ void SolarSystem::doGUI() {
 				numberOfPlanets = 8;
 			}
 		}
-		
+
 		if (ImGui::InputInt("Planet Subdivisions", &this->subs)) {
 			if (this->subs < 0) {
 				this->subs = 0;
@@ -604,13 +614,13 @@ void SolarSystem::doGUI() {
 				this->freq = 0;
 			}
 		}
-		
+
 		if (ImGui::InputInt("Scale", &this->amp)) {
 			if (this->amp < 0) {
 				this->amp = 0;
 			}
 		}
-		
+
 		if (ImGui::InputInt("Octaves", &this->octaves)) {
 			if (this->octaves < 0) {
 				this->octaves = 0;
@@ -637,7 +647,7 @@ void SolarSystem::doGUI() {
 			else {
 				playingRotation = true;
 			}
-		}			
+		}
 
 		static float beta;
 		if (ImGui::SliderFloat("Beta", &beta, 0.0f, 0.04f, "%.2f")) {
@@ -660,10 +670,10 @@ void SolarSystem::doGUI() {
 		ImGui::Begin("Planet Settings"); // Used for planet Gen UI
 		ImGui::Text("Current Planet Information");
 		std::string planetName = "Planet Name: " + this->planets.at(this->currentPlanet).name;
-		ImGui::Text(planetName.data());
+		ImGui::Text("%s", planetName.c_str());
 
 		std::string planetTris = "Planet Tris: " + std::to_string(this->planets.at(this->currentPlanet).originalTriangles.size());
-		ImGui::Text(planetTris.data());
+		ImGui::Text("%s", planetTris.c_str());
 
 		std::string timeTaken = "Generation Time: " + std::to_string(this->planets.at(this->currentPlanet).timeTaken) + " Seconds";
 		ImGui::Text(timeTaken.data());
@@ -689,7 +699,7 @@ void SolarSystem::doGUI() {
 			if (this->planets.at(this->currentPlanet).frequency < 0) {
 				this->planets.at(this->currentPlanet).frequency = 0;
 			}
-			// Regenerate 
+			// Regenerate
 			this->planets.at(this->currentPlanet).generateTerrain();
 		}
 
@@ -697,7 +707,7 @@ void SolarSystem::doGUI() {
 			if (this->planets.at(this->currentPlanet).amplitude < 0) {
 				this->planets.at(this->currentPlanet).amplitude = 0;
 			}
-			// Regenerate 
+			// Regenerate
 			this->planets.at(this->currentPlanet).generateTerrain();
 		}
 
@@ -705,13 +715,13 @@ void SolarSystem::doGUI() {
 			if (this->planets.at(this->currentPlanet).octaves < 0) {
 				this->planets.at(this->currentPlanet).octaves = 0;
 			}
-			// Regenerate 
+			// Regenerate
 			this->planets.at(this->currentPlanet).generateTerrain();
 		}
 
 		if (ImGui::Button("Regenerate Planet")) {
 			this->planets.at(this->currentPlanet).generatePlanet();
-		}		
+		}
 
 		if (ImGui::Button("Reset Camera")) { // Just incase user loses track
 			freeCam = false;
@@ -719,7 +729,7 @@ void SolarSystem::doGUI() {
 			glm::vec3 right = glm::vec3(1.0f);
 			glm::vec3 direction = glm::vec3(1.0f);
 			glm::vec3 up = glm::vec3(1.0f);
-			float horizontalAngle = 3.14f; // horizontal angle : toward -Z			
+			float horizontalAngle = 3.14f; // horizontal angle : toward -Z
 			float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 		}
 

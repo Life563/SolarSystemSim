@@ -3,13 +3,13 @@
 #include "opengl.hpp"
 #include <vector>
 #include "glm/glm.hpp"
-
+#include <string>
 namespace cgra {
 
     class Program {
         // The OpenGL object representing the program
         GLuint m_program;
-		unsigned int leafTexture;
+		unsigned int greenLeafTexture;
 
         Program(GLuint prog) : m_program(prog) { }
     public:
@@ -46,7 +46,8 @@ namespace cgra {
 		// Sets the position of the viewer. Used for shading calculation
 		void setViewerPosition(const glm::vec3 &);
 
-		void specifyLeafTexture();
+		void specifyLeafTexture(std::string filename);
+
 
 
 		void setUpLeafBillboard(glm::mat4 ViewProjectionMatrix, glm::mat4 viewMatrix);

@@ -1,0 +1,6 @@
+name		Tree1
+axiom		+R
+angle		22.9
+generations	4
+
+rule	R	//F[&FRl][-FlRFlR]

@@ -32,9 +32,13 @@ public:
     glm::vec2 m_viewportSize;
     // The current mouse position
     glm::vec2 m_mousePosition;
-	
+
 	LSystem basicTrees;
-	
+	LSystem dessertTrees;
+	LSystem snowTrees;
+	LSystem jungleTrees;
+	LSystem urbanTrees;
+
     // The translation of the mesh as a vec3
     glm::vec3 m_translation = glm::vec3(0);
     // The scale of the mesh

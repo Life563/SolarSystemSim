@@ -1,9 +1,9 @@
 name		Basic
 axiom		A
 angle		22.5
-generations	5
+generations	4
 
-rule	A	[&F[^^T]!A]/////[&F[^^T]!A]///////[&F[^^T]!A]
+rule	A	[&F[^^l]!A]/////[&F[^^l]!A]///////[&F[^^l]!A]
 rule	F	S/////F
 rule	S	FL
-rule	L	[^^T]
+rule	L	[^^l]
