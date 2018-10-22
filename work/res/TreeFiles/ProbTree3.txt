@@ -1,0 +1,8 @@
+name		Basic
+axiom		R
+angle		25.7
+generations	4
+
+rule	R 	F[-&R][+R]FR
+rule	F 	FF	0.6
+rule	F 	Fl	0.4

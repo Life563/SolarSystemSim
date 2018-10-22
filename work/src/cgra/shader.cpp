@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string>
 
 #include <stdexcept>
 #include "stb_image.h"
@@ -195,9 +194,9 @@ namespace cgra {
 		glUniform3f(viewerLoc, viewerPos.x, viewerPos.y, viewerPos.z);
 	}
 
-	void Program::specifyLeafTexture() {
-		glGenTextures(1, &leafTexture);
-		glBindTexture(GL_TEXTURE_2D, leafTexture);
+	void Program::specifyLeafTexture(std::string filename) {
+		glGenTextures(1, &greenLeafTexture);
+		glBindTexture(GL_TEXTURE_2D, greenLeafTexture);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -205,7 +204,7 @@ namespace cgra {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		int width, height, nrChannels;
-		unsigned char *data = stbi_load(CGRA_SRCDIR "/res/Textures/leaves.png", &width, &height, &nrChannels, 0);
+		unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrChannels, 0);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	}
 
@@ -213,13 +212,12 @@ namespace cgra {
 	void Program::setUpLeafBillboard(glm::mat4 ViewProjectionMatrix, glm::mat4 viewMatrix) {
 		GLuint CameraRight_worldspace_ID = glGetUniformLocation(m_program, "CameraRight_worldspace");
 		GLuint CameraUp_worldspace_ID = glGetUniformLocation(m_program, "CameraUp_worldspace");
-		GLuint ViewProjMatrixID = glGetUniformLocation(m_program, "VP");
-		GLuint BillboardPosID = glGetUniformLocation(m_program, "BillboardPos");
+
 		GLuint BillboardSizeID = glGetUniformLocation(m_program, "BillboardSize");
 
 		GLuint TextureID = glGetUniformLocation(m_program, "myTextureSampler");
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, leafTexture);
+		glBindTexture(GL_TEXTURE_2D, greenLeafTexture);
 		// Set our "myTextureSampler" sampler to use Texture Unit 0
 		glUniform1i(TextureID, 0);
 
@@ -238,7 +236,6 @@ namespace cgra {
 		glGenBuffers(1, &billboard_vertex_buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
-		glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
 
 		glEnableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);

@@ -1,0 +1,6 @@
+name		Tree1
+axiom		F
+angle		22.5
+generations	3
+
+rule	F	F[Fl+[+Fl-^Fl-/F]-[-Fl&+F\+Fl]]

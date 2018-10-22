@@ -103,8 +103,13 @@
 			}
 
 		}
-		for (Rule r : Rules) {
-
+		for (int i = 0; i < generations; i++) {
+			generate();
 		}
 
+	}
+
+	void LSystem::resetTree()
+	{
+		currentTree = axiom;
 	}

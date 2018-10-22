@@ -26,8 +26,6 @@ void SolarSystem::init() {
         CGRA_SRCDIR "/res/shaders/simple.vs.glsl",
         CGRA_SRCDIR "/res/shaders/volume.fs.glsl");
 
-
-
 	m_lightScene = LightScene(m_program);
 	m_lightScene.init();
 
@@ -49,11 +47,24 @@ void SolarSystem::init() {
 	generateCylinder();
 	billBoardShader.setViewMatrix(viewMatrix);
 
+	/*
+	* Biome Keys:
+	* 0 = FlatLand (Grass)
+	* 1 = Desert
+	* 2 = Snow
+	* 3 = Jungle
+	* 4 = Urban
+	*/
+	// Tree2 is not good
+	// Tree1 might be good for desert
 	basicTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/Basic.txt");
-	billBoardShader.specifyLeafTexture();
-	for (int i = 0; i < 4; i++) {
-		basicTrees.generate();
-	}
+	dessertTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/Tree1.txt");
+	snowTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/ProbTree3.txt");
+	jungleTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/Tree5.txt");
+	urbanTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/Tree4.txt");
+
+	billBoardShader.specifyLeafTexture(CGRA_SRCDIR "/res/Textures/leaves.png");
+	
 	// Create the sun
 	generateSun();
 	// Setup Basic Planet Info
@@ -179,9 +190,11 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 	for (; index < LS.currentTree.length(); index++) {
 		char c = LS.currentTree.at(index);
 		if (c == 'F') {
+			mat4 td = translate(mat4(1), startPos * 0.58f);
+
 			glm::vec3 midPoint(0, length, 0);
 			mat4 cyMat = glm::translate(transMat, midPoint);
-			cyMat = glm::scale(cyMat, vec3(tsize*0.2, length, tsize*0.2)) ; // translate tree down so we cna see all of it
+			cyMat = td * glm::scale(cyMat, vec3(tsize*0.2, length, tsize*0.2)); // translate tree down so we cna see all of it
 
 			m_program.setModelMatrix(cyMat);
 			m_program.setColour(vec3(1, 0.8, 0.6));
@@ -194,7 +207,7 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 		}
 		else if (c == '[') {
 			index++;
-			generateTree(LS,transMat, startPos, length, tsize, index);
+			generateTree(LS, transMat, startPos, length, tsize, index);
 		}
 		else if (c == ']') {
 			return;
@@ -227,17 +240,18 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 		else if (c == '\'') {
 			//TODO increment color index
 		}
-		else if (c == 'T') {
+		else if (c == 'l') {
+			mat4 td = translate(mat4(1), startPos *0.58f);
+
 			glm::vec3 midPoint(0, length, 0);
 			mat4 cyMat = glm::translate(transMat, midPoint);
 
 			glm::vec3 scale(1);
 			mat4 scaleMat = glm::scale(cyMat, scale);
 
-			mat4 td = scaleMat;
+			td = td * scaleMat;
 
 			m_program.setModelMatrix(td);
-
 			billBoardShader.setModelMatrix(td);
 			drawLeaf();
 		}
@@ -331,14 +345,7 @@ mat4 SolarSystem::createTreeTransMatrix(vec3 startPoint) {
 	glm::vec3 newdir = glm::cross(fdir, vPos);
 	mat4 td;
 
-	td = glm::rotate(td, angle , newdir);
-	if (vPos.y < 0) {
-		td = translate(td, vec3(0, -vPos.y * 0.6, 0));
-	}
-	else {
-		td = translate(td, vec3(0, vPos.y * 0.6, 0));
-	}
-
+	td = glm::rotate(td, angle, newdir);
 	return td;
 }
 
@@ -521,35 +528,38 @@ void SolarSystem::drawScene() {
 		modelTransform = glm::translate(modelTransform, p.location);
 	
 		//TREES
-
+		/*
+		* Biome Keys:
+		* 0 = FlatLand (Grass)
+		* 1 = Desert
+		* 2 = Snow
+		* 3 = Jungle
+		* 4 = Urban
+		*/
 		for (int i = 0; i < p.treeVerts.size(); i++) {
 			int biome = p.biomeMap.at(i);
+			int tv = p.treeVerts.at(i);
+			vec3 mv = p.modifiedVerticies.at(tv);
+			mat4 td = createTreeTransMatrix(mv);
+			int h = 0;
+
 			if (biome == 0) {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 			else if (biome == 1) {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(dessertTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 			else if (biome == 2) {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(snowTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 			else if (biome == 3) {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(jungleTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 			else {
-				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
-				int h = 0;
-				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+				generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 		}
+
 
 		// Scale the mesh
 		modelTransform = glm::scale(modelTransform, p.scale);

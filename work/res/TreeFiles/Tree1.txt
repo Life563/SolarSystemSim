@@ -1,6 +1,6 @@
 name		Tree1
 axiom		+R
 angle		17
-generations	5
+generations	2
 
 rule	R	FFF[F^/-[F&R&F[+FR+&F]R[-F-\F]]\FR\F]
