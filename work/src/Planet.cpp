@@ -269,7 +269,7 @@ void Planet::voronoiCells() {
 		// List of potential canidates
 		// If a point is an equal distance between multiple points, randomly decide on what it should be
 		for (int j = 0; j < this->sites.size(); j++) {
-			float dis = glm::distance(modifiedVerticies.at(i), this->sites.at(j));
+			float dis = glm::distance(originalVerticies.at(i), this->sites.at(j));
 			if (dis <= shortestDistance) {
 				shortestDistance = dis;
 				ClosetBiomeNum = j;
@@ -277,8 +277,8 @@ void Planet::voronoiCells() {
 		}
 		// First we will check the height, if the height is less than 1.0f, it will be a sea tile, so it will be blue regardless
 		// Get distance between center of planet and current vertex
-		float dis = glm::length(modifiedVerticies.at(i));
-		//float dis = glm::distance(originalVerticies.at(i), glm::vec3(0, 0, 0));
+		//float dis = glm::length(modifiedVerticies.at(i));
+		float dis = glm::distance(modifiedVerticies.at(i), glm::vec3(0, 0, 0));
 		std::cout << dis << std::endl;
 		if (dis <= 1.0f) {
 			vertColours.push_back(this->cs1.at(0)); // 'Sea' color
