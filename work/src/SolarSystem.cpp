@@ -589,7 +589,7 @@ void SolarSystem::doGUI() {
 		ImGui::Text("%s", totalTris.c_str());
 
 		std::string timeTaken = "System Generation Time: " + std::to_string(this->timeTaken) + " Seconds";
-		ImGui::Text(timeTaken.data());
+		ImGui::Text("%s", timeTaken.c_str());
 
 		if (ImGui::InputInt("Number of Planets", &numberOfPlanets)) {
 			if (numberOfPlanets < 0) {
@@ -676,7 +676,7 @@ void SolarSystem::doGUI() {
 		ImGui::Text("%s", planetTris.c_str());
 
 		std::string timeTaken = "Generation Time: " + std::to_string(this->planets.at(this->currentPlanet).timeTaken) + " Seconds";
-		ImGui::Text(timeTaken.data());
+		ImGui::Text("%s", timeTaken.c_str());
 
 		if (ImGui::Checkbox("Perlin Noise", &this->planets.at(this->currentPlanet).perlin)) { // Use Perlin Noise
 			this->planets.at(this->currentPlanet).simplex = false;
