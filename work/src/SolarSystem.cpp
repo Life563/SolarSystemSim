@@ -26,9 +26,7 @@ void SolarSystem::init() {
         CGRA_SRCDIR "/res/shaders/simple.vs.glsl",
         CGRA_SRCDIR "/res/shaders/volume.fs.glsl");
 
-	billBoardShader = cgra::Program::load_program(
-		CGRA_SRCDIR "/res/shaders/Billboard.vs.glsl",
-		CGRA_SRCDIR "/res/shaders/Billboard.fs.glsl");
+
 
 	m_lightScene = LightScene(m_program);
 	m_lightScene.init();
@@ -45,6 +43,9 @@ void SolarSystem::init() {
 	m_rotationMatrix = glm::mat4(1.0f);// glm::rotate(glm::mat4(1.0f), 45.0f, glm::vec3(rotation[0], rotation[1], rotation[2]));
 	
 	//TREESTUFF
+	billBoardShader = cgra::Program::load_program(
+		CGRA_SRCDIR "/res/shaders/Billboard.vs.glsl",
+		CGRA_SRCDIR "/res/shaders/Billboard.fs.glsl");
 	generateCylinder();
 	billBoardShader.setViewMatrix(viewMatrix);
 
@@ -183,7 +184,7 @@ void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, floa
 			cyMat = glm::scale(cyMat, vec3(tsize*0.2, length, tsize*0.2)) ; // translate tree down so we cna see all of it
 
 			m_program.setModelMatrix(cyMat);
-			//m_program.setColour(vec3(1, 0.8, 0.6));
+			m_program.setColour(vec3(1, 0.8, 0.6));
 			m_cylinder.draw();
 
 			transMat = translate(transMat, vec3(0, length, 0));
@@ -235,12 +236,10 @@ void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, floa
 			glm::vec3 scale(1);
 			mat4 scaleMat = glm::scale(cyMat, scale);
 
-			scaleMat = translate(scaleMat, vec3(0, -0.5, 0));
 			mat4 td = scaleMat;
 
 			m_program.setModelMatrix(td);
 
-			m_program.setModelMatrix(td);
 			billBoardShader.setModelMatrix(td);
 			drawLeaf();
 		}
@@ -472,7 +471,7 @@ void SolarSystem::drawScene() {
 	// Calculate the aspect ratio of the viewport;
 	float aspectRatio = m_viewportSize.x / m_viewportSize.y;
 	// Calculate the projection matrix with a field-of-view of 45 degrees
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 200.0f);
 	// Set the projection matrix
 	m_program.setProjectionMatrix(projectionMatrix);
 	billBoardShader.setProjectionMatrix(projectionMatrix);

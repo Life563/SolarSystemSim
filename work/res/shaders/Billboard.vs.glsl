@@ -32,4 +32,3 @@ void main()
 
 	UV = squareVertices.xy + vec2(0.5, 0.5);
 }
-
