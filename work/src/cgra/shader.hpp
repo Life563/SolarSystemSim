@@ -9,6 +9,7 @@ namespace cgra {
     class Program {
         // The OpenGL object representing the program
         GLuint m_program;
+		unsigned int leafTexture;
 
         Program(GLuint prog) : m_program(prog) { }
     public:
@@ -45,6 +46,10 @@ namespace cgra {
 		// Sets the position of the viewer. Used for shading calculation
 		void setViewerPosition(const glm::vec3 &);
 
+		void specifyLeafTexture();
+
+
+		void setUpLeafBillboard(glm::mat4 ViewProjectionMatrix, glm::mat4 viewMatrix);
 
 		void buildAirlightData(const char *filename, std::vector<GLubyte> &textureData, int uResolution, int vResolution);
 

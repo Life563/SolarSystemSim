@@ -21,6 +21,8 @@ public:
 
     // The shader program used for drawing
     cgra::Program m_program;
+	cgra::Program billBoardShader;
+
     // The mesh data
     cgra::Mesh m_mesh;
 	cgra::Mesh m_cylinder;
@@ -41,6 +43,8 @@ public:
     // A 4x4 matrix representing the rotation of the
     // mesh
     glm::mat4 m_rotationMatrix;
+	
+	glm::mat4 viewMatrix;
 
     // Whether or not the left, middle or right buttons are down.
     bool m_mouseButtonDown[3];
@@ -108,6 +112,8 @@ public:
 	void generateSystem();
 	void generatePlanetSpots();
 	void generateCylinder();
+
+	void drawLeaf();
 
 	mat4 createTreeTransMatrix(vec3 startPoint);
 

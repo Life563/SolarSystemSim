@@ -16,10 +16,15 @@ class LSystem {
 	struct Rule
 	{
 		string base;
-		vector<string> transforms;
+		float probability = 1;
+		string transform;
+
 		//TODO: implement specific probabilities for branches eg 0.9 and 0.1
-		Rule(string b, vector<string> t ): base(b), transforms(t) {
-		
+		Rule(string b, string t) : base(b), transform(t) {
+
+		}
+		Rule(string b, string t, float p) : base(b), transform(t), probability(p) {
+
 		}
 	};
 
@@ -33,8 +38,11 @@ public:
 	float angle;
 	string axiom;
 	string currentTree;
+	string name;
+	int generations;
 
 	void generate();
 	void setRules();
+	void readRules(string filename);
 
 };

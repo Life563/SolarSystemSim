@@ -4,6 +4,7 @@
 #include <string>
 
 #include <stdexcept>
+#include "stb_image.h"
 
 #include "shader.hpp"
 
@@ -192,6 +193,63 @@ namespace cgra {
 		// Get the location of the viewer position uniform variable
 		GLint viewerLoc = glGetUniformLocation(m_program, "viewerPos");
 		glUniform3f(viewerLoc, viewerPos.x, viewerPos.y, viewerPos.z);
+	}
+
+	void Program::specifyLeafTexture() {
+		glGenTextures(1, &leafTexture);
+		glBindTexture(GL_TEXTURE_2D, leafTexture);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		int width, height, nrChannels;
+		unsigned char *data = stbi_load(CGRA_SRCDIR "/res/Textures/leaves.png", &width, &height, &nrChannels, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+
+
+	void Program::setUpLeafBillboard(glm::mat4 ViewProjectionMatrix, glm::mat4 viewMatrix) {
+		GLuint CameraRight_worldspace_ID = glGetUniformLocation(m_program, "CameraRight_worldspace");
+		GLuint CameraUp_worldspace_ID = glGetUniformLocation(m_program, "CameraUp_worldspace");
+		GLuint ViewProjMatrixID = glGetUniformLocation(m_program, "VP");
+		GLuint BillboardPosID = glGetUniformLocation(m_program, "BillboardPos");
+		GLuint BillboardSizeID = glGetUniformLocation(m_program, "BillboardSize");
+
+		GLuint TextureID = glGetUniformLocation(m_program, "myTextureSampler");
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, leafTexture);
+		// Set our "myTextureSampler" sampler to use Texture Unit 0
+		glUniform1i(TextureID, 0);
+
+		glUniform3f(CameraRight_worldspace_ID, viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
+		glUniform3f(CameraUp_worldspace_ID, viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]);
+
+		glUniform2f(BillboardSizeID, 0.1f, 0.1f);     // and 1m*12cm, because it matches its 256*32 resolution =)
+
+		static const GLfloat g_vertex_buffer_data[] = {
+		 -0.5f, -0.5f, 0.0f,
+		  0.5f, -0.5f, 0.0f,
+		 -0.5f,  0.5f, 0.0f,
+		  0.5f,  0.5f, 0.0f,
+		};
+		GLuint billboard_vertex_buffer;
+		glGenBuffers(1, &billboard_vertex_buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
+		glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
+
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+		glVertexAttribPointer(
+			2,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
 	}
 
 	void Program::buildAirlightData(const char *filename, std::vector<GLubyte> &textureData, int uResolution, int vResolution) {
