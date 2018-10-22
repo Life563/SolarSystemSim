@@ -14,7 +14,7 @@
 
 using namespace std;
 
-extern struct PlanetInfo {
+struct PlanetInfo {
 	glm::vec3 location;
 	std::vector<glm::vec3> colorSet1;
 	float rotationSpeed;
@@ -22,7 +22,7 @@ extern struct PlanetInfo {
 
 class Planet {
 public:
-	
+
 	// Methods
 	Planet();
 	Planet(PlanetInfo pi, int id, int octs, float freq, float amp, int sub );
@@ -39,7 +39,7 @@ public:
 	cgra::Mesh ringMesh;
 
 	// Original
-	std::vector<glm::vec3> originalVerticies;	
+	std::vector<glm::vec3> originalVerticies;
 	std::vector<std::vector<unsigned int>> originalTriangles;
 	// Ones Used after the height map
 	std::vector<glm::vec3> modifiedVerticies;
@@ -87,5 +87,5 @@ public:
 
 	// Noise
 	float generateNoise(int i);
-	
+
 };

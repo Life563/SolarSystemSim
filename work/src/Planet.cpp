@@ -47,7 +47,7 @@ Planet::Planet() {
 	cgra::Matrix<double> vertices(originalVerticies.size(), 3);
 	for (int i = 0; i < originalVerticies.size(); i++) {
 		vertices.setRow(i, { originalVerticies.at(i)[0], originalVerticies.at(i)[1], originalVerticies.at(i)[2] });
-		std::random_device rd; 
+		std::random_device rd;
 		std::mt19937 gen(rd());
 		std::uniform_int_distribution<> dis(150, 255);
 		float g = dis(gen);
@@ -85,7 +85,7 @@ Planet::Planet(PlanetInfo pi, int id, int octs, float freq, float amps, int sub)
 /*
 * Creates the base icosahedron
 */
-void Planet::generateIcosahedron() {	
+void Planet::generateIcosahedron() {
 	// Setup Verticies
 	float t = (1.0f + glm::sqrt(5.0f)) / 2.0f;
 	originalVerticies = { glm::normalize(glm::vec3(-1.0f, t, 0.0f)), glm::normalize(glm::vec3(1.0f, t, 0.0f)), glm::normalize(glm::vec3(-1.0f, -t, 0.0f)), glm::normalize(glm::vec3(1.0f, -t, 0.0f)), glm::normalize(glm::vec3(0.0f, -1.0f, t)), glm::normalize(glm::vec3(0.0f, 1.0f, t)), glm::normalize(glm::vec3(0.0f, -1.0f, -t)), glm::normalize(glm::vec3(0.0f, 1.0f, -t)), glm::normalize(glm::vec3(t, 0.0f, -1.0f)), glm::normalize(glm::vec3(t, 0.0f, 1.0f)), glm::normalize(glm::vec3(-t, 0.0f, -1.0f)), glm::normalize(glm::vec3(-t, 0.0f, 1.0f)) };
@@ -113,8 +113,8 @@ void Planet::generatePlanet() {
 	point = distribution(randGen);
 	if (point < 0.5f) { // Generate a ring around planet
 		//this->generateRings();
-	}	
-	//TREES	
+	}
+	//TREES
 	std::uniform_int_distribution<> dis(0, 4);
 	amtTrees = dis(gen);
 	for (int i = 0; i < amtTrees;i++) {
@@ -135,7 +135,7 @@ void Planet::subdivideIcosahedron() {
 	midPoints = std::map<int, int>();
 	for (int i = 0; i < this->subdivisions; i++) {
 		std::vector<std::vector<unsigned int>> newTris;
-		for each (std::vector<unsigned int> tri in this->originalTriangles) { // Cycle through each polygon	
+		for (std::vector<unsigned int> tri : this->originalTriangles) { // Cycle through each polygon	
 			// Create a new vertex or find one that was previously made
 			unsigned int ab = getMidPoint(tri[0], tri[1]);
 			unsigned int bc = getMidPoint(tri[1], tri[2]);
@@ -167,7 +167,7 @@ int Planet::getMidPoint(int a, int b) {
 	glm::vec3 p1 = originalVerticies.at(smallerIndex);
 	glm::vec3 p2 = originalVerticies.at(greaterIndex);
 	glm::vec3 mid = glm::normalize(glm::lerp(p1, p2, 0.5f));
-	
+
 	int loc = originalVerticies.size();
 	originalVerticies.push_back({mid.x, mid.y, mid.z});
 
@@ -189,8 +189,8 @@ float Planet::generateNoise(int i) {
 
 	float sum = 0.0f;
 	// Tuneable
-	float freq = this->frequency; 
-	float amp = this->amplitude; 
+	float freq = this->frequency;
+	float amp = this->amplitude;
 	//float point;
 	for (int octs = 0; octs < this->octaves; octs++) {
 		glm::vec3 p = glm::vec3(x * freq, y*freq, z * freq);
@@ -226,14 +226,14 @@ float Planet::generateNoise(int i) {
 * 2 = Hills
 * 3 = Mountain
 */
-void Planet::generateTerrain() {	
+void Planet::generateTerrain() {
 	// Generate and apply noise to change terrain
 	modifiedVerticies.clear();
 	for (int i = 0; i < originalVerticies.size(); i++) {
 		modifiedVerticies.push_back(originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateNoise(i)));
 	}
 	// Use Vor Cells to generate biomes
-	voronoiCells();	
+	voronoiCells();
 	// Set mesh
 	cgra::Matrix<double> vertices(modifiedVerticies.size(), 3);
 	for (int i = 0; i < modifiedVerticies.size(); i++) {
@@ -252,7 +252,7 @@ void Planet::generateTerrain() {
 * Brute Force Algorithm
 * A site is a starter point for a biome
 */
-void Planet::voronoiCells() {	
+void Planet::voronoiCells() {
 	// Determin which points are going to become main sites
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -261,11 +261,11 @@ void Planet::voronoiCells() {
 	int numberOfSites = 5;
 	for (int i = 0; i < numberOfSites; i++) {
 		// Decide on a random point
-		int vertToSite = dis(gen);		
+		int vertToSite = dis(gen);
 		this->sites.push_back(this->modifiedVerticies.at(vertToSite));
 	}
 	vertColours.clear();
-	// Now 
+	// Now
 	for (int i = 0; i < this->modifiedVerticies.size(); i++) {
 		float shortestDistance = 9999.0f;
 		int biomeNum;
@@ -387,4 +387,3 @@ void Planet::populatePlanet() {
 
 
 }
-

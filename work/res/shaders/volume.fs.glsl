@@ -1,7 +1,7 @@
 #version 330 core
 
 #define M_PI 3.1415926535897932384626433832795
-const int MAX_POINT_LIGHTS = 6;
+
 
 out vec4 color;
 
@@ -29,7 +29,7 @@ struct PointLight {
 // Light Related Uniforms
 uniform int numPointLights;
 uniform DirectionalLight directionalLight;
-uniform PointLight pointLights[MAX_POINT_LIGHTS];
+uniform PointLight pointLights[6];
 
 // Lighting Related Uniforms
 uniform float beta;                 // Coefficient representing thickness of fog
