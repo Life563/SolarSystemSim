@@ -109,6 +109,18 @@ void Planet::generatePlanet() {
 	}	
 	this->timeTaken = glfwGetTime() - startTime;
 	std::cout << "Generated Planet, Time Taken: " << this->timeTaken << " Seconds" << std::endl;
+
+	//TREES
+	
+	uniform_real_distribution<double> distribution(0.0, 5);
+	amtTrees = distribution(randGen);
+	for (int i = 0; i < amtTrees;i++) {
+		int seed = std::chrono::system_clock::now().time_since_epoch().count();
+		randGen = default_random_engine(seed);
+		uniform_real_distribution<double> dis(0.0, modifiedVerticies.size()-1);
+		int tv = dis(randGen);
+		treeVerts.push_back(tv);
+	}
 }
 
 /*

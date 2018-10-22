@@ -33,7 +33,7 @@ public:
     // The current mouse position
     glm::vec2 m_mousePosition;
 	
-	LSystem ls;
+	LSystem basicTrees;
 	
     // The translation of the mesh as a vec3
     glm::vec3 m_translation = glm::vec3(0);
@@ -119,6 +119,8 @@ public:
 
 	void generateLights();
 
+	void generateTree(LSystem LS, mat4 transMat, vec3 startPos, float length, float trunkSize, int & index);
+
 
 	PlanetInfo generatePlanetInfo(glm::vec3 pos, float rs, std::vector<glm::vec3> cs1);
 
@@ -132,5 +134,4 @@ public:
     void onCursorPos(double xpos, double ypos);
 
     void onScroll(double xoffset, double yoffset);
-	void generateTree(mat4 transMat, vec3 startPos, float length, float trunkSize, int & index);
 };

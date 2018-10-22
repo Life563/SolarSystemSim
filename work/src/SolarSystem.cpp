@@ -49,10 +49,10 @@ void SolarSystem::init() {
 	generateCylinder();
 	billBoardShader.setViewMatrix(viewMatrix);
 
-	ls.readRules(CGRA_SRCDIR "/res/TreeFiles/Basic.txt");
+	basicTrees.readRules(CGRA_SRCDIR "/res/TreeFiles/Basic.txt");
 	billBoardShader.specifyLeafTexture();
 	for (int i = 0; i < 5; i++) {
-		ls.generate();
+		basicTrees.generate();
 	}
 	// Create the sun
 	generateSun();
@@ -172,12 +172,12 @@ void SolarSystem::generatePlanetSpots() {
 	));
 }
 
-void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, float trunkSize, int &index) {
-	float  angle = ls.angle;
+void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float length, float trunkSize, int &index) {
+	float  angle = LS.angle;
 	float tsize = trunkSize;
 
-	for (; index < ls.currentTree.length(); index++) {
-		char c = ls.currentTree.at(index);
+	for (; index < LS.currentTree.length(); index++) {
+		char c = LS.currentTree.at(index);
 		if (c == 'F') {
 			glm::vec3 midPoint(0, length, 0);
 			mat4 cyMat = glm::translate(transMat, midPoint);
@@ -194,7 +194,7 @@ void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, floa
 		}
 		else if (c == '[') {
 			index++;
-			generateTree(transMat, startPos, length, tsize, index);
+			generateTree(LS,transMat, startPos, length, tsize, index);
 		}
 		else if (c == ']') {
 			return;
@@ -221,8 +221,6 @@ void::SolarSystem::generateTree(mat4 transMat, vec3 startPos, float length, floa
 			transMat = rotate(transMat, radians(180.f), vec3(0, 0, 1));
 		}
 		else if (c == '!') {
-			//transMat = glm::scale(transMat, vec3(0.8));
-
 			//TODO trunksize
 			tsize -= (0.15* trunkSize);
 		}
@@ -331,8 +329,16 @@ mat4 SolarSystem::createTreeTransMatrix(vec3 startPoint) {
 	vec3 vPos = startPoint;
 	float angle = glm::acos(glm::dot(fdir, vPos));
 	glm::vec3 newdir = glm::cross(fdir, vPos);
-	mat4 td = glm::rotate(mat4(1), angle , newdir);
-	td = translate(td, vec3(0, -vPos.y, 0));
+	mat4 td;
+
+	td = glm::rotate(td, angle , newdir);
+	if (vPos.y < 0) {
+		td = translate(td, vec3(0, -vPos.y * 0.6, 0));
+	}
+	else {
+		td = translate(td, vec3(0, vPos.y * 0.6, 0));
+	}
+
 	return td;
 }
 
@@ -523,15 +529,36 @@ void SolarSystem::drawScene() {
 
 		modelTransform = glm::translate(modelTransform, p.location);
 	
+		//TREES
 
-		mat4 td = createTreeTransMatrix(p.originalVerticies.at(4));
-		mat4 td1 = createTreeTransMatrix(p.originalVerticies.at(22));
-		mat4 td2 = createTreeTransMatrix(p.originalVerticies.at(15));
-
-		int h = 0;
-		generateTree(modelTransform *td, vec3(0), 0.05, 0.05, h);
-	/*	generateTree(modelTransform *td1, vec3(0), 0.05, 0.3, h = 0);
-		generateTree(modelTransform *td2, vec3(0), 0.05, 0.3, h = 0);*/
+		for (int i = 0; i < p.treeVerts.size(); i++) {
+			int biome = p.biomeMap.at(i);
+			if (biome == 0) {
+				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
+				int h = 0;
+				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+			}
+			else if (biome == 1) {
+				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
+				int h = 0;
+				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+			}
+			else if (biome == 2) {
+				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
+				int h = 0;
+				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+			}
+			else if (biome == 3) {
+				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
+				int h = 0;
+				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+			}
+			else {
+				mat4 td = createTreeTransMatrix(p.modifiedVerticies.at(i));
+				int h = 0;
+				generateTree(basicTrees, modelTransform *td, vec3(0), 0.05, 0.05, h);
+			}
+		}
 
 		// Scale the mesh
 		modelTransform = glm::scale(modelTransform, p.scale);

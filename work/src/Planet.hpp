@@ -1,4 +1,7 @@
 #pragma once
+#include <random>
+#include <chrono>
+
 
 #include "cgra/mesh.hpp"
 #include "cgra/shader.hpp"
@@ -8,6 +11,8 @@
 #include "glm/gtc/noise.hpp"
 
 #include <map>
+
+using namespace std;
 
 extern struct PlanetInfo {
 	glm::vec3 location;
@@ -63,6 +68,11 @@ public:
 	float amplitude = 2;
 
 	double timeTaken;
+
+	//TREE STUFF
+	int amtTrees;
+	default_random_engine randGen = default_random_engine(std::chrono::system_clock::now().time_since_epoch().count());
+	std::vector<int> treeVerts;
 
 	// Methods
 	void generatePlanet();
