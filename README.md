@@ -1,5 +1,5 @@
 # SolarSystemSim
-CGRA350 Final Project
+CGRA350 Final Project  (Post Presentation)
 
 By default the universe will load a sun and 1 planet. Adjust the numbers to spawn more planets, and adjust their subdivisions.
 
