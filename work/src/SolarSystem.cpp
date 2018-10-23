@@ -18,6 +18,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/euler_angles.hpp"
 
+
 void SolarSystem::init() {
     // Load the shader program
     // The use of CGRA_SRCDIR "/path/to/shader" is so you don't
