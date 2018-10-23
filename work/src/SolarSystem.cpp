@@ -31,6 +31,27 @@ void SolarSystem::init() {
 
 	generateLights();
 
+  static const GLfloat g_vertex_buffer_data[] = {
+   -0.5f, -0.5f, 0.0f,
+    0.5f, -0.5f, 0.0f,
+   -0.5f,  0.5f, 0.0f,
+    0.5f,  0.5f, 0.0f,
+  };
+  GLuint billboard_vertex_buffer;
+  glGenBuffers(1, &billboard_vertex_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
+
+  glEnableVertexAttribArray(2);
+  glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+  glVertexAttribPointer(
+    2,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+    3,                  // size
+    GL_FLOAT,           // type
+    GL_FALSE,           // normalized?
+    0,                  // stride
+    (void*)0            // array buffer offset
+  );
 
     // Create a view matrix that positions the camera
     // 10 units behind the object
@@ -76,12 +97,12 @@ void SolarSystem::init() {
 }
 
 void::SolarSystem::generateLights() {
-	PointLight p = PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(10, 10, 10));
-	PointLight p2 = PointLight(glm::vec3(0, 1, 0), 1, glm::vec3(-20, -20, -20));
-	PointLight p3 = PointLight(glm::vec3(1, 1, 0), 20, glm::vec3(0, 0, 0)); // Sun
-	PointLight p4 = PointLight(glm::vec3(0, 1, 1), 20, glm::vec3(10, -10, 9));
-	PointLight p5 = PointLight(glm::vec3(1, 1, 1), 20, glm::vec3(-13, 6, 12));
-	PointLight p6 = PointLight(glm::vec3(0, .5, .5), 20, glm::vec3(9, 9, -8));
+  PointLight p3 = PointLight(glm::vec3(1, 1, 0), 20, glm::vec3(0, 0, 0)); // Sun
+	PointLight p = PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(10, 5, 10));
+	PointLight p2 = PointLight(glm::vec3(0, 1, 0), 1, glm::vec3(20, 3, 12));
+	PointLight p4 = PointLight(glm::vec3(0, 1, 1), 20, glm::vec3(10, 7, 8));
+	PointLight p5 = PointLight(glm::vec3(1, 1, 1), 20, glm::vec3(-13, 2, 12));
+	PointLight p6 = PointLight(glm::vec3(0, .5, .5), 20, glm::vec3(9, 3, 7));
 	PointLight pLights[] = { p, p2, p3, p4, p5, p6 };
 
 	DirectionalLight d = DirectionalLight(glm::vec3(0.25, 0.25, -1));
@@ -127,56 +148,49 @@ void SolarSystem::generateSystem() {
 void SolarSystem::generatePlanetSpots() {
 	//std::vector<std::vector<double>> cs1;
 	// First Spot: Closest to the sun
-	this->planetSpots.push_back(
-		generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
-			{
-				{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {1.0f, 0.0f , 0.0f}, {0.5f, 0.5f , 0.5f}
-			}
+  this->planetSpots.push_back(generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
+		{
+			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.8f , 0.0f}, {1.0f, 1.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {163.0f / 255.0f, 198.0f / 255.0f , 1.0f}, {0.5f, 0.5f , 0.5f}
+		}
 	));
 	// Second Spot
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(10.0f, 0.0f, 0.0f), 2.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.8f , 0.0f}, {1.0f, 1.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {163.0f / 255.0f, 198.0f / 255.0f , 1.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Third
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(15.0f, 0.0f, 0.0f), 3.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 0.0f, 1.0f , 0.0f}, { 237.0f / 255.0f, 166.0f / 255.0f , 66.0f / 255.0f}, { 1.0f, 1.0f , 1.0f}, { 0.0f, 0.7f , 0.0f}, { 0.6f, 0.6f , 0.6f}
 		}
 	));
 	// Fourth: "Goldy locks zone"
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(20.0f, 0.0f, 0.0f), 4.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 0.0f, 1.0f , 0.0f}, { 237.0f / 255.0f, 166.0f / 255.0f , 66.0f / 255.0f}, { 1.0f, 1.0f , 1.0f}, { 0.0f, 0.7f , 0.0f}, { 0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 0.0f, 1.0f , 0.0f}, { 237.0f / 255.0f, 166.0f / 255.0f , 66.0f / 255.0f}, { 1.0f, 1.0f , 1.0f}, { 0.0f, 0.7f , 0.0f}, { 0.6f, 0.6f , 0.6f}
 		}
 	));
 	// Fifth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(25.0f, 0.0f, 0.0f), 5.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, { 0.8f, 0.8f , 0.8f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Sixth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(30.0f, 0.0f, 0.0f), 6.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.0f, 0.0f , 0.0f}, {0.0f, 0.6f , 0.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Seventh
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(35.0f, 0.0f, 0.0f), 7.0f,
 		{
-			{ 0.0f, 1.0f , 0.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
+			{ 0.0f, 0.0f , 1.0f}, { 1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {1.0f, 0.2f , 0.0f}, {0.5f, 0.5f , 0.5f}
 		}
 	));
 	// Eighth
-	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(40.0f, 0.0f, 0.0f), 8.0f,
-		{
-			{ 0.0f, 0.0f , 0.9f}, { 163.0f / 255.0f, 198.0f / 255.0f , 1.0f}, {1.0f, 1.0f , 1.0f}, {1.0f, 1.0f , 1.0f}, {0.0f, 30.0f / 255.0f , 79.0f / 255.0f}, {0.6f, 0.6f , 0.6f}
-		}
-	));
-	// Nineth : Furthest away
-	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(45.0f, 0.0f, 0.0f), 9.0f,
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(45.0f, 0.0f, 0.0f), 8.0f,
 		{
 			{ 0.0f, 0.0f , 1.0f}, { 163.0f / 255.0f, 198.0f / 255.0f , 1.0f}, {1.0f, 1.0f , 1.0f}, {1.0f, 1.0f , 1.0f}, {0.0f, 30.0f / 255.0f , 79.0f / 255.0f}, {0.6f, 0.6f , 0.6f}
 		}
@@ -253,7 +267,7 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 
 			m_program.setModelMatrix(td);
 			billBoardShader.setModelMatrix(td);
-			drawLeaf();
+			// drawLeaf();
 		}
 	}
 }
@@ -536,6 +550,7 @@ void SolarSystem::drawScene() {
 		* 3 = Jungle
 		* 4 = Urban
 		*/
+    if(m_showTrees){
 		for (int i = 0; i < p.treeVerts.size(); i++) {
 			int biome = p.biomeMap.at(i);
 			int tv = p.treeVerts.at(i);
@@ -543,7 +558,10 @@ void SolarSystem::drawScene() {
 			mat4 td = createTreeTransMatrix(mv);
 			int h = 0;
 
-			if (biome == 0) {
+      if(biome == -1 ) {
+
+      }
+			else if (biome == 0) {
 				generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 			else if (biome == 1) {
@@ -559,6 +577,7 @@ void SolarSystem::drawScene() {
 				generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
 			}
 		}
+  }
 
 
 		// Scale the mesh
@@ -655,7 +674,11 @@ void SolarSystem::doGUI() {
 			}
 		}
 
-		static float beta;
+    if (ImGui::Checkbox("Show Trees", &m_showTrees)) { // Rotates around the scene
+
+    }
+
+		static float beta = 0.04f;
 		if (ImGui::SliderFloat("Beta", &beta, 0.0f, 0.04f, "%.2f")) {
 			m_program.setBeta(beta);
 		}
@@ -722,14 +745,16 @@ void SolarSystem::doGUI() {
 			this->planets.at(this->currentPlanet).generatePlanet();
 		}
 
+
+
 		if (ImGui::Button("Reset Camera")) { // Just incase user loses track
 			freeCam = false;
-			glm::vec3 position = glm::vec3(0, 0, 10);
-			glm::vec3 right = glm::vec3(1.0f);
-			glm::vec3 direction = glm::vec3(1.0f);
-			glm::vec3 up = glm::vec3(1.0f);
-			float horizontalAngle = 3.14f; // horizontal angle : toward -Z
-			float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
+			position = glm::vec3(0, 0, 10);
+			right = glm::vec3(1.0f);
+			direction = glm::vec3(1.0f);
+			up = glm::vec3(1.0f);
+			horizontalAngle = 3.14f; // horizontal angle : toward -Z
+			verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 		}
 
 		if (ImGui::Button("Next Planet")) {

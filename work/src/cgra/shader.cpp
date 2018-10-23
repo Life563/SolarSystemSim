@@ -226,27 +226,7 @@ namespace cgra {
 
 		glUniform2f(BillboardSizeID, 0.1f, 0.1f);     // and 1m*12cm, because it matches its 256*32 resolution =)
 
-		static const GLfloat g_vertex_buffer_data[] = {
-		 -0.5f, -0.5f, 0.0f,
-		  0.5f, -0.5f, 0.0f,
-		 -0.5f,  0.5f, 0.0f,
-		  0.5f,  0.5f, 0.0f,
-		};
-		GLuint billboard_vertex_buffer;
-		glGenBuffers(1, &billboard_vertex_buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
 
-		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-		glVertexAttribPointer(
-			2,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
 	}
 
 	void Program::buildAirlightData(const char *filename, std::vector<GLubyte> &textureData, int uResolution, int vResolution) {
@@ -262,7 +242,7 @@ namespace cgra {
 
 
 		std::string row;
-		
+
 		std::getline(file, row); // X res
 		std::getline(file, row); // Y res
 		std::getline(file, row); // x min

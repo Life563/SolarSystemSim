@@ -1,6 +1,6 @@
 ﻿#include "LSystem.hpp"
 #include <fstream>
-#include <sstream> 
+#include <sstream>
 #include <string>
 
 	void LSystem::generate() {
@@ -30,7 +30,7 @@
 			}
 		}
 		currentTree = nextTree;
-		
+
 	}
 
 	void LSystem::setRules(){
@@ -42,7 +42,7 @@
 		Rule r2 = Rule("F", { "S/////F" });
 		Rule r3 = Rule("S", { "FL" });
 		Rule r4 = Rule("L", { "[^^T]" });
-	
+
 
 		Rules.push_back(r1);
 		Rules.push_back(r2);
@@ -103,7 +103,7 @@
 			}
 
 		}
-		for (int i = 0; i < generations; i++) {
+		for (int i = 0; i < 3; i++) {
 			generate();
 		}
 

@@ -135,7 +135,7 @@ void Planet::subdivideIcosahedron() {
 	midPoints = std::map<int, int>();
 	for (int i = 0; i < this->subdivisions; i++) {
 		std::vector<std::vector<unsigned int>> newTris;
-		for (std::vector<unsigned int> tri : this->originalTriangles) { // Cycle through each polygon	
+		for (std::vector<unsigned int> tri : this->originalTriangles) { // Cycle through each polygon
 			// Create a new vertex or find one that was previously made
 			unsigned int ab = getMidPoint(tri[0], tri[1]);
 			unsigned int bc = getMidPoint(tri[1], tri[2]);
@@ -281,10 +281,11 @@ void Planet::voronoiCells() {
 		// First we will check the height, if the height is less than 1.0f, it will be a sea tile, so it will be blue regardless
 		// Get distance between center of planet and current vertex
 		float dis = glm::length(modifiedVerticies.at(i));
-		//float dis = glm::distance(glm::vec3(0, 0, 0), originalVerticies.at(i));
+		// float dis = glm::distance(glm::vec3(0, 0, 0), originalVerticies.at(i));
 		//std::cout << dis << std::endl;
 		if (dis <= 1.0f) {
 			vertColours.push_back(this->cs1.at(0)); // 'Sea' color
+			biomeMap.push_back(-1);
 		} else {
 			if (biomeNum == 0) { // Flatlands
 				vertColours.push_back(this->cs1.at(1));
