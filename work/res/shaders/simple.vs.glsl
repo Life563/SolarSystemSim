@@ -6,7 +6,7 @@ layout (location=3) in vec3 vertColor;
 
 out vec3 fragPosition;
 out vec3 fragNormal;
-out vec3 fragmentColor;
+flat out vec3 fragmentColor;
 out mat4 view;
 
 

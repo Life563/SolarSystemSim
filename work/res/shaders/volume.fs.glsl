@@ -7,7 +7,7 @@ out vec4 color;
 
 in vec3 fragPosition;
 in vec3 fragNormal;
-in vec3 fragmentColor;
+flat in vec3 fragmentColor;
 in mat4 model;
 in mat4 view;
 

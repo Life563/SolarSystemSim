@@ -266,6 +266,7 @@ void Planet::voronoiCells() {
 	}
 	vertColours.clear();
 	// Now
+	std::uniform_int_distribution<> distribution(-15, 15);
 	for (int i = 0; i < this->modifiedVerticies.size(); i++) {
 		float shortestDistance = 9999.0f;
 		int biomeNum;
@@ -279,28 +280,33 @@ void Planet::voronoiCells() {
 			}
 		}
 		// First we will check the height, if the height is less than 1.0f, it will be a sea tile, so it will be blue regardless
-		// Get distance between center of planet and current vertex
-		float dis = glm::length(modifiedVerticies.at(i));
-		// float dis = glm::distance(glm::vec3(0, 0, 0), originalVerticies.at(i));
+		//// Get distance between center of planet and current vertex
+		//float dis = glm::length(modifiedVerticies.at(i));
+		float dis = glm::distance(glm::vec3(0, 0, 0), modifiedVerticies.at(i));
 		//std::cout << dis << std::endl;
+		// Shift the colors slightly for some variance
+
+		float offsetColor = distribution(gen);
+		//std::cout << offsetColor << std::endl;
+
 		if (dis <= 1.0f) {
-			vertColours.push_back(this->cs1.at(0)); // 'Sea' color
+			vertColours.push_back({ (this->cs1.at(0).x + offsetColor) / 255, (this->cs1.at(0).y + offsetColor) / 255, (this->cs1.at(0).z + offsetColor) /255}); // 'Sea' color
 			biomeMap.push_back(-1);
 		} else {
 			if (biomeNum == 0) { // Flatlands
-				vertColours.push_back(this->cs1.at(1));
+				vertColours.push_back({ (this->cs1.at(1).x + offsetColor) / 255, (this->cs1.at(1).y + offsetColor) / 255, (this->cs1.at(1).z + offsetColor) / 255 });
 			}
 			else if (biomeNum == 1) { // Dessert
-				vertColours.push_back(this->cs1.at(2));
+				vertColours.push_back({ (this->cs1.at(2).x + offsetColor) / 255, (this->cs1.at(2).y + offsetColor) / 255, (this->cs1.at(2).z + offsetColor) / 255 });
 			}
 			else if (biomeNum == 2) { // Snow
-				vertColours.push_back(this->cs1.at(3));
+				vertColours.push_back({ (this->cs1.at(3).x + offsetColor) / 255, (this->cs1.at(3).y + offsetColor) / 255, (this->cs1.at(3).z + offsetColor) / 255 });
 			}
 			else if (biomeNum == 3) { // Jungle
-				vertColours.push_back(this->cs1.at(4));
+				vertColours.push_back({ (this->cs1.at(4).x + offsetColor) / 255, (this->cs1.at(4).y + offsetColor) / 255, (this->cs1.at(4).z + offsetColor) / 255 });
 			}
 			else { // Urban
-				vertColours.push_back(this->cs1.at(5));
+				vertColours.push_back({ (this->cs1.at(5).x + offsetColor) / 255, (this->cs1.at(5).y + offsetColor) / 255, (this->cs1.at(5).z + offsetColor) / 255 });
 			}
 			biomeMap.push_back(biomeNum);
 		}
