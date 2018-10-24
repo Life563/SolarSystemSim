@@ -598,6 +598,17 @@ void SolarSystem::drawScene() {
 			m_program.setModelMatrix(modelTransform);
 			p.moonMesh.draw();
 		}
+		if (p.hasRing) {
+			// Move the planet and rotate it
+			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotates with planet
+			// Translate the actual mesh
+			modelTransform = glm::translate(modelTransform, glm::vec3(p.location.x, p.location.y, p.location.z));
+			// Scale the mesh
+			modelTransform = glm::scale(modelTransform, glm::vec3(1.0f));
+			// Draw the mesh
+			m_program.setModelMatrix(modelTransform);
+			p.ringMesh.draw();
+		}
 	}
 
 	// Draw Bounding Box
@@ -621,8 +632,8 @@ void SolarSystem::doGUI() {
 			if (numberOfPlanets < 0) {
 				numberOfPlanets = 0;
 			}
-			if (numberOfPlanets > 9) {
-				numberOfPlanets = 9;
+			if (numberOfPlanets > 8) {
+				numberOfPlanets = 8;
 			}
 		}
 

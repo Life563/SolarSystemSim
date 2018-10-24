@@ -44,11 +44,11 @@ Planet::Planet() {
 	subdivideIcosahedron();
 	// Set mesh
 	vertColours.clear();
+	std::random_device rd;
+	std::mt19937 gen(rd());
 	cgra::Matrix<double> vertices(originalVerticies.size(), 3);
 	for (int i = 0; i < originalVerticies.size(); i++) {
 		vertices.setRow(i, { originalVerticies.at(i)[0], originalVerticies.at(i)[1], originalVerticies.at(i)[2] });
-		std::random_device rd;
-		std::mt19937 gen(rd());
 		std::uniform_int_distribution<> dis(150, 255);
 		float g = dis(gen);
 		vertColours.push_back({ 255.0f/255.0f, g /255.0f, 0.0f /255.0f }); // Shift the green value for some variation
@@ -230,7 +230,7 @@ void Planet::generateTerrain() {
 	// Generate and apply noise to change terrain
 	modifiedVerticies.clear();
 	for (int i = 0; i < originalVerticies.size(); i++) {
-		modifiedVerticies.push_back(originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + generateNoise(i)));
+		modifiedVerticies.push_back(originalVerticies.at(i) * (1.0f + generateNoise(i)));
 	}
 	// Use Vor Cells to generate biomes
 	voronoiCells();
@@ -268,7 +268,7 @@ void Planet::voronoiCells() {
 	// Now
 	std::uniform_int_distribution<> distribution(-15, 15);
 	for (int i = 0; i < this->modifiedVerticies.size(); i++) {
-		float shortestDistance = 9999.0f;
+		float shortestDistance = FLT_MAX;
 		int biomeNum;
 		// List of potential canidates
 		// If a point is an equal distance between multiple points, randomly decide on what it should be
@@ -282,17 +282,14 @@ void Planet::voronoiCells() {
 		// First we will check the height, if the height is less than 1.0f, it will be a sea tile, so it will be blue regardless
 		//// Get distance between center of planet and current vertex
 		//float dis = glm::length(modifiedVerticies.at(i));
-		float dis = glm::distance(glm::vec3(0, 0, 0), modifiedVerticies.at(i));
+		float dis = glm::distance(modifiedVerticies.at(i), glm::vec3(0, 0, 0));
 		//std::cout << dis << std::endl;
 		// Shift the colors slightly for some variance
-
 		float offsetColor = distribution(gen);
-		//std::cout << offsetColor << std::endl;
-
-		if (dis <= 1.0f) {
-			vertColours.push_back({ (this->cs1.at(0).x + offsetColor) / 255, (this->cs1.at(0).y + offsetColor) / 255, (this->cs1.at(0).z + offsetColor) /255}); // 'Sea' color
-			biomeMap.push_back(-1);
-		} else {
+		//if (dis <= 1.0f) {
+			//vertColours.push_back({ (this->cs1.at(0).x + offsetColor) / 255, (this->cs1.at(0).y + offsetColor) / 255, (this->cs1.at(0).z + offsetColor) /255}); // 'Sea' color
+			//biomeMap.push_back(-1);
+		//} else {
 			if (biomeNum == 0) { // Flatlands
 				vertColours.push_back({ (this->cs1.at(1).x + offsetColor) / 255, (this->cs1.at(1).y + offsetColor) / 255, (this->cs1.at(1).z + offsetColor) / 255 });
 			}
@@ -309,7 +306,7 @@ void Planet::voronoiCells() {
 				vertColours.push_back({ (this->cs1.at(5).x + offsetColor) / 255, (this->cs1.at(5).y + offsetColor) / 255, (this->cs1.at(5).z + offsetColor) / 255 });
 			}
 			biomeMap.push_back(biomeNum);
-		}
+		//}
 	}
 }
 
@@ -317,6 +314,10 @@ void Planet::voronoiCells() {
 * Generates a small moon for the planet which uses the base icohedron
 */
 void Planet::generateMoon() {
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(-15, 15);
+
 	this->hasMoon = true;
 	float t = (1.0f + glm::sqrt(5.0f)) / 2.0f;
 	std::vector<glm::vec3> moonVertices = { glm::normalize(glm::vec3(-1.0f, t, 0.0f)), glm::normalize(glm::vec3(1.0f, t, 0.0f)), glm::normalize(glm::vec3(-1.0f, -t, 0.0f)), glm::normalize(glm::vec3(1.0f, -t, 0.0f)), glm::normalize(glm::vec3(0.0f, -1.0f, t)), glm::normalize(glm::vec3(0.0f, 1.0f, t)), glm::normalize(glm::vec3(0.0f, -1.0f, -t)), glm::normalize(glm::vec3(0.0f, 1.0f, -t)), glm::normalize(glm::vec3(t, 0.0f, -1.0f)), glm::normalize(glm::vec3(t, 0.0f, 1.0f)), glm::normalize(glm::vec3(-t, 0.0f, -1.0f)), glm::normalize(glm::vec3(-t, 0.0f, 1.0f)) };
@@ -324,8 +325,9 @@ void Planet::generateMoon() {
 	std::vector<glm::vec3> vC; // Color
 	cgra::Matrix<double> mV(moonVertices.size(), 3);
 	for (int i = 0; i < moonVertices.size(); i++) {
+		float offset = dis(gen);
 		mV.setRow(i, { moonVertices.at(i)[0], moonVertices.at(i)[1], moonVertices.at(i)[2] });
-		vC.push_back(glm::vec3(0.5f));
+		vC.push_back(glm::vec3( (128 + offset) /255, (128 + offset) /255, (128 + offset) /255));
 	}
 	// Setup Triangles
 	cgra::Matrix<unsigned int> mT(moonTriangles.size(), 3);
@@ -341,11 +343,10 @@ void Planet::generateMoon() {
 */
 void Planet::generateRings() {
 	this->hasRing = true;
-	cgra::Mesh m_mesh;
 	cgra::Wavefront obj;
 	// Wrap the loading in a try..catch block
 	try {
-		obj = cgra::Wavefront::load("work/res/Ring.obj");
+		obj = cgra::Wavefront::load("work/res/arrow.obj");
 	}
 	catch (std::exception e) {
 		std::cerr << "Couldn't load file: '" << e.what() << "'" << std::endl;
@@ -357,11 +358,11 @@ void Planet::generateRings() {
 
 	cgra::Matrix<double> vertices(numVertices, 3);
 	cgra::Matrix<unsigned int> triangles(numTriangles, 3);
-	std::vector<glm::vec3> vC;
+	std::vector<glm::vec3> vc;
 	for (size_t i = 0; i < obj.m_positions.size(); i++) {
 		// Add each position to the vertices matrix
 		vertices.setRow(i, { obj.m_positions[i][0],  obj.m_positions[i][1],  obj.m_positions[i][2] });
-		vC.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
+		vc.push_back({1.0f, 0.0f, 0.0f});
 	}
 
 	for (unsigned int i = 0; i < obj.m_faces.size(); i++) {
@@ -370,7 +371,7 @@ void Planet::generateRings() {
 		std::vector<cgra::Wavefront::Vertex> theVertices = obj.m_faces[i].m_vertices;
 		triangles.setRow(i, { theVertices[0].m_p - 1, theVertices[1].m_p - 1, theVertices[2].m_p - 1 });
 	}
-	m_mesh.setData(vertices, triangles, vC);
+	ringMesh.setData(vertices, triangles, vc);
 }
 
 

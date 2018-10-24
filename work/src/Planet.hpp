@@ -64,7 +64,7 @@ public:
 	bool hasRing = false;
 
 	int octaves = 4;
-	float frequency = 1;
+	float frequency = 3;
 	float amplitude = 2;
 
 	double timeTaken;
@@ -84,8 +84,10 @@ public:
 	void generateRings();
 	void populatePlanet();
 	void voronoiCells();
+	void moveSunPoints();
 
 	// Noise
 	float generateNoise(int i);
+
 
 };
