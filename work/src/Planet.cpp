@@ -60,7 +60,6 @@ Planet::Planet() {
 	}
 	// Set Mesh
 	this->mesh.setData(vertices, triangles, this->vertColours);
-	std::cout << "Generated Sun" << std::endl;
 }
 
 /*
@@ -125,7 +124,6 @@ void Planet::generatePlanet() {
 		treeVerts.push_back(tv);
 	}
 	this->timeTaken = glfwGetTime() - startTime;
-	std::cout << "Generated Planet, Time Taken: " << this->timeTaken << " Seconds" << std::endl;
 }
 
 /*
@@ -236,8 +234,8 @@ void Planet::generateTerrain() {
 		if (point < 0.0f) {
 			point = 0.0f;
 		}
-		if (point > 0.2f) {
-			point = 0.2f;
+		if (point > 0.3f) {
+			point = 0.3f;
 		}
 		modifiedVerticies.push_back(originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + point));
 	}
@@ -280,11 +278,18 @@ void Planet::voronoiCells(bool genNewSites) {
 	for (int i = 0; i < this->modifiedVerticies.size(); i++) {
 		float shortestDistance = FLT_MAX;
 		int biomeNum;
-		// List of potential canidates
-		// If a point is an equal distance between multiple points, randomly decide on what it should be
+		// Check list of sites
 		for (int j = 0; j < this->sites.size(); j++) {
 			float dis = glm::abs(glm::distance(modifiedVerticies.at(i), this->sites.at(j)));
-			if (dis <= shortestDistance) {
+			if (dis == shortestDistance) {
+				// Randomly decide on the winner
+				std::uniform_real_distribution<double> siteDist(0.0, 1.0);
+				double dp = siteDist(gen);
+				if (dp < 0.5f) {
+					shortestDistance = dis;
+					biomeNum = j;
+				}				
+			}else if (dis <= shortestDistance) {
 				shortestDistance = dis;
 				biomeNum = j;
 			}
@@ -326,7 +331,7 @@ void Planet::voronoiCells(bool genNewSites) {
 		// Generate a point
 		float p = waterDistribution(gen);
 		float point = glm::perlin((originalVerticies.at(p)));
-		if (point < this->waterDepth-1.0f) {
+		if (point < this->waterDepth-1.0f && glm::distance(modifiedVerticies.at(i), glm::vec3(0, 0, 0)) < 1.0f) {
 			float oc = seaDistribution(gen);
 			vertColours.at(i) = glm::vec3((this->cs1.at(0).x + oc) / 255, (this->cs1.at(0).y + oc) / 255, (this->cs1.at(0).z + oc) / 255); // 'Sea' color
 		}

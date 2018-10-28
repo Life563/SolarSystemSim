@@ -132,6 +132,8 @@ namespace cgra {
                                   reinterpret_cast<void *>(offsetof(Vertex, m_normal)));
             glEnableVertexAttribArray(1);
 
+			glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
+
 			// Attribute 3 is the color.
 			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
 									reinterpret_cast<void *>(offsetof(Vertex, m_color)));

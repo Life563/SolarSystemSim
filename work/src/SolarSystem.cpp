@@ -133,8 +133,7 @@ void SolarSystem::generateSystem() {
 		p.name = std::to_string(i);
 		planets.push_back(p);
 	}
-	double timeTaken = glfwGetTime() - startTime;
-	std::cout << "Generated System, Time Taken: " << timeTaken << " Seconds" << std::endl;
+	this->timeTaken = glfwGetTime() - startTime;
 }
 
 /*
@@ -606,9 +605,9 @@ void SolarSystem::drawScene() {
 			modelTransform = glm::scale(modelTransform, glm::vec3(0.9f,0.5f,0.9f));
 			// Draw the mesh
 			m_program.setModelMatrix(modelTransform);
-			//p.ringMesh.draw();
+			p.ringMesh.draw();
 		}
-		if (p.planetId == this->currentPlanet) { // Draw an arrow above the 
+		if (p.planetId == this->currentPlanet) { // Draw an icon above the 
 			// Move the planet and rotate it
 			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 			// Translate the actual mesh
@@ -636,6 +635,10 @@ void SolarSystem::doGUI() {
 		}
 		std::string totalTris = "Total Number of Tris: " + std::to_string(pt);
 		ImGui::Text("%s", totalTris.c_str());
+
+		std::string tt = "Time Taken to Generate (In Seconds): " + std::to_string(this->timeTaken);
+		ImGui::Text("%s", tt.c_str());
+
 		ImGui::Separator();
 
 		ImGui::Text("Planet Parameters");
@@ -720,14 +723,6 @@ void SolarSystem::doGUI() {
 	}
 	ImGui::Separator();
 
-
-
-	if (ImGui::Checkbox("Wire Frame Mode", &wire)) { // Rotates around the scene
-		for (Planet p : this->planets) {
-			p.mesh.setDrawWireframe(this->wire);
-		}
-	}
-
 	std::string rot;
 	if (playingRotation) {
 		rot = "Pause";
@@ -744,7 +739,15 @@ void SolarSystem::doGUI() {
 		}
 	}
 
-	
+	if (ImGui::Button("Reset Camera")) { // Just incase user loses track
+		freeCam = false;
+		position = glm::vec3(0, 0, 10);
+		right = glm::vec3(1.0f);
+		direction = glm::vec3(1.0f);
+		up = glm::vec3(1.0f);
+		horizontalAngle = 3.14f; // horizontal angle : toward -Z
+		verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
+	}
 
 		if (ImGui::Button("Generate New System")) {
 			this->generateSystem();
@@ -762,6 +765,10 @@ void SolarSystem::doGUI() {
 		std::string planetTris = "Planet Tris: " + std::to_string(this->planets.at(this->currentPlanet).originalTriangles.size());
 		ImGui::Text("%s", planetTris.c_str());
 
+		std::string tt = "Time Taken to Generate (In Seconds): " + std::to_string(this->planets.at(this->currentPlanet).timeTaken);
+		ImGui::Text("%s", tt.c_str());
+
+		ImGui::Separator();
 		if (ImGui::Checkbox("Perlin Noise", &this->planets.at(this->currentPlanet).perlin)) { // Use Perlin Noise
 			this->planets.at(this->currentPlanet).simplex = false;
 		}
@@ -769,7 +776,7 @@ void SolarSystem::doGUI() {
 		if (ImGui::Checkbox("Simplex Camera", &this->planets.at(this->currentPlanet).simplex)) { // Rotates around the scene
 			this->planets.at(this->currentPlanet).perlin = false;
 		}
-
+		ImGui::Separator();
 		if (ImGui::InputInt("Planet Subdivisions", &this->planets.at(this->currentPlanet).subdivisions)) {
 			if (this->planets.at(this->currentPlanet).subdivisions < 0) {
 				this->planets.at(this->currentPlanet).subdivisions = 0;
@@ -810,21 +817,10 @@ void SolarSystem::doGUI() {
 			// Regenerate
 			this->planets.at(this->currentPlanet).voronoiCells(false);
 		}
+		ImGui::Separator();
 
 		if (ImGui::Button("Regenerate Planet")) {
 			this->planets.at(this->currentPlanet).generatePlanet();
-		}
-
-
-
-		if (ImGui::Button("Reset Camera")) { // Just incase user loses track
-			freeCam = false;
-			position = glm::vec3(0, 0, 10);
-			right = glm::vec3(1.0f);
-			direction = glm::vec3(1.0f);
-			up = glm::vec3(1.0f);
-			horizontalAngle = 3.14f; // horizontal angle : toward -Z
-			verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 		}
 
 		if (ImGui::Button("Next Planet")) {

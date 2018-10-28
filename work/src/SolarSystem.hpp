@@ -94,7 +94,7 @@ public:
 	int amp = 2;
 	int octaves = 4;
 
-
+	double timeTaken;
 
 	//
 	bool playingRotation = false;
