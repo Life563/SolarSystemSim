@@ -45,4 +45,5 @@ public:
 	void setRules();
 	void readRules(string filename);
 	void resetTree();
+	void treeGeneration(int generation);
 };

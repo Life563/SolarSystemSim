@@ -40,8 +40,11 @@ public:
 	LSystem snowTrees;
 	LSystem jungleTrees;
 	LSystem urbanTrees;
+	bool m_showTrees = false;
+	bool showLeaves = false;
 
-  bool m_showTrees = false;
+	int cylinderDiv = 3;
+
     // The translation of the mesh as a vec3
     glm::vec3 m_translation = glm::vec3(0);
     // The scale of the mesh

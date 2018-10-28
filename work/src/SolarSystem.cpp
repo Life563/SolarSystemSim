@@ -208,7 +208,7 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 
 			glm::vec3 midPoint(0, length, 0);
 			mat4 cyMat = glm::translate(transMat, midPoint);
-			cyMat = td * glm::scale(cyMat, vec3(tsize*0.2, length, tsize*0.2)); // translate tree down so we cna see all of it
+			cyMat = td * glm::scale(cyMat, vec3(tsize*0.2, 0.02, tsize*0.2)); // translate tree down so we cna see all of it
 
 			m_program.setModelMatrix(cyMat);
 			m_program.setColour(vec3(1, 0.8, 0.6));
@@ -267,13 +267,15 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 
 			m_program.setModelMatrix(td);
 			billBoardShader.setModelMatrix(td);
-			// drawLeaf();
+			if (showLeaves) {
+				drawLeaf();
+			}
 		}
 	}
 }
 
 void SolarSystem::generateCylinder() {
-	int divisions = 3;
+	int divisions = cylinderDiv;
 
 	std::vector<unsigned int> indices;
 	cgra::Matrix<double> vertices((divisions + 1) * (divisions + 1), 3);
@@ -292,7 +294,7 @@ void SolarSystem::generateCylinder() {
 			float x = cos(ele) * sin(azi);
 			float y = cos(azi);
 			if (i >= (divisions / 2) + 1) {
-				y = cos(azi);
+				y = cos(azi) - 2.25;
 			}
 			float z = sin(ele) * sin(azi);
 			vertColours.push_back(vec3(1, 0.8, 0.6));
@@ -604,7 +606,7 @@ void SolarSystem::drawScene() {
 			modelTransform = glm::scale(modelTransform, glm::vec3(0.9f,0.5f,0.9f));
 			// Draw the mesh
 			m_program.setModelMatrix(modelTransform);
-			p.ringMesh.draw();
+			//p.ringMesh.draw();
 		}
 		if (p.planetId == this->currentPlanet) { // Draw an arrow above the 
 			// Move the planet and rotate it
@@ -696,6 +698,31 @@ void SolarSystem::doGUI() {
     if (ImGui::Checkbox("Show Trees", &m_showTrees)) { // Rotates around the scene
 
     }
+
+	if (ImGui::Checkbox("Show Leaves", &this->showLeaves)) { // Rotates around the scene
+
+	}
+
+	if (ImGui::InputInt("Cylinder Division on trees", &cylinderDiv)) {
+		if (cylinderDiv < 0) {
+			cylinderDiv = 0;
+		}
+		if (cylinderDiv > 12) {
+			cylinderDiv = 12;
+		}
+		generateCylinder();
+	}
+
+	if (ImGui::InputInt("Tree generations", &cylinderDiv)) {
+		if (cylinderDiv < 0) {
+			cylinderDiv = 0;
+		}
+		if (cylinderDiv > 12) {
+			cylinderDiv = 12;
+		}
+		generateCylinder();
+	}
+
 
 		static float beta = 0.04f;
 		if (ImGui::SliderFloat("Beta", &beta, 0.0f, 0.04f, "%.2f")) {

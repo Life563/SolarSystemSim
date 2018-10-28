@@ -103,13 +103,16 @@
 			}
 
 		}
-		for (int i = 0; i < 3; i++) {
-			generate();
-		}
-
 	}
 
 	void LSystem::resetTree()
 	{
 		currentTree = axiom;
+	}
+
+	void LSystem::treeGeneration(int generation) {
+		resetTree();
+		for (int i = 0; i < generation;i++) {
+			generate();
+		}
 	}
