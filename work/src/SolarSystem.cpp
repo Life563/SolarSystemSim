@@ -636,6 +636,9 @@ void SolarSystem::doGUI() {
 		}
 		std::string totalTris = "Total Number of Tris: " + std::to_string(pt);
 		ImGui::Text("%s", totalTris.c_str());
+		ImGui::Separator();
+
+		ImGui::Text("Planet Parameters");
 
 		if (ImGui::InputInt("Number of Planets", &numberOfPlanets)) {
 			if (numberOfPlanets < 0) {
@@ -673,35 +676,14 @@ void SolarSystem::doGUI() {
 			}
 		}
 
-		if (ImGui::Checkbox("Wire Frame Mode", &wire)) { // Rotates around the scene
-			for (Planet p : this->planets) {
-				p.mesh.setDrawWireframe(this->wire);
-			}
+		if (ImGui::Button("View Planet Screen")) {
+			this->screenNum = (this->screenNum + 1) % 2;
 		}
 
-		std::string rot;
-		if (playingRotation) {
-			rot = "Pause";
-		}
-		else {
-			rot = "Play";
-		}
-		if (ImGui::Button(rot.data())) {
-			if (playingRotation) {
-				playingRotation = false;
-			}
-			else {
-				playingRotation = true;
-			}
-		}
+		ImGui::Separator();
+		ImGui::Text("Tree Parameters");
 
-    if (ImGui::Checkbox("Show Trees", &m_showTrees)) { // Rotates around the scene
 
-    }
-
-	if (ImGui::Checkbox("Show Leaves", &this->showLeaves)) { // Rotates around the scene
-
-	}
 
 	if (ImGui::InputInt("Cylinder Division on trees", &cylinderDiv)) {
 		if (cylinderDiv < 0) {
@@ -713,22 +695,56 @@ void SolarSystem::doGUI() {
 		generateCylinder();
 	}
 
-	if (ImGui::InputInt("Tree generations", &cylinderDiv)) {
-		if (cylinderDiv < 0) {
-			cylinderDiv = 0;
-		}
-		if (cylinderDiv > 12) {
-			cylinderDiv = 12;
-		}
-		generateCylinder();
+	if (ImGui::InputInt("Tree generations", &treeGenerations)) {
+		urbanTrees.treeGeneration(treeGenerations);
+		dessertTrees.treeGeneration(treeGenerations);
+		basicTrees.treeGeneration(treeGenerations);
+		snowTrees.treeGeneration(treeGenerations);
+		jungleTrees.treeGeneration(treeGenerations);
 	}
 
+	if (ImGui::Checkbox("Show Trees", &m_showTrees)) { // Rotates around the scene
 
-		static float beta = 0.04f;
-		if (ImGui::SliderFloat("Beta", &beta, 0.0f, 0.04f, "%.2f")) {
-			m_program.setBeta(beta);
+	}
+
+	if (ImGui::Checkbox("Show Leaves", &this->showLeaves)) { // Rotates around the scene
+
+	}
+
+	ImGui::Separator();
+	ImGui::Text("Light Parameters");
+
+	static float beta = 0.04f;
+	if (ImGui::SliderFloat("Beta", &beta, 0.0f, 0.04f, "%.2f")) {
+		m_program.setBeta(beta);
+	}
+	ImGui::Separator();
+
+
+
+	if (ImGui::Checkbox("Wire Frame Mode", &wire)) { // Rotates around the scene
+		for (Planet p : this->planets) {
+			p.mesh.setDrawWireframe(this->wire);
 		}
+	}
 
+	std::string rot;
+	if (playingRotation) {
+		rot = "Pause";
+	}
+	else {
+		rot = "Play";
+	}
+	if (ImGui::Button(rot.data())) {
+		if (playingRotation) {
+			playingRotation = false;
+		}
+		else {
+			playingRotation = true;
+		}
+	}
+
+	
 
 		if (ImGui::Button("Generate New System")) {
 			this->generateSystem();
@@ -818,6 +834,11 @@ void SolarSystem::doGUI() {
 		if (ImGui::Button("Previous Planet")) {
 
 		}
+
+		if (ImGui::Button("View Solar System Screen")) {
+			this->screenNum = 0;
+		}
+
 		ImGui::End();
 	}
 }

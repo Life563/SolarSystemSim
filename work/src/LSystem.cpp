@@ -103,6 +103,9 @@
 			}
 
 		}
+
+		treeGeneration(3);
+
 	}
 
 	void LSystem::resetTree()

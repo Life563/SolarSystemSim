@@ -44,6 +44,7 @@ public:
 	bool showLeaves = false;
 
 	int cylinderDiv = 3;
+	int treeGenerations = 3;
 
     // The translation of the mesh as a vec3
     glm::vec3 m_translation = glm::vec3(0);
