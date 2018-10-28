@@ -92,9 +92,8 @@ void SolarSystem::init() {
 	// Setup Basic Planet Info
 	generatePlanetSpots();
 	generateSystem();
-	createCube();
-	//planets.push_back(Planet());
-
+	this->m_cube = createCube();
+	this->m_Selector = createCube();
 }
 
 void::SolarSystem::generateLights() {
@@ -382,8 +381,8 @@ PlanetInfo SolarSystem::generatePlanetInfo(glm::vec3 pos, float rs, std::vector<
 	return pi;
 }
 
-void SolarSystem::createCube() {
-
+cgra::Mesh  SolarSystem::createCube() {
+	cgra::Mesh mesh;
 	cgra::Matrix<double> vertices(36, 3);
 	cgra::Matrix<unsigned int> triangles(12, 3);
 
@@ -439,10 +438,11 @@ void SolarSystem::createCube() {
 
 	std::vector<glm::vec3> vertColours;
 	for (int i = 0; i < 36; i++) {
-		vertColours.push_back(vec3(0.0f));
+		vertColours.push_back(vec3(0.5f));
 	}
 
-	m_cube.setData(vertices, triangles, vertColours);
+	mesh.setData(vertices, triangles, vertColours);
+	return mesh;
 }
 
 void SolarSystem::drawBoundingBox() {
@@ -510,9 +510,10 @@ void SolarSystem::drawScene() {
 		double xpos, ypos;
 		glfwGetCursorPos(m_window, &xpos, &ypos);
 		glfwSetCursorPos(m_window, m_viewportSize.x / 2, m_viewportSize.y / 2);
-		horizontalAngle += mouseSpeed * deltaTime * float(m_viewportSize.x / 2 - xpos);
-		verticalAngle += mouseSpeed * deltaTime * float(m_viewportSize.y / 2 - ypos);
+		horizontalAngle += mouseSpeed * deltaTime * int(m_viewportSize.x / 2 - xpos);
+		verticalAngle += mouseSpeed * deltaTime * int(m_viewportSize.y / 2 - ypos);
 	}
+
 	direction = glm::vec3(cos(verticalAngle) * sin(horizontalAngle),sin(verticalAngle),	cos(verticalAngle) * cos(horizontalAngle));
 	right = glm::vec3( sin(horizontalAngle - 3.14f / 2.0f),	0, cos(horizontalAngle - 3.14f / 2.0f)	);
 
@@ -531,7 +532,6 @@ void SolarSystem::drawScene() {
 	// Draw the mesh
 	m_program.setModelMatrix(modelTransform);
 	sun.draw();
-
 	// Draw each planet
 	for (Planet p : planets) {
 		// Move the planet and rotate it
@@ -551,36 +551,32 @@ void SolarSystem::drawScene() {
 		* 3 = Jungle
 		* 4 = Urban
 		*/
-    if(m_showTrees){
-		for (int i = 0; i < p.treeVerts.size(); i++) {
-			int biome = p.biomeMap.at(i);
-			int tv = p.treeVerts.at(i);
-			vec3 mv = p.modifiedVerticies.at(tv);
-			mat4 td = createTreeTransMatrix(mv);
-			int h = 0;
-
-      if(biome == -1 ) {
-
-      }
-			else if (biome == 0) {
-				generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
-			}
-			else if (biome == 1) {
-				generateTree(dessertTrees, modelTransform *td, mv, 0.05, 0.05, h);
-			}
-			else if (biome == 2) {
-				generateTree(snowTrees, modelTransform *td, mv, 0.05, 0.05, h);
-			}
-			else if (biome == 3) {
-				generateTree(jungleTrees, modelTransform *td, mv, 0.05, 0.05, h);
-			}
-			else {
-				generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
+		if(m_showTrees){
+			for (int i = 0; i < p.treeVerts.size(); i++) {
+				int biome = p.biomeMap.at(i);
+				int tv = p.treeVerts.at(i);
+				vec3 mv = p.modifiedVerticies.at(tv);
+				mat4 td = createTreeTransMatrix(mv);
+				int h = 0;
+				if(biome != -1 ) {
+					if (biome == 0) {
+						generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
+					}
+					else if (biome == 1) {
+						generateTree(dessertTrees, modelTransform *td, mv, 0.05, 0.05, h);
+					}
+					else if (biome == 2) {
+						generateTree(snowTrees, modelTransform *td, mv, 0.05, 0.05, h);
+					}
+					else if (biome == 3) {
+						generateTree(jungleTrees, modelTransform *td, mv, 0.05, 0.05, h);
+					}
+					else {
+						generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
+					}
+				}
 			}
 		}
-  }
-
-
 		// Scale the mesh
 		modelTransform = glm::scale(modelTransform, p.scale);
 		// Draw the mesh
@@ -589,7 +585,7 @@ void SolarSystem::drawScene() {
 		if (p.hasMoon) {
 			// Move the planet and rotate it
 			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotates with planet
-			modelTransform = glm::rotate(modelTransform, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, p.location); // Rotates around planet
+			modelTransform = glm::rotate(modelTransform, (playingRotation) ? ((float)glfwGetTime() / 3.0f) : 0.0f, p.location); // Rotates around planet
 			// Translate the actual mesh
 			modelTransform = glm::translate(modelTransform, glm::vec3(p.location.x, p.location.y+0.5f, p.location.z+1.25f));
 			// Scale the mesh
@@ -602,15 +598,26 @@ void SolarSystem::drawScene() {
 			// Move the planet and rotate it
 			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotates with planet
 			// Translate the actual mesh
-			modelTransform = glm::translate(modelTransform, glm::vec3(p.location.x, p.location.y, p.location.z));
+			modelTransform = glm::translate(modelTransform, p.location);
+			modelTransform = glm::rotate(modelTransform, p.ringAngle, p.location); // Rotates around planet
 			// Scale the mesh
-			modelTransform = glm::scale(modelTransform, glm::vec3(1.0f));
+			modelTransform = glm::scale(modelTransform, glm::vec3(0.9f,0.5f,0.9f));
 			// Draw the mesh
 			m_program.setModelMatrix(modelTransform);
 			p.ringMesh.draw();
 		}
+		if (p.planetId == this->currentPlanet) { // Draw an arrow above the 
+			// Move the planet and rotate it
+			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			// Translate the actual mesh
+			modelTransform = glm::translate(modelTransform, glm::vec3(p.location.x, p.location.y+1.0f, p.location.z));
+			modelTransform = glm::rotate(modelTransform, 0.785398f, p.location);
+			modelTransform = glm::scale(modelTransform, glm::vec3(0.1f, 0.2f, 0.2f));
+			// Draw the mesh
+			m_program.setModelMatrix(modelTransform);
+			m_Selector.draw();
+		}
 	}
-
 	// Draw Bounding Box
 	drawBoundingBox();
 }
@@ -751,6 +758,14 @@ void SolarSystem::doGUI() {
 			}
 			// Regenerate
 			this->planets.at(this->currentPlanet).generateTerrain();
+		}
+		
+		if (ImGui::InputFloat("Water Depth", &this->planets.at(this->currentPlanet).waterDepth)) {
+			if (this->planets.at(this->currentPlanet).waterDepth < 0) {
+				this->planets.at(this->currentPlanet).waterDepth = 0;
+			}
+			// Regenerate
+			this->planets.at(this->currentPlanet).voronoiCells(false);
 		}
 
 		if (ImGui::Button("Regenerate Planet")) {

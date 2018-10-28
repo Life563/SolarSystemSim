@@ -27,6 +27,7 @@ public:
     cgra::Mesh m_mesh;
 	cgra::Mesh m_cylinder;
 	cgra::Mesh m_cube;
+	cgra::Mesh m_Selector;
 
     // The current size of the viewport
     glm::vec2 m_viewportSize;
@@ -113,7 +114,7 @@ public:
 
     void init();
 
-	void createCube();
+	cgra::Mesh createCube();
 	void drawBoundingBox();
 
 	void generateSun();

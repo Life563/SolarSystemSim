@@ -49,6 +49,7 @@ public:
 
 	// Sites used for voronoi
 	std::vector<glm::vec3> sites;
+	std::vector<int> water; // 0 means no water, 1 means water
 
 	std::map<int, int> midPoints;
 	std::vector<glm::vec3> vertColours; // Current colors for each vertex
@@ -67,6 +68,9 @@ public:
 	float frequency = 3;
 	float amplitude = 2;
 
+	float waterDepth = 1.0f;
+	float ringAngle = 1.0f;
+
 	double timeTaken;
 
 	//TREE STUFF
@@ -83,8 +87,7 @@ public:
 	void generateMoon();
 	void generateRings();
 	void populatePlanet();
-	void voronoiCells();
-	void moveSunPoints();
+	void voronoiCells(bool genNewSites);
 
 	// Noise
 	float generateNoise(int i);

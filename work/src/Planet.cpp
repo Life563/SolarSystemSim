@@ -112,7 +112,7 @@ void Planet::generatePlanet() {
 	}
 	point = distribution(randGen);
 	if (point < 0.5f) { // Generate a ring around planet
-		//this->generateRings();
+		this->generateRings();
 	}
 	//TREES
 	std::uniform_int_distribution<> dis(0, 4);
@@ -179,9 +179,13 @@ int Planet::getMidPoint(int a, int b) {
 *  Returns a floating point between -1.0f & 1.0f which has been generated through running a vertex point through a Perlin noise algorithm
 */
 float Planet::generateNoise(int i) {
-	float xFactor = 1.0f / (glm::sqrt(originalVerticies.size()) - 1);
-	float yFactor = 1.0f / (glm::sqrt(originalVerticies.size()) - 1);
-	float zFactor = 1.0f / (glm::sqrt(originalVerticies.size()) - 1);
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	uniform_real_distribution<double> distribution(0, 1.0);
+	// 1.0f / (glm::sqrt(originalVerticies.size()) - 1);
+	float xFactor = distribution(gen);
+	float yFactor = distribution(gen);
+	float zFactor = distribution(gen);
 
 	float x = xFactor * originalVerticies.at(i)[0];
 	float y = yFactor * originalVerticies.at(i)[1];
@@ -200,10 +204,8 @@ float Planet::generateNoise(int i) {
 		} else if (this->simplex) {
 			value = glm::simplex(p) / amp;
 		} else { // Random
-			std::random_device rd;
-			std::mt19937 gen(rd());
-			uniform_real_distribution<double> distribution(-1.0, 1.0);
-			value = distribution(gen);
+			uniform_real_distribution<double> rDistribution(-1.0, 1.0);
+			value = rDistribution(gen);
 		}
 		sum += value;
 		freq *= 2.0f;
@@ -230,10 +232,17 @@ void Planet::generateTerrain() {
 	// Generate and apply noise to change terrain
 	modifiedVerticies.clear();
 	for (int i = 0; i < originalVerticies.size(); i++) {
-		modifiedVerticies.push_back(originalVerticies.at(i) * (1.0f + generateNoise(i)));
+		float point = this->generateNoise(i);
+		if (point < 0.0f) {
+			point = 0.0f;
+		}
+		if (point > 0.2f) {
+			point = 0.2f;
+		}
+		modifiedVerticies.push_back(originalVerticies.at(i) * (glm::length(originalVerticies.at(i)) + point));
 	}
 	// Use Vor Cells to generate biomes
-	voronoiCells();
+	voronoiCells(true);
 	// Set mesh
 	cgra::Matrix<double> vertices(modifiedVerticies.size(), 3);
 	for (int i = 0; i < modifiedVerticies.size(); i++) {
@@ -252,20 +261,21 @@ void Planet::generateTerrain() {
 * Brute Force Algorithm
 * A site is a starter point for a biome
 */
-void Planet::voronoiCells() {
-	// Determin which points are going to become main sites
+void Planet::voronoiCells(bool genNewSites) {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dis(0, this->modifiedVerticies.size()-1);
-	int vertSites [5];
-	int numberOfSites = 5;
-	for (int i = 0; i < numberOfSites; i++) {
-		// Decide on a random point
-		int vertToSite = dis(gen);
-		this->sites.push_back(this->modifiedVerticies.at(vertToSite));
+	if (genNewSites) {
+		// Determin which points are going to become main sites
+		std::uniform_int_distribution<> dis(0, this->modifiedVerticies.size()-1);
+		int numberOfSites = 5;
+		for (int i = 0; i < numberOfSites; i++) {
+			// Decide on a random point
+			int vertToSite = dis(gen);
+			this->sites.push_back(this->modifiedVerticies.at(vertToSite));
+		}
 	}
 	vertColours.clear();
-	// Now
+	// Now Decided on the biome of each vertex, as well as the color
 	std::uniform_int_distribution<> distribution(-15, 15);
 	for (int i = 0; i < this->modifiedVerticies.size(); i++) {
 		float shortestDistance = FLT_MAX;
@@ -286,10 +296,11 @@ void Planet::voronoiCells() {
 		//std::cout << dis << std::endl;
 		// Shift the colors slightly for some variance
 		float offsetColor = distribution(gen);
-		//if (dis <= 1.0f) {
-			//vertColours.push_back({ (this->cs1.at(0).x + offsetColor) / 255, (this->cs1.at(0).y + offsetColor) / 255, (this->cs1.at(0).z + offsetColor) /255}); // 'Sea' color
-			//biomeMap.push_back(-1);
-		//} else {
+		//if (dis < this->waterDepth) {
+		//	biomeMap.push_back(biomeNum);
+		//	vertColours.push_back(glm::vec3((this->cs1.at(0).x + offsetColor) / 255, (this->cs1.at(0).y + offsetColor) / 255, (this->cs1.at(0).z + offsetColor) / 255)); // 'Sea' color
+		//}
+		//else {
 			if (biomeNum == 0) { // Flatlands
 				vertColours.push_back({ (this->cs1.at(1).x + offsetColor) / 255, (this->cs1.at(1).y + offsetColor) / 255, (this->cs1.at(1).z + offsetColor) / 255 });
 			}
@@ -307,6 +318,18 @@ void Planet::voronoiCells() {
 			}
 			biomeMap.push_back(biomeNum);
 		//}
+	}
+	//// Decide on water
+	std::uniform_int_distribution<> waterDistribution(0, originalVerticies.size()-1);
+	std::uniform_int_distribution<> seaDistribution(-15, 15);
+	for (int i = 0; i < originalVerticies.size(); i++) {
+		// Generate a point
+		float p = waterDistribution(gen);
+		float point = glm::perlin((originalVerticies.at(p)));
+		if (point < this->waterDepth-1.0f) {
+			float oc = seaDistribution(gen);
+			vertColours.at(i) = glm::vec3((this->cs1.at(0).x + oc) / 255, (this->cs1.at(0).y + oc) / 255, (this->cs1.at(0).z + oc) / 255); // 'Sea' color
+		}
 	}
 }
 
@@ -346,7 +369,7 @@ void Planet::generateRings() {
 	cgra::Wavefront obj;
 	// Wrap the loading in a try..catch block
 	try {
-		obj = cgra::Wavefront::load("work/res/arrow.obj");
+		obj = cgra::Wavefront::load("work/res/Ring.obj");
 	}
 	catch (std::exception e) {
 		std::cerr << "Couldn't load file: '" << e.what() << "'" << std::endl;
@@ -359,10 +382,16 @@ void Planet::generateRings() {
 	cgra::Matrix<double> vertices(numVertices, 3);
 	cgra::Matrix<unsigned int> triangles(numTriangles, 3);
 	std::vector<glm::vec3> vc;
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dist(-15, 15);
+
 	for (size_t i = 0; i < obj.m_positions.size(); i++) {
 		// Add each position to the vertices matrix
 		vertices.setRow(i, { obj.m_positions[i][0],  obj.m_positions[i][1],  obj.m_positions[i][2] });
-		vc.push_back({1.0f, 0.0f, 0.0f});
+		float oc = dist(gen);
+		vc.push_back(glm::vec3((150 + oc) / 255, (75+oc) / 255, (15 + oc) / 255));
 	}
 
 	for (unsigned int i = 0; i < obj.m_faces.size(); i++) {
@@ -371,6 +400,8 @@ void Planet::generateRings() {
 		std::vector<cgra::Wavefront::Vertex> theVertices = obj.m_faces[i].m_vertices;
 		triangles.setRow(i, { theVertices[0].m_p - 1, theVertices[1].m_p - 1, theVertices[2].m_p - 1 });
 	}
+	std::uniform_real_distribution<double> ra(-2.0, 2.0);
+	ringAngle = ra(gen);
 	ringMesh.setData(vertices, triangles, vc);
 }
 
