@@ -51,7 +51,7 @@ int main(int argc, const char** argv) {
     // but is worth being explicit about
     glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
 
-    GLFWwindow *window = glfwCreateWindow(1280, 720, "CGRA350 T2/2018 Assignment #1", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(1280, 720, "CGRA350 T2/2018 Solar System Simulation", NULL, NULL);
     if (window == nullptr) {
         return 1;
     }
