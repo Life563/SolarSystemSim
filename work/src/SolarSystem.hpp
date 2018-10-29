@@ -43,7 +43,7 @@ public:
 	bool m_showTrees = false;
 	bool showLeaves = false;
 	bool polyLeaves = true;
-	int cylinderDiv = 3;
+	int cylinderDiv = 9;
 	int treeGenerations = 3;
 
 	cgra::Mesh m_leaf;
