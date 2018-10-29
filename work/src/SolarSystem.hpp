@@ -87,11 +87,11 @@ public:
 	int screenNum = 0; // 0 = System Screen, 1 = All planet Info, 2 == Single Planet Info
 	int numberOfTris = 0;
 	int currentPlanet = 0;
-	int subs = 2;
+	int subs = 3;
 
 	// Global Noise Functions
 	int freq = 3;
-	int amp = 2;
+	int amp = 5;
 	int octaves = 4;
 
 	double timeTaken;

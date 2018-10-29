@@ -68,7 +68,7 @@ public:
 	float frequency = 3;
 	float amplitude = 2;
 
-	float waterDepth = 1.0f;
+	float waterDepth = -0.1f;
 	float ringAngle = 1.0f;
 
 	double timeTaken;

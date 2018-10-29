@@ -145,53 +145,52 @@ void SolarSystem::generateSystem() {
 * 4 = Urban
 */
 void SolarSystem::generatePlanetSpots() {
-	//std::vector<std::vector<double>> cs1;
 	// First Spot: Closest to the sun
-  this->planetSpots.push_back(generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
+	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
 		{
-			{ 255.0f, 255.0f , 0.0f}, { 255.0f, 20.0f , 0.0f}, {255.0f, 255.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {163.0f, 198.0f , 255.0f}, {128.0f, 128.0f , 128.0f}
+			{ 255.0f, 255.0f , 0.0f}, { 255.0f, 20.0f , 0.0f}, {255.0f, 255.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {163.0f, 198.0f , 255.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Second Spot
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(10.0f, 0.0f, 0.0f), 2.0f,
 		{
-			{ 200.0f, 200.0f , 0.0f}, { 255.0f, 100.0f , 0.0f}, {255.0f, 150.0f , 40.0f}, {0.0f, 0.0f , 0.0f}, {163.0f, 198.0f, 255.0f}, {128.0f, 128.0f , 128.0f}
+			{ 200.0f, 200.0f , 0.0f}, { 255.0f, 100.0f , 0.0f}, {255.0f, 150.0f , 40.0f}, {0.0f, 0.0f , 0.0f}, {163.0f, 198.0f, 255.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Third
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(15.0f, 0.0f, 0.0f), 3.0f,
 		{
-			{ 0.0f, 0.0f , 255.0f}, { 255.0f, 255.0f , 0.0f}, { 237.0f, 166.0f, 66.0f}, { 255.0f, 255.0f , 255.0f}, { 0.0f, 175.0f , 0.0f}, {128.0f, 128.0f , 128.0f}
+			{ 55.0f, 127.0f , 135.0f}, { 255.0f, 0.0f , 0.0f}, { 200.0f, 139.0f, 55.0f}, { 255.0f, 255.0f , 255.0f}, {237.0f, 166.0f, 66.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Fourth: "Goldy locks zone"
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(20.0f, 0.0f, 0.0f), 4.0f,
 		{
-			{ 0.0f, 0.0f , 255.0f}, { 0.0f, 255.0f , 0.0f}, { 237.0f, 166.0f, 66.0f}, { 255.0f, 255.0f , 255.0f}, { 0.0f, 175.0f , 0.0f}, {128.0f, 128.0f , 128.0f}
+			{ 50.0f, 50.0f , 255.0f}, { 0.0f, 255.0f , 0.0f}, { 237.0f, 166.0f, 66.0f}, { 255.0f, 255.0f , 255.0f}, { 0.0f, 175.0f , 0.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Fifth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(25.0f, 0.0f, 0.0f), 5.0f,
 		{
-			{ 0.0f, 0.0f , 255.0f}, { 200.0f, 200.0f , 200.0f}, { 200.0f, 200.0f , 200.0f}, { 200.0f, 200.0f , 200.0f}, { 200.0f, 200.0f , 200.0f}, {128.0f, 128.0f , 128.0f}
+			{ 50.0f, 50.0f , 255.0f}, { 200.0f, 200.0f , 200.0f}, { 200.0f, 200.0f , 200.0f}, { 200.0f, 200.0f , 200.0f}, { 200.0f, 200.0f , 200.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Sixth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(30.0f, 0.0f, 0.0f), 6.0f,
 		{
-			{ 0.0f, 0.0f , 255.0f}, { 255.0f, 50.0f , 0.0f}, {255.0f, 50.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {0.0f, 150.0f , 0.0f}, {128.0f, 128.0f , 128.0f}
+			{ 50.0f, 50.0f , 255.0f}, { 255.0f, 50.0f , 0.0f}, {255.0f, 50.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {0.0f, 150.0f , 0.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Seventh
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(35.0f, 0.0f, 0.0f), 7.0f,
 		{
-			{ 0.0f, 0.0f , 255.0f}, { 255.0f, 50.0f , 0.0f}, {255.0f, 50.0f , 0.0f}, {255.0f, 50.0f , 0.0f}, {255.0f, 50.0f, 0.0f}, {128.0f, 128.0f , 128.0f}
+			{ 25.0f, 25.0f , 255.0f}, { 255.0f, 50.0f , 0.0f}, {255.0f, 50.0f , 0.0f}, {255.0f, 50.0f , 0.0f}, {255.0f, 50.0f, 0.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Eighth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(45.0f, 0.0f, 0.0f), 8.0f,
 		{
-			{ 0.0f, 0.0f , 255.0f}, { 163.0f, 198.0f, 255.0f}, {255.0f, 255.0f , 255.0f}, {255.0f, 255.0f , 255.0f}, {0.0f, 30.0f, 79.0f}, {128.0f, 128.0f , 128.0f}
+			{ 15.0f, 15.0f , 255.0f}, { 163.0f, 198.0f, 255.0f}, {255.0f, 255.0f , 255.0f}, {255.0f, 255.0f , 255.0f}, {0.0f, 30.0f, 79.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 }
@@ -611,7 +610,7 @@ void SolarSystem::drawScene() {
 			// Move the planet and rotate it
 			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 			// Translate the actual mesh
-			modelTransform = glm::translate(modelTransform, glm::vec3(p.location.x, p.location.y+1.0f, p.location.z));
+			modelTransform = glm::translate(modelTransform, glm::vec3(p.location.x, p.location.y+1.25f, p.location.z));
 			modelTransform = glm::rotate(modelTransform, 0.785398f, p.location);
 			modelTransform = glm::scale(modelTransform, glm::vec3(0.1f, 0.2f, 0.2f));
 			// Draw the mesh
@@ -811,9 +810,6 @@ void SolarSystem::doGUI() {
 		}
 		
 		if (ImGui::InputFloat("Water Depth", &this->planets.at(this->currentPlanet).waterDepth)) {
-			if (this->planets.at(this->currentPlanet).waterDepth < 0) {
-				this->planets.at(this->currentPlanet).waterDepth = 0;
-			}
 			// Regenerate
 			this->planets.at(this->currentPlanet).voronoiCells(false);
 		}

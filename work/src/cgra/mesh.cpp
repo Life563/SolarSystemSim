@@ -87,7 +87,7 @@ namespace cgra {
         // Check to see if we have all the GPU objects we need to draw the
         // mesh.
         if (m_vbo == 0 || m_ibo == 0 || m_vao == 0) {
-
+			glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
             deleteMesh(); // Make sure all the existing things are deleted
 
             // Create the Vertex Array Object, we do this first to make
@@ -132,7 +132,7 @@ namespace cgra {
                                   reinterpret_cast<void *>(offsetof(Vertex, m_normal)));
             glEnableVertexAttribArray(1);
 
-			glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
+			
 
 			// Attribute 3 is the color.
 			glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),

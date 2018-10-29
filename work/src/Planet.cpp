@@ -95,6 +95,8 @@ void Planet::generateIcosahedron() {
 * Method to generate the planets
 */
 void Planet::generatePlanet() {
+	this->hasMoon = false;
+	this->hasRing = false;
 	srand((unsigned int)rdtsc()); // Makes sure we have a random seed
 	double startTime = glfwGetTime();
 	generateIcosahedron();
@@ -123,6 +125,7 @@ void Planet::generatePlanet() {
 		int tv = dis(randGen);
 		treeVerts.push_back(tv);
 	}
+	std::cout << this->originalVerticies.size() << std::endl;
 	this->timeTaken = glfwGetTime() - startTime;
 }
 
@@ -174,7 +177,7 @@ int Planet::getMidPoint(int a, int b) {
 }
 
 /*
-*  Returns a floating point between -1.0f & 1.0f which has been generated through running a vertex point through a Perlin noise algorithm
+*  Returns a floating point between -1.0f & 1.0f which has been generated through running a vertex point through a noise algorithm
 */
 float Planet::generateNoise(int i) {
 	std::random_device rd;
@@ -193,7 +196,6 @@ float Planet::generateNoise(int i) {
 	// Tuneable
 	float freq = this->frequency;
 	float amp = this->amplitude;
-	//float point;
 	for (int octs = 0; octs < this->octaves; octs++) {
 		glm::vec3 p = glm::vec3(x * freq, y*freq, z * freq);
 		float value;
@@ -214,17 +216,11 @@ float Planet::generateNoise(int i) {
 
 /*
 * Biome Keys:
-* 0 = FlatLand (Grass)
+* 0 = FlatLand
 * 1 = Desert
 * 2 = Snow
 * 3 = Jungle
 * 4 = Urban
-
-* Terrain Types:
-* 0 = Sea
-* 1 = Flatlands
-* 2 = Hills
-* 3 = Mountain
 */
 void Planet::generateTerrain() {
 	// Generate and apply noise to change terrain
@@ -241,6 +237,20 @@ void Planet::generateTerrain() {
 	}
 	// Use Vor Cells to generate biomes
 	voronoiCells(true);
+	// Decide on water
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> waterDistribution(0, originalVerticies.size() - 1);
+	std::uniform_int_distribution<> seaDistribution(-15, 15);
+	for (int i = 0; i < originalVerticies.size(); i++) {
+		// Generate a point
+		float p = waterDistribution(gen);
+		float point = glm::perlin((originalVerticies.at(p)));
+		if (point < this->waterDepth) {
+			float oc = seaDistribution(gen);
+			vertColours.at(i) = glm::vec3((this->cs1.at(0).x + oc) / 255, (this->cs1.at(0).y + oc) / 255, (this->cs1.at(0).z + oc) / 255); // 'Sea' color
+		}
+	}
 	// Set mesh
 	cgra::Matrix<double> vertices(modifiedVerticies.size(), 3);
 	for (int i = 0; i < modifiedVerticies.size(); i++) {
@@ -256,8 +266,7 @@ void Planet::generateTerrain() {
 }
 
 /*
-* Brute Force Algorithm
-* A site is a starter point for a biome
+* An algorithm to determin which points are part of which biome. A site is a starter point for a biome
 */
 void Planet::voronoiCells(bool genNewSites) {
 	std::random_device rd;
@@ -282,7 +291,7 @@ void Planet::voronoiCells(bool genNewSites) {
 		for (int j = 0; j < this->sites.size(); j++) {
 			float dis = glm::abs(glm::distance(modifiedVerticies.at(i), this->sites.at(j)));
 			if (dis == shortestDistance) {
-				// Randomly decide on the winner
+				// Randomly decide on the winner, this helps with the borders between sites
 				std::uniform_real_distribution<double> siteDist(0.0, 1.0);
 				double dp = siteDist(gen);
 				if (dp < 0.5f) {
@@ -294,48 +303,26 @@ void Planet::voronoiCells(bool genNewSites) {
 				biomeNum = j;
 			}
 		}
-		// First we will check the height, if the height is less than 1.0f, it will be a sea tile, so it will be blue regardless
-		//// Get distance between center of planet and current vertex
-		//float dis = glm::length(modifiedVerticies.at(i));
-		float dis = glm::distance(modifiedVerticies.at(i), glm::vec3(0, 0, 0));
-		//std::cout << dis << std::endl;
 		// Shift the colors slightly for some variance
 		float offsetColor = distribution(gen);
-		//if (dis < this->waterDepth) {
-		//	biomeMap.push_back(biomeNum);
-		//	vertColours.push_back(glm::vec3((this->cs1.at(0).x + offsetColor) / 255, (this->cs1.at(0).y + offsetColor) / 255, (this->cs1.at(0).z + offsetColor) / 255)); // 'Sea' color
-		//}
-		//else {
-			if (biomeNum == 0) { // Flatlands
-				vertColours.push_back({ (this->cs1.at(1).x + offsetColor) / 255, (this->cs1.at(1).y + offsetColor) / 255, (this->cs1.at(1).z + offsetColor) / 255 });
-			}
-			else if (biomeNum == 1) { // Dessert
-				vertColours.push_back({ (this->cs1.at(2).x + offsetColor) / 255, (this->cs1.at(2).y + offsetColor) / 255, (this->cs1.at(2).z + offsetColor) / 255 });
-			}
-			else if (biomeNum == 2) { // Snow
-				vertColours.push_back({ (this->cs1.at(3).x + offsetColor) / 255, (this->cs1.at(3).y + offsetColor) / 255, (this->cs1.at(3).z + offsetColor) / 255 });
-			}
-			else if (biomeNum == 3) { // Jungle
-				vertColours.push_back({ (this->cs1.at(4).x + offsetColor) / 255, (this->cs1.at(4).y + offsetColor) / 255, (this->cs1.at(4).z + offsetColor) / 255 });
-			}
-			else { // Urban
-				vertColours.push_back({ (this->cs1.at(5).x + offsetColor) / 255, (this->cs1.at(5).y + offsetColor) / 255, (this->cs1.at(5).z + offsetColor) / 255 });
-			}
-			biomeMap.push_back(biomeNum);
-		//}
-	}
-	//// Decide on water
-	std::uniform_int_distribution<> waterDistribution(0, originalVerticies.size()-1);
-	std::uniform_int_distribution<> seaDistribution(-15, 15);
-	for (int i = 0; i < originalVerticies.size(); i++) {
-		// Generate a point
-		float p = waterDistribution(gen);
-		float point = glm::perlin((originalVerticies.at(p)));
-		if (point < this->waterDepth-1.0f && glm::distance(modifiedVerticies.at(i), glm::vec3(0, 0, 0)) < 1.0f) {
-			float oc = seaDistribution(gen);
-			vertColours.at(i) = glm::vec3((this->cs1.at(0).x + oc) / 255, (this->cs1.at(0).y + oc) / 255, (this->cs1.at(0).z + oc) / 255); // 'Sea' color
+		// Get the color of the decided biome
+		if (biomeNum == 0) { // Flatlands
+			vertColours.push_back({ (this->cs1.at(1).x + offsetColor) / 255, (this->cs1.at(1).y + offsetColor) / 255, (this->cs1.at(1).z + offsetColor) / 255 });
 		}
-	}
+		else if (biomeNum == 1) { // Dessert
+			vertColours.push_back({ (this->cs1.at(2).x + offsetColor) / 255, (this->cs1.at(2).y + offsetColor) / 255, (this->cs1.at(2).z + offsetColor) / 255 });
+		}
+		else if (biomeNum == 2) { // Snow
+			vertColours.push_back({ (this->cs1.at(3).x + offsetColor) / 255, (this->cs1.at(3).y + offsetColor) / 255, (this->cs1.at(3).z + offsetColor) / 255 });
+		}
+		else if (biomeNum == 3) { // Jungle
+			vertColours.push_back({ (this->cs1.at(4).x + offsetColor) / 255, (this->cs1.at(4).y + offsetColor) / 255, (this->cs1.at(4).z + offsetColor) / 255 });
+		}
+		else { // Urban
+			vertColours.push_back({ (this->cs1.at(5).x + offsetColor) / 255, (this->cs1.at(5).y + offsetColor) / 255, (this->cs1.at(5).z + offsetColor) / 255 });
+		}
+		biomeMap.push_back(biomeNum);
+	}	
 }
 
 /*
@@ -345,7 +332,6 @@ void Planet::generateMoon() {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dis(-15, 15);
-
 	this->hasMoon = true;
 	float t = (1.0f + glm::sqrt(5.0f)) / 2.0f;
 	std::vector<glm::vec3> moonVertices = { glm::normalize(glm::vec3(-1.0f, t, 0.0f)), glm::normalize(glm::vec3(1.0f, t, 0.0f)), glm::normalize(glm::vec3(-1.0f, -t, 0.0f)), glm::normalize(glm::vec3(1.0f, -t, 0.0f)), glm::normalize(glm::vec3(0.0f, -1.0f, t)), glm::normalize(glm::vec3(0.0f, 1.0f, t)), glm::normalize(glm::vec3(0.0f, -1.0f, -t)), glm::normalize(glm::vec3(0.0f, 1.0f, -t)), glm::normalize(glm::vec3(t, 0.0f, -1.0f)), glm::normalize(glm::vec3(t, 0.0f, 1.0f)), glm::normalize(glm::vec3(-t, 0.0f, -1.0f)), glm::normalize(glm::vec3(-t, 0.0f, 1.0f)) };
@@ -367,7 +353,7 @@ void Planet::generateMoon() {
 }
 
 /*
-*   Method used to generate a ring for the planet
+*   Method used to generate a ring for the planet. Uses a slightly modified version of the obj loader from 251
 */
 void Planet::generateRings() {
 	this->hasRing = true;
@@ -375,8 +361,7 @@ void Planet::generateRings() {
 	// Wrap the loading in a try..catch block
 	try {
 		obj = cgra::Wavefront::load(CGRA_SRCDIR "/res/Ring.obj");
-	}
-	catch (std::exception e) {
+	} catch (std::exception e) {
 		std::cerr << "Couldn't load file: '" << e.what() << "'" << std::endl;
 	}
 	// The mesh data
