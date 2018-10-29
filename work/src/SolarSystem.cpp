@@ -859,10 +859,6 @@ void SolarSystem::doGUI() {
 			this->currentPlanet = (this->currentPlanet + 1) % planets.size();
 		}
 
-		if (ImGui::Button("Previous Planet")) {
-
-		}
-
 		if (ImGui::Button("View Solar System Screen")) {
 			this->screenNum = 0;
 		}
