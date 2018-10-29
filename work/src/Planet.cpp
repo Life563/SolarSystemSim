@@ -117,6 +117,7 @@ void Planet::generatePlanet() {
 	}
 	//TREES
 	std::uniform_int_distribution<> dis(0, 4);
+	treeVerts.clear();
 	amtTrees = dis(gen);
 	for (int i = 0; i < amtTrees;i++) {
 		int seed = std::chrono::system_clock::now().time_since_epoch().count();
