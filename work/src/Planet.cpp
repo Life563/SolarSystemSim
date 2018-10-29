@@ -186,14 +186,10 @@ float Planet::generateNoise(int i) {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	uniform_real_distribution<double> distribution(0, 1.0);
-	// 1.0f / (glm::sqrt(originalVerticies.size()) - 1);
-	float xFactor = distribution(gen);
-	float yFactor = distribution(gen);
-	float zFactor = distribution(gen);
 
-	float x = xFactor * originalVerticies.at(i)[0];
-	float y = yFactor * originalVerticies.at(i)[1];
-	float z = zFactor * originalVerticies.at(i)[2];
+	float x = distribution(gen) * originalVerticies.at(i)[0];
+	float y = distribution(gen) * originalVerticies.at(i)[1];
+	float z = distribution(gen) * originalVerticies.at(i)[2];
 
 	float sum = 0.0f;
 	// Tuneable
