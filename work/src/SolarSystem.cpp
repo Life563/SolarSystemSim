@@ -274,14 +274,14 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 }
 
 void SolarSystem::generateCylinder() {
-	int divisions = cylinderDiv;
+	unsigned int divisions = cylinderDiv;
 
 	std::vector<unsigned int> indices;
 	cgra::Matrix<double> vertices((divisions + 1) * (divisions + 1), 3);
 	std::vector<glm::vec3> vertColours;
 	int count = 0;
 
-	for (int i = 0; i <= divisions; ++i) {
+	for (unsigned int i = 0; i <= divisions; ++i) {
 		float V = i / (float)divisions;
 		float azi = V * glm::pi<float>();
 
@@ -301,7 +301,7 @@ void SolarSystem::generateCylinder() {
 		}
 	}
 
-	for (int i = 0; i < ((divisions + 1) * (divisions + 1) * 2); i++) {
+	for (unsigned int i = 0; i < ((divisions + 1) * (divisions + 1) * 2); i++) {
 
 		if (i + divisions + 1 >= vertices.numRows()) {
 			continue;
@@ -320,7 +320,7 @@ void SolarSystem::generateCylinder() {
 
 	cgra::Matrix<unsigned int> triangles(indices.size() / 3, 3);
 	count = 0;
-	for (int i = 0; i < indices.size(); i += 3) {
+	for (unsigned int i = 0; i < indices.size(); i += 3) {
 		triangles.setRow(count++, { indices.at(i), indices.at(i + 1), indices.at(i + 2) });
 	}
 
@@ -447,7 +447,6 @@ cgra::Mesh  SolarSystem::createCube() {
 }
 
 void SolarSystem::drawBoundingBox() {
-	GLuint airlightOnly;
 	glUniform1i(glGetUniformLocation(m_program.getProgram(), "onlyPointLights"), 1);
 	//m_program.setColour(glm::vec3(0, 0, 0));
 	// Bottom
@@ -553,7 +552,7 @@ void SolarSystem::drawScene() {
 		* 4 = Urban
 		*/
 		if(m_showTrees){
-			for (int i = 0; i < p.treeVerts.size(); i++) {
+			for (unsigned int i = 0; i < p.treeVerts.size(); i++) {
 				int biome = p.biomeMap.at(i);
 				int tv = p.treeVerts.at(i);
 				vec3 mv = p.modifiedVerticies.at(tv);
@@ -607,7 +606,7 @@ void SolarSystem::drawScene() {
 			m_program.setModelMatrix(modelTransform);
 			p.ringMesh.draw();
 		}
-		if (p.planetId == this->currentPlanet) { // Draw an icon above the 
+		if (p.planetId == this->currentPlanet) { // Draw an icon above the
 			// Move the planet and rotate it
 			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 			// Translate the actual mesh
@@ -630,7 +629,7 @@ void SolarSystem::doGUI() {
 		ImGui::Text("Solar System Information");
 
 		int pt = this->sun.originalTriangles.size();
-		for (int i = 0; i < this->planets.size(); i++) {
+		for (unsigned int i = 0; i < this->planets.size(); i++) {
 			pt += this->planets.at(i).originalTriangles.size();
 		}
 		std::string totalTris = "Total Number of Tris: " + std::to_string(pt);
@@ -809,7 +808,7 @@ void SolarSystem::doGUI() {
 			// Regenerate
 			this->planets.at(this->currentPlanet).generateTerrain();
 		}
-		
+
 		if (ImGui::InputFloat("Water Depth", &this->planets.at(this->currentPlanet).waterDepth)) {
 			if (this->planets.at(this->currentPlanet).waterDepth < 0) {
 				this->planets.at(this->currentPlanet).waterDepth = 0;
@@ -854,7 +853,7 @@ void SolarSystem::onCursorPos(double xpos, double ypos) {
     glm::vec2 currentMousePosition(xpos, ypos);
 
     // Get the difference from the previous mouse position
-    glm::vec2 mousePositionDelta = currentMousePosition - m_mousePosition;
+    // glm::vec2 mousePositionDelta = currentMousePosition - m_mousePosition;
 
     if (m_mouseButtonDown[GLFW_MOUSE_BUTTON_LEFT]) {
 
@@ -870,6 +869,8 @@ void SolarSystem::onCursorPos(double xpos, double ypos) {
 
 void SolarSystem::onKey(int key, int scancode, int action, int mods) {
     // `(void)foo` suppresses unused variable warnings
+    (void)scancode;
+    (void)mods;
 	if (GLFW_KEY_X == key && action == GLFW_PRESS) {
 		this->screenNum = (this->screenNum + 1) % 2;
 	}
