@@ -55,7 +55,7 @@ void main() {
 
     vec3 cumulativeColor = vec3(0, 0, 0);
     vec3 surfaceNormal = normalize(fragNormal);
-    
+
 
     /*****************************************
                     Point Lights
@@ -88,22 +88,23 @@ void main() {
         // Calculating Airlight Integral
         vec3 A0 = (beta * p.base.color * exp(-tsv * cos(gamma))) / (2 * M_PI * dsv * sin(gamma));
         float A1 = tsv * sin(gamma);
-        float v = (M_PI / 4) + (0.5 * atan((tvp - tsv * cos(gamma)) / (tsv * sin(gamma)))); 
+        float v = (M_PI / 4) + (0.5 * atan((tvp - tsv * cos(gamma)) / (tsv * sin(gamma))));
 
         float f1 = texture(airlightLookup, vec2(A1/maxU, v/maxV)).r;
         float f2 = texture(airlightLookup, vec2(A1/maxU, (gamma/2) / maxV)).r;
 
-        vec3 La = A0;// * (f1 - f2);
+        // Airlight lookup commented out so that light from stars are visible from further away.
+        vec3 La = A0;// * ((f1 - f2) * conversion);
         vec3 totalAirlight = Ld + La * 5;
 
         /******************* Diffuse ***********************/
-        vec3 totalLambertian = vec3(0, 0, 0); 
+        vec3 totalLambertian = vec3(0, 0, 0);
         // Regular diffuse shading attenuated due to optical thickness
         vec3 lightDirection = normalize(-lightToSurface);
         float lambertian = max(dot(lightDirection, surfaceNormal), 0.0);
         if(!onlyPointLights) {
             vec3 LpdDiffuse = lambertian * objectDiffuseColor * exp(-tsp) * ((p.base.intensity * 4 * M_PI) / (dsp * dsp));
-            vec3 LpaDiffuse = (objectDiffuseColor * p.base.intensity * beta * texture(G0, vec2(tsp/10, thetaS / (M_PI/2))).r / (2 * M_PI * dsp));  
+            vec3 LpaDiffuse = (objectDiffuseColor * p.base.intensity * beta * texture(G0, vec2(tsp/10, thetaS / (M_PI/2))).r / (2 * M_PI * dsp));
             totalLambertian = LpdDiffuse + LpaDiffuse;
         }
         /******************* Specular **********************/
@@ -120,7 +121,7 @@ void main() {
                 specular = pow(specAngle, shininess);
             }
             vec3 LpdSpecular = specular * objectSpecColor * exp(-tsp) * ((p.base.intensity * 4 * M_PI) / (dsp * dsp));
-            vec3 LpaSpecular = (objectSpecColor * p.base.intensity * beta * texture(G20, vec2(tsp/10, thetaSPrime / (M_PI/2))).r) / (2 * M_PI * dsp); 
+            vec3 LpaSpecular = (objectSpecColor * p.base.intensity * beta * texture(G20, vec2(tsp/10, thetaSPrime / (M_PI/2))).r) / (2 * M_PI * dsp);
             totalSpecular = LpdSpecular + LpaSpecular;
         }
         /*************** Combine Components ****************/
@@ -134,7 +135,7 @@ void main() {
     ******************************************/
     vec3 dFragColor = vec3(0, 0, 0);
     if(!onlyPointLights) { // Check for bounding box shading. Bounding box only needs to have point light contribtion, not directional.
-        
+
         // Standard directional light calculation.
         vec3 dLightDir = normalize(-directionalLight.direction);
         float dLambertian = max(dot(dLightDir, surfaceNormal), 0.0);
