@@ -138,7 +138,7 @@ void SolarSystem::generateSystem() {
 
 /*
 * Biome Keys:
-* 0 = FlatLand (Grass)
+* 0 = FlatLand
 * 1 = Desert
 * 2 = Snow
 * 3 = Jungle
@@ -149,19 +149,19 @@ void SolarSystem::generatePlanetSpots() {
 	// First Spot: Closest to the sun
   this->planetSpots.push_back(generatePlanetInfo(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f,
 		{
-			{ 0.0f, 0.0f , 255.0f}, { 255.0f, 200.0f , 0.0f}, {255.0f, 255.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {163.0f, 198.0f , 255.0f}, {128.0f, 128.0f , 128.0f}
+			{ 255.0f, 255.0f , 0.0f}, { 255.0f, 20.0f , 0.0f}, {255.0f, 255.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {163.0f, 198.0f , 255.0f}, {128.0f, 128.0f , 128.0f}
 		}
 	));
 	// Second Spot
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(10.0f, 0.0f, 0.0f), 2.0f,
 		{
-			{ 0.0f, 0.0f , 255.0f}, { 255.0f, 200.0f , 0.0f}, {255.0f, 255.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {163.0f, 198.0f, 255.0f}, {128.0f, 128.0f , 128.0f}
+			{ 200.0f, 200.0f , 0.0f}, { 255.0f, 100.0f , 0.0f}, {255.0f, 150.0f , 40.0f}, {0.0f, 0.0f , 0.0f}, {163.0f, 198.0f, 255.0f}, {128.0f, 128.0f , 128.0f}
 		}
 	));
 	// Third
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(15.0f, 0.0f, 0.0f), 3.0f,
 		{
-			{ 0.0f, 0.0f , 255.0f}, { 0.0f, 255.0f , 0.0f}, { 237.0f, 166.0f, 66.0f}, { 255.0f, 255.0f , 255.0f}, { 0.0f, 175.0f , 0.0f}, {128.0f, 128.0f , 128.0f}
+			{ 0.0f, 0.0f , 255.0f}, { 255.0f, 255.0f , 0.0f}, { 237.0f, 166.0f, 66.0f}, { 255.0f, 255.0f , 255.0f}, { 0.0f, 175.0f , 0.0f}, {128.0f, 128.0f , 128.0f}
 		}
 	));
 	// Fourth: "Goldy locks zone"

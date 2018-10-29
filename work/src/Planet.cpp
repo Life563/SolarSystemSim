@@ -374,7 +374,7 @@ void Planet::generateRings() {
 	cgra::Wavefront obj;
 	// Wrap the loading in a try..catch block
 	try {
-		obj = cgra::Wavefront::load("work/res/Ring.obj");
+		obj = cgra::Wavefront::load(CGRA_SRCDIR "/res/Ring.obj");
 	}
 	catch (std::exception e) {
 		std::cerr << "Couldn't load file: '" << e.what() << "'" << std::endl;
