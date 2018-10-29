@@ -32,28 +32,7 @@ void SolarSystem::init() {
 
 	generateLights();
 
-  static const GLfloat g_vertex_buffer_data[] = {
-   -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-   -0.5f,  0.5f, 0.0f,
-    0.5f,  0.5f, 0.0f,
-  };
-  GLuint billboard_vertex_buffer;
-  glGenBuffers(1, &billboard_vertex_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
-
-  glEnableVertexAttribArray(2);
-  glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-  glVertexAttribPointer(
-    2,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-    3,                  // size
-    GL_FLOAT,           // type
-    GL_FALSE,           // normalized?
-    0,                  // stride
-    (void*)0            // array buffer offset
-  );
-
+ 
     // Create a view matrix that positions the camera
     // 10 units behind the object
     viewMatrix[3] = glm::vec4(0, 0, -9, 1);
@@ -68,6 +47,7 @@ void SolarSystem::init() {
 		CGRA_SRCDIR "/res/shaders/Billboard.fs.glsl");
 	generateCylinder();
 	billBoardShader.setViewMatrix(viewMatrix);
+	loadObj(CGRA_SRCDIR "/res/Leaf.obj", &m_leaf);
 
 	/*
 	* Biome Keys:
@@ -254,23 +234,70 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 			//TODO increment color index
 		}
 		else if (c == 'l') {
-			mat4 td = translate(mat4(1), startPos *0.58f);
-
-			glm::vec3 midPoint(0, length, 0);
-			mat4 cyMat = glm::translate(transMat, midPoint);
-
-			glm::vec3 scale(1);
-			mat4 scaleMat = glm::scale(cyMat, scale);
-
-			td = td * scaleMat;
-
-			m_program.setModelMatrix(td);
-			billBoardShader.setModelMatrix(td);
 			if (showLeaves) {
-				drawLeaf();
+				mat4 td = translate(mat4(1), startPos *0.58f);
+
+				glm::vec3 midPoint(0, length, 0);
+				mat4 cyMat = glm::translate(transMat, midPoint);
+				if (polyLeaves == true) {
+					glm::vec3 scale(0.05f);
+					mat4 scaleMat = glm::scale(cyMat, scale);
+
+					td = td * scaleMat;
+					m_program.setModelMatrix(td);
+
+					m_program.setColour(vec3(0, 1, 0));
+					m_leaf.draw();
+				}
+				else {
+
+					glm::vec3 scale(1);
+					mat4 scaleMat = glm::scale(cyMat, scale);
+
+					td = td * scaleMat;
+					m_program.setModelMatrix(td);
+
+					billBoardShader.setModelMatrix(td);
+					drawLeaf();
+				}
 			}
 		}
 	}
+}
+
+void SolarSystem::loadObj(const char *filename, cgra::Mesh *mesh) {
+	cgra::Wavefront obj;
+	// Wrap the loading in a try..catch block
+	try {
+		obj = cgra::Wavefront::load(filename);
+	}
+	catch (std::exception e) {
+		std::cerr << "Couldn't load file: '" << e.what() << "'" << std::endl;
+		return;
+	}
+
+	unsigned int numVertices = obj.m_positions.size();
+	unsigned int numTriangles = obj.m_faces.size();
+
+	cgra::Matrix<double> vertices(numVertices, 3);
+	cgra::Matrix<unsigned int> triangles(numTriangles, 3);
+	std::vector<glm::vec3> vc;
+
+
+	for (size_t i = 0; i < obj.m_positions.size(); i++) {
+		// Add each position to the vertices matrix
+		vertices.setRow(i, { obj.m_positions[i][0],  obj.m_positions[i][1],  obj.m_positions[i][2] });
+		vc.push_back(glm::vec3(0, 1, 0));
+	}
+
+	for (unsigned int i = 0; i < obj.m_faces.size(); i++) {
+		// Add each triangle's indices to the triangles matrix
+		// Remember that Wavefront files use indices that start at 1
+		std::vector<cgra::Wavefront::Vertex> theVertices = obj.m_faces[i].m_vertices;
+		triangles.setRow(i, { theVertices[0].m_p - 1, theVertices[1].m_p - 1, theVertices[2].m_p - 1 });
+	}
+
+	mesh->setData(vertices, triangles, vc);
 }
 
 void SolarSystem::generateCylinder() {
@@ -711,6 +738,16 @@ void SolarSystem::doGUI() {
 
 	if (ImGui::Checkbox("Show Leaves", &this->showLeaves)) { // Rotates around the scene
 
+	}
+
+	if (showLeaves) {
+		if (ImGui::Checkbox(" Poly Leaves", &this->polyLeaves)) { // Rotates around the scene
+
+		}
+		bool billboardLeaves = !polyLeaves;
+		if (ImGui::Checkbox("Billboard Leaves", &billboardLeaves)) { // Rotates around the scene
+			polyLeaves = !polyLeaves;
+		}
 	}
 
 	ImGui::Separator();
