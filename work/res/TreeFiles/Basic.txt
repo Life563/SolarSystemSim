@@ -1,6 +1,8 @@
 name		Basic
 axiom		A
 angle		22.5
+length		0.05
+width		0.05
 generations	4
 
 rule	A	[&F[^^l]!A]/////[&F[^^l]!A]///////[&F[^^l]!A]

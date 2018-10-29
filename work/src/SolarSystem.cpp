@@ -586,19 +586,19 @@ void SolarSystem::drawScene() {
 				int h = 0;
 				if(biome != -1 ) {
 					if (biome == 0) {
-						generateTree(basicTrees, modelTransform *td, mv, 0.05, 0.05, h);
+						generateTree(basicTrees, modelTransform *td, mv, basicTrees.length, basicTrees.width, h);
 					}
 					else if (biome == 1) {
-						generateTree(dessertTrees, modelTransform *td, mv, 0.05, 0.05, h);
+						generateTree(dessertTrees, modelTransform *td, mv, dessertTrees.length, dessertTrees.width, h);
 					}
 					else if (biome == 2) {
-						generateTree(snowTrees, modelTransform *td, mv, 0.05, 0.05, h);
+						generateTree(snowTrees, modelTransform *td, mv, snowTrees.length, snowTrees.width, h);
 					}
 					else if (biome == 3) {
-						generateTree(jungleTrees, modelTransform *td, mv, 0.05, 0.05, h);
+						generateTree(jungleTrees, modelTransform *td, mv, jungleTrees.length, jungleTrees.width, h);
 					}
 					else {
-						generateTree(urbanTrees, modelTransform *td, mv, 0.05, 0.05, h);
+						generateTree(urbanTrees, modelTransform *td, mv, urbanTrees.length, urbanTrees.width, h);
 					}
 				}
 			}

@@ -40,6 +40,8 @@ public:
 	string currentTree;
 	string name;
 	int generations;
+	float length;
+	float width;
 
 	void generate();
 	void setRules();

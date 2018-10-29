@@ -1,8 +1,10 @@
 name		Basic
 axiom		R
 angle		25.7
+length		0.05
+width		0.05
 generations	4
 
-rule	R 	F[-&R][+R]FR
-rule	F 	FF	0.6
+rule	R 	F[-&Rl][+Rl]F!R
+rule	F 	F[//l]F	0.6
 rule	F 	Fl	0.4

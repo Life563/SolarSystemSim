@@ -90,6 +90,12 @@
 			else if (key == "generations") {
 				generations = stoi(values.at(0));
 			}
+			else if (key == "length") {
+				length = stof(values.at(0));
+			}
+			else if (key == "width") {
+				width = stof(values.at(0));
+			}
 			else if (key == "rule") {
 				string base = values.at(0);
 				string transform = values.at(1);
