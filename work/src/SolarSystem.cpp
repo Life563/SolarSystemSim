@@ -32,28 +32,7 @@ void SolarSystem::init() {
 
 	generateLights();
 
-  static const GLfloat g_vertex_buffer_data[] = {
-   -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-   -0.5f,  0.5f, 0.0f,
-    0.5f,  0.5f, 0.0f,
-  };
-  GLuint billboard_vertex_buffer;
-  glGenBuffers(1, &billboard_vertex_buffer);
-  glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
-
-  glEnableVertexAttribArray(2);
-  glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
-  glVertexAttribPointer(
-    2,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-    3,                  // size
-    GL_FLOAT,           // type
-    GL_FALSE,           // normalized?
-    0,                  // stride
-    (void*)0            // array buffer offset
-  );
-
+ 
     // Create a view matrix that positions the camera
     // 10 units behind the object
     viewMatrix[3] = glm::vec4(0, 0, -9, 1);
@@ -68,6 +47,7 @@ void SolarSystem::init() {
 		CGRA_SRCDIR "/res/shaders/Billboard.fs.glsl");
 	generateCylinder();
 	billBoardShader.setViewMatrix(viewMatrix);
+	loadObj(CGRA_SRCDIR "/res/Leaf.obj", &m_leaf);
 
 	/*
 	* Biome Keys:
@@ -253,34 +233,81 @@ void::SolarSystem::generateTree(LSystem LS, mat4 transMat, vec3 startPos, float 
 			//TODO increment color index
 		}
 		else if (c == 'l') {
-			mat4 td = translate(mat4(1), startPos *0.58f);
-
-			glm::vec3 midPoint(0, length, 0);
-			mat4 cyMat = glm::translate(transMat, midPoint);
-
-			glm::vec3 scale(1);
-			mat4 scaleMat = glm::scale(cyMat, scale);
-
-			td = td * scaleMat;
-
-			m_program.setModelMatrix(td);
-			billBoardShader.setModelMatrix(td);
 			if (showLeaves) {
-				drawLeaf();
+				mat4 td = translate(mat4(1), startPos *0.58f);
+
+				glm::vec3 midPoint(0, length, 0);
+				mat4 cyMat = glm::translate(transMat, midPoint);
+				if (polyLeaves == true) {
+					glm::vec3 scale(0.05f);
+					mat4 scaleMat = glm::scale(cyMat, scale);
+
+					td = td * scaleMat;
+					m_program.setModelMatrix(td);
+
+					m_program.setColour(vec3(0, 1, 0));
+					m_leaf.draw();
+				}
+				else {
+
+					glm::vec3 scale(1);
+					mat4 scaleMat = glm::scale(cyMat, scale);
+
+					td = td * scaleMat;
+					m_program.setModelMatrix(td);
+
+					billBoardShader.setModelMatrix(td);
+					drawLeaf();
+				}
 			}
 		}
 	}
 }
 
+void SolarSystem::loadObj(const char *filename, cgra::Mesh *mesh) {
+	cgra::Wavefront obj;
+	// Wrap the loading in a try..catch block
+	try {
+		obj = cgra::Wavefront::load(filename);
+	}
+	catch (std::exception e) {
+		std::cerr << "Couldn't load file: '" << e.what() << "'" << std::endl;
+		return;
+	}
+
+	unsigned int numVertices = obj.m_positions.size();
+	unsigned int numTriangles = obj.m_faces.size();
+
+	cgra::Matrix<double> vertices(numVertices, 3);
+	cgra::Matrix<unsigned int> triangles(numTriangles, 3);
+	std::vector<glm::vec3> vc;
+
+
+	for (size_t i = 0; i < obj.m_positions.size(); i++) {
+		// Add each position to the vertices matrix
+		vertices.setRow(i, { obj.m_positions[i][0],  obj.m_positions[i][1],  obj.m_positions[i][2] });
+		vc.push_back(glm::vec3(0, 1, 0));
+	}
+
+	for (unsigned int i = 0; i < obj.m_faces.size(); i++) {
+		// Add each triangle's indices to the triangles matrix
+		// Remember that Wavefront files use indices that start at 1
+		std::vector<cgra::Wavefront::Vertex> theVertices = obj.m_faces[i].m_vertices;
+		triangles.setRow(i, { theVertices[0].m_p - 1, theVertices[1].m_p - 1, theVertices[2].m_p - 1 });
+	}
+
+	mesh->setData(vertices, triangles, vc);
+}
+
 void SolarSystem::generateCylinder() {
-	int divisions = cylinderDiv;
+	unsigned int divisions = cylinderDiv;
 
 	std::vector<unsigned int> indices;
 	cgra::Matrix<double> vertices((divisions + 1) * (divisions + 1), 3);
 	std::vector<glm::vec3> vertColours;
 	int count = 0;
 
-	for (int i = 0; i <= divisions; ++i) {
+	for (unsigned int i = 0; i <= divisions; ++i) {
 		float V = i / (float)divisions;
 		float azi = V * glm::pi<float>();
 
@@ -300,7 +327,7 @@ void SolarSystem::generateCylinder() {
 		}
 	}
 
-	for (int i = 0; i < ((divisions + 1) * (divisions + 1) * 2); i++) {
+	for (unsigned int i = 0; i < ((divisions + 1) * (divisions + 1) * 2); i++) {
 
 		if (i + divisions + 1 >= vertices.numRows()) {
 			continue;
@@ -319,7 +346,7 @@ void SolarSystem::generateCylinder() {
 
 	cgra::Matrix<unsigned int> triangles(indices.size() / 3, 3);
 	count = 0;
-	for (int i = 0; i < indices.size(); i += 3) {
+	for (unsigned int i = 0; i < indices.size(); i += 3) {
 		triangles.setRow(count++, { indices.at(i), indices.at(i + 1), indices.at(i + 2) });
 	}
 
@@ -446,7 +473,6 @@ cgra::Mesh  SolarSystem::createCube() {
 }
 
 void SolarSystem::drawBoundingBox() {
-	GLuint airlightOnly;
 	glUniform1i(glGetUniformLocation(m_program.getProgram(), "onlyPointLights"), 1);
 	//m_program.setColour(glm::vec3(0, 0, 0));
 	// Bottom
@@ -552,7 +578,7 @@ void SolarSystem::drawScene() {
 		* 4 = Urban
 		*/
 		if(m_showTrees){
-			for (int i = 0; i < p.treeVerts.size(); i++) {
+			for (unsigned int i = 0; i < p.treeVerts.size(); i++) {
 				int biome = p.biomeMap.at(i);
 				int tv = p.treeVerts.at(i);
 				vec3 mv = p.modifiedVerticies.at(tv);
@@ -606,7 +632,7 @@ void SolarSystem::drawScene() {
 			m_program.setModelMatrix(modelTransform);
 			p.ringMesh.draw();
 		}
-		if (p.planetId == this->currentPlanet) { // Draw an icon above the 
+		if (p.planetId == this->currentPlanet) { // Draw an icon above the
 			// Move the planet and rotate it
 			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 			// Translate the actual mesh
@@ -629,7 +655,7 @@ void SolarSystem::doGUI() {
 		ImGui::Text("Solar System Information");
 
 		int pt = this->sun.originalTriangles.size();
-		for (int i = 0; i < this->planets.size(); i++) {
+		for (unsigned int i = 0; i < this->planets.size(); i++) {
 			pt += this->planets.at(i).originalTriangles.size();
 		}
 		std::string totalTris = "Total Number of Tris: " + std::to_string(pt);
@@ -711,6 +737,16 @@ void SolarSystem::doGUI() {
 
 	if (ImGui::Checkbox("Show Leaves", &this->showLeaves)) { // Rotates around the scene
 
+	}
+
+	if (showLeaves) {
+		if (ImGui::Checkbox(" Poly Leaves", &this->polyLeaves)) { // Rotates around the scene
+
+		}
+		bool billboardLeaves = !polyLeaves;
+		if (ImGui::Checkbox("Billboard Leaves", &billboardLeaves)) { // Rotates around the scene
+			polyLeaves = !polyLeaves;
+		}
 	}
 
 	ImGui::Separator();
@@ -808,7 +844,7 @@ void SolarSystem::doGUI() {
 			// Regenerate
 			this->planets.at(this->currentPlanet).generateTerrain();
 		}
-		
+
 		if (ImGui::InputFloat("Water Depth", &this->planets.at(this->currentPlanet).waterDepth)) {
 			// Regenerate
 			this->planets.at(this->currentPlanet).voronoiCells(false);
@@ -850,7 +886,7 @@ void SolarSystem::onCursorPos(double xpos, double ypos) {
     glm::vec2 currentMousePosition(xpos, ypos);
 
     // Get the difference from the previous mouse position
-    glm::vec2 mousePositionDelta = currentMousePosition - m_mousePosition;
+    // glm::vec2 mousePositionDelta = currentMousePosition - m_mousePosition;
 
     if (m_mouseButtonDown[GLFW_MOUSE_BUTTON_LEFT]) {
 
@@ -866,6 +902,8 @@ void SolarSystem::onCursorPos(double xpos, double ypos) {
 
 void SolarSystem::onKey(int key, int scancode, int action, int mods) {
     // `(void)foo` suppresses unused variable warnings
+    (void)scancode;
+    (void)mods;
 	if (GLFW_KEY_X == key && action == GLFW_PRESS) {
 		this->screenNum = (this->screenNum + 1) % 2;
 	}

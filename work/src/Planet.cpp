@@ -47,7 +47,7 @@ Planet::Planet() {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	cgra::Matrix<double> vertices(originalVerticies.size(), 3);
-	for (int i = 0; i < originalVerticies.size(); i++) {
+	for (unsigned int i = 0; i < originalVerticies.size(); i++) {
 		vertices.setRow(i, { originalVerticies.at(i)[0], originalVerticies.at(i)[1], originalVerticies.at(i)[2] });
 		std::uniform_int_distribution<> dis(150, 255);
 		float g = dis(gen);
@@ -55,7 +55,7 @@ Planet::Planet() {
 	}
 	// Setup Triangles
 	cgra::Matrix<unsigned int> triangles(originalTriangles.size(), 3);
-	for (int i = 0; i < originalTriangles.size(); i++) {
+	for (unsigned int i = 0; i < originalTriangles.size(); i++) {
 		triangles.setRow(i, { originalTriangles.at(i)[0], originalTriangles.at(i)[1], originalTriangles.at(i)[2] });
 	}
 	// Set Mesh
@@ -225,7 +225,7 @@ float Planet::generateNoise(int i) {
 void Planet::generateTerrain() {
 	// Generate and apply noise to change terrain
 	modifiedVerticies.clear();
-	for (int i = 0; i < originalVerticies.size(); i++) {
+	for (unsigned int i = 0; i < originalVerticies.size(); i++) {
 		float point = this->generateNoise(i);
 		if (point < 0.0f) {
 			point = 0.0f;
@@ -253,12 +253,12 @@ void Planet::generateTerrain() {
 	}
 	// Set mesh
 	cgra::Matrix<double> vertices(modifiedVerticies.size(), 3);
-	for (int i = 0; i < modifiedVerticies.size(); i++) {
+	for (unsigned int i = 0; i < modifiedVerticies.size(); i++) {
 		vertices.setRow(i, { modifiedVerticies.at(i)[0], modifiedVerticies.at(i)[1], modifiedVerticies.at(i)[2] });
 	}
 	// Setup Triangles
 	cgra::Matrix<unsigned int> triangles(originalTriangles.size(), 3);
-	for (int i = 0; i < originalTriangles.size(); i++) {
+	for (unsigned int i = 0; i < originalTriangles.size(); i++) {
 		triangles.setRow(i, { originalTriangles.at(i)[0], originalTriangles.at(i)[1], originalTriangles.at(i)[2] });
 	}
 	// Set Mesh
@@ -284,11 +284,11 @@ void Planet::voronoiCells(bool genNewSites) {
 	vertColours.clear();
 	// Now Decided on the biome of each vertex, as well as the color
 	std::uniform_int_distribution<> distribution(-15, 15);
-	for (int i = 0; i < this->modifiedVerticies.size(); i++) {
+	for (unsigned int i = 0; i < this->modifiedVerticies.size(); i++) {
 		float shortestDistance = FLT_MAX;
 		int biomeNum;
 		// Check list of sites
-		for (int j = 0; j < this->sites.size(); j++) {
+		for (unsigned int j = 0; j < this->sites.size(); j++) {
 			float dis = glm::abs(glm::distance(modifiedVerticies.at(i), this->sites.at(j)));
 			if (dis == shortestDistance) {
 				// Randomly decide on the winner, this helps with the borders between sites
@@ -297,7 +297,7 @@ void Planet::voronoiCells(bool genNewSites) {
 				if (dp < 0.5f) {
 					shortestDistance = dis;
 					biomeNum = j;
-				}				
+				}
 			}else if (dis <= shortestDistance) {
 				shortestDistance = dis;
 				biomeNum = j;
@@ -338,14 +338,14 @@ void Planet::generateMoon() {
 	std::vector<std::vector<unsigned int>> moonTriangles = { { 0, 11, 5 }, { 0, 5, 1 }, {0, 1, 7}, {0, 7, 10}, {0, 10, 11}, {1,5,9},{5, 11,4}, {11, 10,2}, {10, 7,6}, {7, 1,8}, {3, 9,4}, {3,4,2}, {3,2,6}, {3,6,8}, {3,8,9}, {4,9,5}, {2,4,11}, {6,2,10}, {8,6,7}, {9,8,1} };
 	std::vector<glm::vec3> vC; // Color
 	cgra::Matrix<double> mV(moonVertices.size(), 3);
-	for (int i = 0; i < moonVertices.size(); i++) {
+	for (unsigned int i = 0; i < moonVertices.size(); i++) {
 		float offset = dis(gen);
 		mV.setRow(i, { moonVertices.at(i)[0], moonVertices.at(i)[1], moonVertices.at(i)[2] });
 		vC.push_back(glm::vec3( (128 + offset) /255, (128 + offset) /255, (128 + offset) /255));
 	}
 	// Setup Triangles
 	cgra::Matrix<unsigned int> mT(moonTriangles.size(), 3);
-	for (int i = 0; i < moonTriangles.size(); i++) {
+	for (unsigned int i = 0; i < moonTriangles.size(); i++) {
 		mT.setRow(i, { moonTriangles.at(i)[0], moonTriangles.at(i)[1], moonTriangles.at(i)[2] });
 	}
 	// Set Mesh

@@ -42,9 +42,12 @@ public:
 	LSystem urbanTrees;
 	bool m_showTrees = false;
 	bool showLeaves = false;
-
+	bool polyLeaves = true;
 	int cylinderDiv = 3;
 	int treeGenerations = 3;
+
+	cgra::Mesh m_leaf;
+
 
     // The translation of the mesh as a vec3
     glm::vec3 m_translation = glm::vec3(0);
@@ -91,7 +94,7 @@ public:
 
 	// Global Noise Functions
 	int freq = 3;
-	int amp = 5;
+	int amp = 6;
 	int octaves = 4;
 
 	double timeTaken;
@@ -124,6 +127,7 @@ public:
 	void generateSun();
 	void generateSystem();
 	void generatePlanetSpots();
+	void loadObj(const char * filename, cgra::Mesh * mesh);
 	void generateCylinder();
 
 	void drawLeaf();

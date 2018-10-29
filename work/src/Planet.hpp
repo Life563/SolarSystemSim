@@ -66,9 +66,9 @@ public:
 
 	int octaves = 4;
 	float frequency = 3;
-	float amplitude = 2;
+	float amplitude = 6;
 
-	float waterDepth = -0.1f;
+	float waterDepth = -0.2f;
 	float ringAngle = 1.0f;
 
 	double timeTaken;
