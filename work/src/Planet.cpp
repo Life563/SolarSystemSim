@@ -16,6 +16,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/euler_angles.hpp"
 
+
+/*
+	Use the procesors cycles in order to generate the initial random seed instead of time
+*/
 //  Windows
 #ifdef _WIN32
 
@@ -97,7 +101,7 @@ void Planet::generateIcosahedron() {
 void Planet::generatePlanet() {
 	this->hasMoon = false;
 	this->hasRing = false;
-	srand((unsigned int)rdtsc()); // Makes sure we have a random seed
+	//srand((unsigned int)rdtsc()); // Makes sure we have a random seed
 	double startTime = glfwGetTime();
 	generateIcosahedron();
 	subdivideIcosahedron();
@@ -125,7 +129,6 @@ void Planet::generatePlanet() {
 		int tv = dis(randGen);
 		treeVerts.push_back(tv);
 	}
-	std::cout << this->originalVerticies.size() << std::endl;
 	this->timeTaken = glfwGetTime() - startTime;
 }
 
@@ -237,21 +240,19 @@ void Planet::generateTerrain() {
 	}
 	// Use Vor Cells to generate biomes
 	voronoiCells(true);
-	// Decide on water
+	// Decide on water map
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> waterDistribution(0, originalVerticies.size() - 1);
 	std::uniform_int_distribution<> seaDistribution(-15, 15);
 	for (int i = 0; i < originalVerticies.size(); i++) {
 		// Generate a point
-		float p = waterDistribution(gen);
-		float point = glm::perlin((originalVerticies.at(p)));
+		float point = glm::perlin((originalVerticies.at(i)));
 		if (point < this->waterDepth) {
 			float oc = seaDistribution(gen);
 			vertColours.at(i) = glm::vec3((this->cs1.at(0).x + oc) / 255, (this->cs1.at(0).y + oc) / 255, (this->cs1.at(0).z + oc) / 255); // 'Sea' color
 		}
 	}
-	// Set mesh
+	// Set Verticies and colors
 	cgra::Matrix<double> vertices(modifiedVerticies.size(), 3);
 	for (unsigned int i = 0; i < modifiedVerticies.size(); i++) {
 		vertices.setRow(i, { modifiedVerticies.at(i)[0], modifiedVerticies.at(i)[1], modifiedVerticies.at(i)[2] });
@@ -271,6 +272,7 @@ void Planet::generateTerrain() {
 void Planet::voronoiCells(bool genNewSites) {
 	std::random_device rd;
 	std::mt19937 gen(rd());
+	// If we are just wanting to change the height map, we don't want to pick new sites which will change everything about the planet
 	if (genNewSites) {
 		// Determin which points are going to become main sites
 		std::uniform_int_distribution<> dis(0, this->modifiedVerticies.size()-1);
@@ -287,18 +289,10 @@ void Planet::voronoiCells(bool genNewSites) {
 	for (unsigned int i = 0; i < this->modifiedVerticies.size(); i++) {
 		float shortestDistance = FLT_MAX;
 		int biomeNum;
-		// Check list of sites
+		// Check list of sites and find closest
 		for (unsigned int j = 0; j < this->sites.size(); j++) {
 			float dis = glm::abs(glm::distance(modifiedVerticies.at(i), this->sites.at(j)));
-			if (dis == shortestDistance) {
-				// Randomly decide on the winner, this helps with the borders between sites
-				std::uniform_real_distribution<double> siteDist(0.0, 1.0);
-				double dp = siteDist(gen);
-				if (dp < 0.5f) {
-					shortestDistance = dis;
-					biomeNum = j;
-				}
-			}else if (dis <= shortestDistance) {
+			if (dis < shortestDistance) {
 				shortestDistance = dis;
 				biomeNum = j;
 			}
@@ -381,7 +375,7 @@ void Planet::generateRings() {
 		// Add each position to the vertices matrix
 		vertices.setRow(i, { obj.m_positions[i][0],  obj.m_positions[i][1],  obj.m_positions[i][2] });
 		float oc = dist(gen);
-		vc.push_back(glm::vec3((150 + oc) / 255, (75+oc) / 255, (15 + oc) / 255));
+		vc.push_back(glm::vec3((200 + oc) / 255, (150+oc) / 255, (30 + oc) / 255));
 	}
 
 	for (unsigned int i = 0; i < obj.m_faces.size(); i++) {
@@ -393,26 +387,4 @@ void Planet::generateRings() {
 	std::uniform_real_distribution<double> ra(-2.0, 2.0);
 	ringAngle = ra(gen);
 	ringMesh.setData(vertices, triangles, vc);
-}
-
-
-
-
-void Planet::draw() {
-	// Draw the planet mesh first
-	this->mesh.draw();
-	// Draw the items on the planet afterwards
-	populatePlanet();
-}
-
-//========================================================//
-//================= Alans Methods ========================//
-//========================================================//
-
-/*
- * Method used to populate the planet. Alans Main method
- */
-void Planet::populatePlanet() {
-
-
 }

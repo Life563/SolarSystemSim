@@ -152,25 +152,25 @@ void SolarSystem::generatePlanetSpots() {
 	// Fifth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(25.0f, 0.0f, 0.0f), 5.0f,
 		{
-			{ 50.0f, 50.0f , 255.0f}, { 200.0f, 200.0f , 200.0f}, { 200.0f, 200.0f , 200.0f}, { 200.0f, 200.0f , 200.0f}, { 200.0f, 200.0f , 200.0f}, {175.0f, 175.0f , 175.0f}
+			{ 50.0f, 50.0f , 255.0f}, { 150.0f, 200.0f , 150.0f}, {  237.0f, 166.0f, 66.0f}, { 255.0f, 255.0f , 255.0f}, { 50.0f, 210.0f , 50.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Sixth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(30.0f, 0.0f, 0.0f), 6.0f,
 		{
-			{ 50.0f, 50.0f , 255.0f}, { 255.0f, 50.0f , 0.0f}, {255.0f, 50.0f , 0.0f}, {0.0f, 0.0f , 0.0f}, {0.0f, 150.0f , 0.0f}, {175.0f, 175.0f , 175.0f}
+			{ 25.0f, 25.0f , 255.0f}, { 35.0f, 90.0f , 200.0f}, { 215.0f, 135.0f, 50.0f}, {255.0f, 255.0f , 255.0f}, {15.0f, 80.0f , 15.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Seventh
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(35.0f, 0.0f, 0.0f), 7.0f,
 		{
-			{ 25.0f, 25.0f , 255.0f}, { 255.0f, 50.0f , 0.0f}, {255.0f, 50.0f , 0.0f}, {255.0f, 50.0f , 0.0f}, {255.0f, 50.0f, 0.0f}, {175.0f, 175.0f , 175.0f}
+			{ 75.0f, 75.0f , 255.0f}, { 50.0f, 50.0f , 200.0f}, {50.0f, 50.0f , 255.0f}, {255.0f, 255.0f , 255.0f}, {150, 175.0f, 50.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 	// Eighth
 	this->planetSpots.push_back(generatePlanetInfo(glm::vec3(45.0f, 0.0f, 0.0f), 8.0f,
 		{
-			{ 15.0f, 15.0f , 255.0f}, { 163.0f, 198.0f, 255.0f}, {255.0f, 255.0f , 255.0f}, {255.0f, 255.0f , 255.0f}, {0.0f, 30.0f, 79.0f}, {175.0f, 175.0f , 175.0f}
+			{ 115.0f, 115.0f , 255.0f}, { 163.0f, 198.0f, 255.0f}, {255.0f, 255.0f , 255.0f}, {255.0f, 255.0f , 255.0f}, {0.0f, 30.0f, 79.0f}, {175.0f, 175.0f , 175.0f}
 		}
 	));
 }
@@ -557,7 +557,7 @@ void SolarSystem::drawScene() {
 	modelTransform = glm::scale(modelTransform, glm::vec3(1.3f));
 	// Draw the mesh
 	m_program.setModelMatrix(modelTransform);
-	sun.draw();
+	sun.mesh.draw();
 	// Draw each planet
 	for (Planet p : planets) {
 		// Move the planet and rotate it
@@ -607,7 +607,7 @@ void SolarSystem::drawScene() {
 		modelTransform = glm::scale(modelTransform, p.scale);
 		// Draw the mesh
 		m_program.setModelMatrix(modelTransform);
-		p.draw();
+		p.mesh.draw();
 		if (p.hasMoon) {
 			// Move the planet and rotate it
 			modelTransform = glm::rotate(m_rotationMatrix, (playingRotation) ? ((float)glfwGetTime() / p.rotationSpeed) : 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotates with planet
